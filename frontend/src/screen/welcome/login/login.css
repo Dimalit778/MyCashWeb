@@ -1,0 +1,95 @@
+.wrapper {
+  height: 100vh;
+}
+.login {
+  height: min-content;
+
+  border-radius: 5px;
+  background-color: aliceblue;
+  padding: 30px;
+}
+
+.p {
+  color: rgb(26, 24, 21);
+}
+.text a {
+  list-style: none;
+}
+
+.btn {
+  border: solid 1px black;
+  font-size: 1em;
+}
+.bn31 {
+  background-image: linear-gradient(to right, #006175 0%, #00a950 100%);
+  border-radius: 40px;
+  box-sizing: border-box;
+  color: white;
+  display: block;
+  height: 45px;
+  font-size: 1.2em;
+  padding: 4px;
+  position: relative;
+  text-decoration: none;
+  z-index: 2;
+}
+
+.bn31:hover {
+  color: #fff;
+}
+
+.bn31 .bn31span {
+  align-items: center;
+  background: #0e0e10;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  transition: background 0.5s ease;
+  width: 100%;
+}
+
+.bn31:hover .bn31span {
+  background: transparent;
+}
+.bn9 {
+  padding: 2px;
+  outline: 0;
+  font-size: 17px;
+  color: rgb(0, 0, 0);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#fdde5c),
+    color-stop(#f8ab5e),
+    color-stop(#f56a62),
+    color-stop(#a176c8),
+    color-stop(#759beb),
+    color-stop(#65beb3),
+    to(#70db96)
+  );
+  background: linear-gradient(
+    to right,
+    #fdde5c,
+    #f8ab5e,
+    #f56a62,
+    #a176c8,
+    #759beb,
+    #65beb3,
+    #70db96
+  );
+  border-radius: 30px;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.bn9 > span {
+  display: block;
+  padding: 10px 40px;
+  font-size: 17px;
+  font-weight: 500;
+  background: #ebebeb;
+  border-radius: 30px;
+}

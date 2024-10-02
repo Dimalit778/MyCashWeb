@@ -1,0 +1,19 @@
+h1 {
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+
+h2 {
+  font-size: clamp(0.8rem, 1.5vw, 2rem);
+}
+
+h3 {
+  font-size: clamp(0.6rem, 1.2vw, 1.5rem);
+}
+
+.imgStyle {
+  max-width: 100%;
+  height: auto;
+}
+.respIcon {
+  font-size: clamp(1rem, 2vw, 2rem);
+}

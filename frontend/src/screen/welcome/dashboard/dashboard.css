@@ -1,0 +1,9 @@
+.overViewDetails {
+  height: 200px;
+  width: 80%;
+  border: 3px solid black;
+}
+.categories {
+  background-color: rgb(241, 237, 231);
+  border-radius: 3rem;
+}

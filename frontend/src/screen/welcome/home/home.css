@@ -1,0 +1,65 @@
+/* ------> SECTION - 1 - STYLE : */
+.home_section1 {
+  min-height: 60vh;
+  .section_one_header {
+    gap: 1.5rem;
+    text-transform: uppercase;
+    font-size: 3.5rem;
+    font-weight: bold;
+    /* text-overflow: inherit; */
+    color: white;
+  }
+
+  .btns > button {
+    padding: 12px 20px;
+    background-color: #f0e68c; /* A softer wheat color */
+    color: #333; /* Darker text for better contrast */
+    font-weight: 600;
+    font-size: 16px;
+
+    border-radius: 8px;
+    border: 2px solid #d4af37; /* Golden border */
+
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+
+  .btns > button:hover {
+    background-color: #d4af37; /* Darker color on hover */
+    color: #fff; /* White text on hover for contrast */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+  }
+}
+.Home_box .btnStart:hover {
+  background-color: rgb(43, 39, 36);
+  color: white;
+}
+
+.stroke-text {
+  text-transform: uppercase;
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-overflow: inherit;
+  color: white;
+  color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}
+.img-fluid {
+  height: 100%;
+  width: 100%;
+}
+/* ------> SECTION - 3 - STYLE : */
+.Home_text {
+  h3 {
+    color: white;
+  }
+  p {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 20px;
+    color: white;
+  }
+}

@@ -1,0 +1,17 @@
+.btn {
+  border: solid 1px black;
+}
+.p {
+  color: rgb(26, 24, 21);
+}
+.form {
+  background-color: rgb(252, 250, 248);
+}
+.link {
+  text-align: center;
+  background-color: rgb(3, 116, 3);
+  color: wheat;
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 3px;
+}

@@ -40,14 +40,17 @@ app.use(
 app.use("/api/users", protectRoute, userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/transactions", protectRoute, transactionsRoute);
+app.use("/test", (req, res) => {
+  res.send("test");
+});
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-  });
-}
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+//   });
+// }
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

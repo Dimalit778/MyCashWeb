@@ -28,7 +28,6 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: "http://localhost:3000", // your frontend URL
-    // origin: "https://mzrc1wcg-3000.euw.devtunnels.ms",
     credentials: true, // this is important for sending cookies
     optionsSuccessStatus: 200,
   })
@@ -43,14 +42,6 @@ app.use("/api/transactions", protectRoute, transactionsRoute);
 app.use("/test", (req, res) => {
   res.send("test");
 });
-
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-//   });
-// }
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

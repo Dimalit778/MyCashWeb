@@ -15,6 +15,7 @@ const TopBar = ({ className }) => {
   const [logoutApi] = useLogoutMutation();
 
   const logoutHandler = async () => {
+    console.log("logoutHandler");
     try {
       await logoutApi().unwrap();
       dispatch(logout());
@@ -48,7 +49,7 @@ const TopBar = ({ className }) => {
           ) : (
             <div className="d-flex align-items-center">
               <div className="me-4">
-                <Button variant="link" className="text-light p-0" onClick={() => console.log("logout")}>
+                <Button variant="link" className="text-light p-0" onClick={logoutHandler}>
                   <img src={logoutIcon} alt="logout" width="24" height="24" />
                 </Button>
               </div>

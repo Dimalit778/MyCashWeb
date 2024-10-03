@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import "custom.css";
+
 import { useGetAllExpensesQuery } from "api/slicesApi/expenseApiSlice";
 import { useGetAllIncomesQuery } from "api/slicesApi/incomeApiSlice";
 import Loader from "components/Loader";
@@ -10,16 +10,19 @@ import { filterByYear } from "hooks/filterByYear";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Card, Col, Row } from "react-bootstrap";
 import FinancialStats from "components/ui/FinanceStats";
+import { fakeExpenses, fakeIncomes } from "fakedata";
 
 const Main = () => {
   const currentYear = new Date().getFullYear();
   const [chosenYear, setChosenYear] = useState(currentYear);
 
-  const { data: allExpenses, isLoading: loadExpenses } = useGetAllExpensesQuery();
-  const { data: allIncomes, isLoading: loadIncomes } = useGetAllIncomesQuery();
+  // const { data: allExpenses, isLoading: loadExpenses } = useGetAllExpensesQuery();
+  // const { data: allIncomes, isLoading: loadIncomes } = useGetAllIncomesQuery();
+  const allExpenses = fakeExpenses;
+  const allIncomes = fakeIncomes;
 
   const memoizedData = useMemo(() => {
-    if (loadIncomes || loadExpenses) return null;
+    // if (loadIncomes || loadExpenses) return null;
 
     const expenses_list = allExpenses ? filterByYear(allExpenses, chosenYear) : [];
     const incomes_list = allIncomes ? filterByYear(allIncomes, chosenYear) : [];
@@ -35,7 +38,7 @@ const Main = () => {
       expenses_list,
       incomes_list,
     };
-  }, [allExpenses, allIncomes, chosenYear, loadExpenses, loadIncomes]);
+  }, [allExpenses, allIncomes, chosenYear]);
 
   if (!memoizedData) return <Loader />;
 

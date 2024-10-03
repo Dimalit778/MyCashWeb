@@ -52,13 +52,12 @@ export default function PieActiveArc({ list, date }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "bottom",
+        position: "right",
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
           font: {
             size: 12,
           },
-          padding: 20,
         },
       },
       tooltip: {
@@ -92,10 +91,8 @@ export default function PieActiveArc({ list, date }) {
   };
 
   return (
-    <div style={{ height: "100%", width: "100%" }} className="d-flex flex-column">
-      <div style={{ flex: "1 1 auto", minHeight: 0 }}>
-        <PolarArea data={chartData} options={chartOptions} />
-      </div>
+    <div style={{ minHeight: "250px", width: "100%" }}>
+      <PolarArea data={chartData} options={chartOptions} />
     </div>
   );
 }

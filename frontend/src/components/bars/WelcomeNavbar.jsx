@@ -62,7 +62,7 @@ const WelcomeNavBar = () => {
               // {/* --- > USERNAME AND LINK TO PROFILE < --- */}
               <div className="userName pe-3">
                 <NavDropdown title={userInfo.name} id="username" className="userProfile mx-auto p-1 text-center ">
-                  <NavDropdown.Item onClick={() => navigate("/dashboard")}>Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => navigate("/")}>Profile</NavDropdown.Item>
 
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>

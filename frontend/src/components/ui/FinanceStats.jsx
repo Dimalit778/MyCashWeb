@@ -1,6 +1,6 @@
 import React from "react";
 import "./ui.css";
-import "custom.css";
+import "../../app.css";
 import CountUp from "react-countup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowTrendUp, faArrowTrendDown, faHandHoldingDollar } from "@fortawesome/free-solid-svg-icons";
@@ -37,23 +37,23 @@ export const FinancialStats = React.memo(({ type, amount }) => {
   return (
     <div className={`stats-card border-2 ${colorClass} p-2`}>
       <div className="row g-2">
-        <div className="col-12 col-md-8 d-flex flex-column align-items-center">
-          <h2
+        <div className="col-12 col-md-9 d-flex flex-column align-items-center">
+          <h3
+            className="small"
             style={{
               fontFamily: "Orbitron",
-              fontStyle: "italic",
             }}
           >
             {title}
-          </h2>
-          <h3 className={`fw-semibold ${isBalance ? (isPositive ? "text-success" : "text-danger") : ""}`}>
+          </h3>
+          <h3 className={`small fw-semibold ${isBalance ? (isPositive ? "text-success" : "text-danger") : ""}`}>
             <CountUp start={0} end={amount} separator="," decimals={2} prefix="$" />
           </h3>
         </div>
-        <div className="col-12 col-md-4 d-flex align-items-center justify-content-center">
+        <div className="col-12 col-md-3 d-flex align-items-center justify-content-center">
           <FontAwesomeIcon
             icon={icon}
-            className={`respIcon ${bgClass} text-${color} border-2 border-${color}`}
+            className={`respIcon ${bgClass} text-${color} border-1 border-${color}`}
             border
           />
         </div>

@@ -12,14 +12,14 @@ const RootLayout = () => {
   if (!userInfo) return <Navigate to="/login" replace />;
 
   return (
-    <div className="root-layout d-flex flex-column min-vh-100 bg-dark ">
+    <div className=" d-flex flex-column bg-dark min-vh-100   ">
       <TopBar className="d-md-none sticky-top" />
-      <Container fluid className="flex-grow-1 p-0">
-        <Row className="h-100 m-0">
+      <Container fluid className="flex-grow-1 p-3  ">
+        <Row className=" m-0 ">
           <Col
             md={3}
             lg={2}
-            className="p-0 d-none d-md-block "
+            className="p-0 d-none d-md-block border-end border-1 border-secondary "
             style={{ position: "fixed", top: 0, bottom: 0, left: 0, zIndex: 100, padding: 0, overflowY: "auto" }}
           >
             <LeftSideBar />
@@ -28,15 +28,17 @@ const RootLayout = () => {
             xs={12}
             md={9}
             lg={10}
-            className="p-3 pb-5 pb-md-3 main-content "
+            className="p-0"
             style={{
               marginLeft: "auto",
+              marginBottom: "30px",
             }}
           >
             <Outlet />
           </Col>
         </Row>
       </Container>
+
       <BottomBar className="d-md-none" />
     </div>
   );

@@ -1,146 +1,115 @@
-import { setCredentials } from "api/slicesApi/authSlice";
-import { Image, Transformation } from "cloudinary-react";
-import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { Image, Transformation } from "cloudinary-react";
+import toast from "react-hot-toast";
+import { setCredentials } from "api/slicesApi/authSlice";
+import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
 import uploadUserImg from "./../assets/uploadUserImg.png";
-import Loader from "components/Loader";
+import MyButton from "components/MyButton";
+import { Col, Container, Row } from "react-bootstrap";
 
 const UploadImage = () => {
   const [userImage, setUserImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const [uploadImage, { isLoading }] = useUploadImageMutation();
-  const [deleteImage] = useDeleteImageMutation();
-  const [updateUser] = useUpdateUserMutation();
+  const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation();
+  const [deleteImage, { isLoading: isDeleting }] = useDeleteImageMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
-  const handleChange = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setImagePreview(URL.createObjectURL(e.target.files[0]));
-    transformFile(file);
-  };
-  // DELETE IMAGE FROM CLOUDINARY
-  const handleDeleteImage = async (e) => {
-    e.preventDefault();
-    try {
-      const { imageUrl } = userInfo;
-      if (!imageUrl) return toast.error("No image for this user");
-
-      await deleteImage({ imageUrl });
-
-      const res = await updateUser({
-        imageUrl: null,
-      }).unwrap();
-      if (!res) return toast.error("User update failed");
-
-      // add to userInfo in the local storage  the imageUrl
-      dispatch(setCredentials({ ...res }));
-
-      return toast.success("Photo was deleted ");
-    } catch (e) {
-      return toast.error(e.message);
-    }
-  };
-
-  const transformFile = (file) => {
-    const reader = new FileReader();
     if (file) {
+      setImagePreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => setUserImage(reader.result);
       reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setUserImage(reader.result);
-      };
-    } else {
-      setUserImage("");
     }
   };
-  // UPLOAD IMAGE TO CLOUDINARY
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
+  const handleDeleteImage = async () => {
+    if (!userInfo.imageUrl) return toast.error("No image for this user");
+    try {
+      await deleteImage({ imageUrl: userInfo.imageUrl });
+      const res = await updateUser({ imageUrl: null }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      toast.success("Photo was deleted");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete photo");
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!userImage) return toast.error("Please add an image");
     try {
-      // Upload the image file to Cloudinary database
-      const res = await uploadImage({ userImage });
-
-      //?  Update image to User Schema
-      if (res) {
-        // if upload successfully -> update the user with imageUrl
-        const result = await updateUser({
-          imageUrl: res.data.public_id,
-        }).unwrap();
-        // add to userInfo in the local storage  the imageUrl
-        dispatch(
-          setCredentials({
-            ...result,
-          })
-        );
-        toast.success("Profile updated successfully");
-        setImagePreview("");
-        setUserImage("");
-      }
-    } catch (err) {
-      toast.error("Error");
-      console.log("err");
+      const res = await uploadImage({ userImage }).unwrap();
+      const result = await updateUser({ imageUrl: res.public_id }).unwrap();
+      dispatch(setCredentials({ ...result }));
+      toast.success("Profile updated successfully");
+      setImagePreview("");
+      setUserImage("");
+    } catch (error) {
+      toast.error(error.message || "Failed to update profile");
     }
   };
+
+  const isLoading = isUploading || isDeleting || isUpdating;
+
   return (
-    <form className="text-center " onSubmit={handleSubmit}>
-      {/* --- IMAGE DIV  ---- */}
-      <div>
-        {/* ---- USER USER IMAGE ----- */}
-        {userInfo.imageUrl && !imagePreview && (
-          <Image cloudName="dx6oxmki4" publicId={userInfo.imageUrl} className="cloudImage">
-            <Transformation width="200" height="200" gravity="auto" crop="fill" quality="auto" />
-          </Image>
-        )}
-        {/* ---- USER HAS IMAGE OR SELECTED IMAGE ----- */}
-        {imagePreview && <img style={{ height: "20vh", widows: "20vw" }} src={imagePreview} alt="imagePreview"></img>}
-        {/*  SHOW AVATAR IMAGE */}
-        {!imagePreview && !userInfo.imageUrl && (
-          <img style={{ height: "150px" }} src={uploadUserImg} alt="uploadUserImg" />
-        )}
-      </div>
-      {isLoading && <Loader />}
-      {/* upload button */}
-      <div className=" mt-3">
-        <label className="me-4">
-          <input
-            style={{ display: "none" }}
-            className=" mx-auto ps-5"
-            type="file"
-            accept="image/"
-            onChange={handleChange}
-          />
-          <span className="searchImage">Add Image</span>
-        </label>
-        <button
-          style={{
-            backgroundColor: "grey",
-            border: "2px solid black",
-            color: "white",
-            padding: "3px",
-            borderRadius: "5px",
-            width: "75px",
-            fontStyle: "600",
-          }}
-          className="mx-auto"
-          type="submit"
-        >
-          SAVE
-        </button>
-      </div>
-      {userInfo?.imageUrl && (
-        <div className="mt-3">
-          <button className="deletePhotoBth" onClick={(e) => handleDeleteImage(e)}>
-            Delete Photo
+    <Container className="text-center py-3">
+      <Row className=" g-5 bg-primary">
+        <Col md={6}>
+          <div className="d-flex ms-3">
+            {userInfo.imageUrl && !imagePreview ? (
+              <Image cloudName="dx6oxmki4" publicId={userInfo.imageUrl} className="cloudImage">
+                <Transformation width="200" height="200" gravity="auto" crop="fill" quality="auto" />
+              </Image>
+            ) : imagePreview ? (
+              <img style={{ height: "20vh", width: "20vw" }} src={imagePreview} alt="Preview" />
+            ) : (
+              <img style={{ height: "100px" }} src={uploadUserImg} alt="Upload" />
+            )}
+            <h5 className="ms-5 mt-3">Profile Image</h5>
+          </div>
+        </Col>
+
+        <Col md={6} className="d-flex align-items-center justify-content-lg-end justify-content-center ">
+          <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} />
+          <label htmlFor="fileInput" className="me-4">
+            <MyButton
+              className="me-3"
+              variant={"dark"}
+              disabled={isLoading}
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              Upload Image
+            </MyButton>
+          </label>
+          <button
+            type="button"
+            className="btn btn-secondary border border-1 border-light text-light"
+            disabled={isLoading}
+            onClick={handleSubmit}
+          >
+            Save
           </button>
-        </div>
-      )}
-    </form>
+
+          {userInfo?.imageUrl && (
+            <div className="mt-3">
+              <MyButton
+                buttonText="Delete Photo"
+                onClick={handleDeleteImage}
+                disabled={isLoading}
+                color="red"
+                size="large"
+              />
+            </div>
+          )}
+        </Col>
+      </Row>
+      {isLoading && <div className="mt-3">Loading...</div>}
+    </Container>
   );
 };
 

@@ -8,6 +8,7 @@ import { incCategories } from "../hooks/incomeCateList.js";
 import useModal from "../hooks/useModal";
 import { useAddIncomeMutation } from "api/slicesApi/incomeApiSlice.js";
 import { useAddExpenseMutation } from "api/slicesApi/expenseApiSlice.js";
+import MyButton from "components/MyButton.jsx";
 
 const ACTION_TYPES = {
   INCOME: "income",
@@ -57,9 +58,9 @@ const AddForm = ({ actionType }) => {
 
   return (
     <>
-      <Button variant="outline-light" onClick={openModal}>
+      <MyButton bgColor="grey" onClick={openModal}>
         Add New
-      </Button>
+      </MyButton>
       <Modal show={isOpen} onHide={closeModal} contentClassName="bg-dark text-light">
         <Modal.Header closeButton className="border-secondary">
           <Modal.Title>Add new {actionType}</Modal.Title>

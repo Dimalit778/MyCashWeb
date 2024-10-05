@@ -5,21 +5,25 @@ import { Link, useLocation } from "react-router-dom";
 
 const BottomBar = ({ className }) => {
   const { pathname } = useLocation();
-  console.log(pathname);
+
+  const handleNavClick = () => {
+    window.scrollTo(0, 0);
+  };
 
   return (
-    <Nav className={`${className} fixed-bottom bg-dark d-flex flex-nowrap `}>
+    <Nav className={`${className} fixed-bottom d-flex flex-nowrap border-top   `}>
       {sidebarLinks.map((link) => {
         const isActive = pathname === link.route;
-        console.log("link ", link.route);
+
         return (
           <Nav.Item key={`bottombar-${link.label}`} className="flex-grow-1 text-center">
             <Nav.Link
               as={Link}
               to={link.route}
               className={`d-flex flex-column align-items-center ${isActive && "bg-primary"}`}
+              onClick={handleNavClick}
             >
-              <img src={link.imgURL} alt={link.label} width={26} height={26} className="m-1" />
+              <img src={link.imgURL} alt={link.label} width={30} height={30} className="mb-1" />
             </Nav.Link>
           </Nav.Item>
         );

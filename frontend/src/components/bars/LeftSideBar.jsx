@@ -24,7 +24,7 @@ const LeftSideBar = ({ className }) => {
   };
 
   return (
-    <nav className={`d-flex flex-column bg-dark p-2  ${className}`} style={{ height: "100vh" }}>
+    <nav className={`d-flex flex-column  p-2  ${className}`} style={{ height: "100vh" }}>
       <div className="mb-3">
         <BrandLogo />
       </div>

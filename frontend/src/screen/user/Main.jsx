@@ -8,7 +8,7 @@ import { totalBalance } from "hooks/totalBalance";
 import LineChart from "components/charts/LineChart";
 import { filterByYear } from "hooks/filterByYear";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import FinancialStats from "components/ui/FinanceStats";
 import { fakeExpenses, fakeIncomes } from "fakedata";
 
@@ -45,8 +45,8 @@ const Main = () => {
   const { expenses, incomes, total, expenses_list, incomes_list } = memoizedData;
 
   return (
-    <div className="container-fluid ">
-      <div className="d-flex justify-content-center align-items-center mb-3 ">
+    <Container fluid className="  ">
+      <div className="d-flex justify-content-center align-items-center   ">
         <button className="btn btn-outline-light btn-sm me-4" onClick={() => setChosenYear((prev) => prev - 1)}>
           <ChevronLeft size={20} />
         </button>
@@ -68,12 +68,17 @@ const Main = () => {
         </Col>
       </Row>
 
-      <Card className="bg-dark text-light border-light shadow-lg mb-5">
+      <Card className="bg-dark text-light border-light shadow-lg mb-5 ">
         <Card.Body>
           <LineChart allExpenses={expenses_list} allIncomes={incomes_list} />
         </Card.Body>
       </Card>
-    </div>
+      <Card className="bg-dark text-light border-light shadow-lg ">
+        <Card.Body>
+          <LineChart allExpenses={expenses_list} allIncomes={incomes_list} />
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 export default Main;

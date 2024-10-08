@@ -15,7 +15,7 @@ const RootLayout = () => {
     <div className=" d-flex flex-column  min-vh-100 " style={{ backgroundColor: "black" }}>
       <TopBar className="d-md-none sticky-top" />
       <Container fluid className="flex-grow-1 p-3  ">
-        <Row className="">
+        <Row>
           <Col
             md={3}
             lg={2}

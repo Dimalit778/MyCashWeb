@@ -11,23 +11,22 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
+      max: 30,
       unique: true,
     },
     password: {
       type: String,
       required: true,
+      min: 6,
     },
     profileImage: {
       type: String,
       default: null,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    lastLogin: {
-      type: Date,
-      default: Date.now,
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
   },
 

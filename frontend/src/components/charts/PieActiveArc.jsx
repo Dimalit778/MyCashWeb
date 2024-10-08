@@ -1,7 +1,6 @@
 import React from "react";
 import { Chart as ChartJS, RadialLinearScale, ArcElement, Tooltip, Legend } from "chart.js";
 import { PolarArea } from "react-chartjs-2";
-import { filterByMonthAndYear } from "hooks/filterByMonthYear";
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
@@ -17,29 +16,12 @@ const darkThemeColors = [
   "rgba(83, 102, 255, 0.8)", // Indigo
 ];
 
-export default function PieActiveArc({ list, date }) {
-  const filteredList = filterByMonthAndYear(list, date);
-
-  const categoryTotals = filteredList.reduce((acc, transaction) => {
-    const { category, amount } = transaction;
-    if (!acc[category]) {
-      acc[category] = amount;
-    } else {
-      acc[category] += amount;
-    }
-    return acc;
-  }, {});
-
-  const uniqueCategories = Object.keys(categoryTotals).map((category) => ({
-    category,
-    totalAmount: categoryTotals[category],
-  }));
-
+export default function PieActiveArc({ list }) {
   const chartData = {
-    labels: uniqueCategories.map((item) => item.category),
+    labels: list.map((item) => item._id),
     datasets: [
       {
-        data: uniqueCategories.map((category) => category.totalAmount),
+        data: list.map((category) => category.total),
         backgroundColor: darkThemeColors,
         borderColor: "rgba(255, 255, 255, 0.3)",
         borderWidth: 1,

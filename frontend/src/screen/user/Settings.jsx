@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useDeleteUserMutation, useLogoutMutation } from "api/slicesApi/userApiSlice.js";
 import { logout } from "api/slicesApi/authSlice.js";
 import UploadImage from "forms/UploadImage";
-import { UpdateUser } from "forms/UpdateUser";
+
 import MyButton from "components/MyButton";
 
 const Settings = () => {

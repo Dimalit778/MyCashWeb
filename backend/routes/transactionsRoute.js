@@ -7,6 +7,7 @@ import {
   updateExpense,
 } from "../controllers/expenseController.js";
 import { addIncome, deleteIncome, getIncome, getAllIncomes, updateIncome } from "../controllers/incomeController.js";
+import { getMonthlyTransactions, getYearlyTransactions } from "../controllers/transactionController.js";
 
 const router = express.Router();
 
@@ -23,6 +24,9 @@ router
   .get("/getAllIncomes", getAllIncomes)
   .post("/addIncome", addIncome)
   .patch("/updateIncome/:id", updateIncome)
-  .delete("/deleteIncome/:id", deleteIncome);
+  .delete("/deleteIncome/:id", deleteIncome)
+
+  .get("/monthly", getMonthlyTransactions)
+  .get("/yearly", getYearlyTransactions);
 
 export default router;

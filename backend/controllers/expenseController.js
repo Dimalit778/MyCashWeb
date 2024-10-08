@@ -1,18 +1,21 @@
 import Expense from "../models/expenseModel.js";
 import expenseSchema from "../models/expenseModel.js";
+import { getMonthlyData } from "../utils/getMonthlyData.js";
 
 // Get All User Expenses
 export const getAllExpenses = async (req, res) => {
   const userId = req.user._id;
+  const { date, type } = req.query;
+  // console.log("Year:", year, "Month:", month, "Type:", type, "User:", userId);
 
   try {
-    const result = await Expense.find({ user: userId });
-    res.json(result);
+    const monthlyData = await getMonthlyData(userId, date, type);
+    res.json(monthlyData);
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
-
 // Get One Expense
 export const getExpense = async (req, res) => {
   const expenseId = req.params.id;

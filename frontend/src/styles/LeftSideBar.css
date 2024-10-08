@@ -16,7 +16,7 @@
 
 .navLinks h5:hover {
   color: #ffd700;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
 
 .logRegBtn {

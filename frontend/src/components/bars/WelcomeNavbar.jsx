@@ -1,5 +1,4 @@
 import React from "react";
-import "./bars.css";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";

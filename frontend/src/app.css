@@ -8,24 +8,7 @@ html {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-h1 {
-  font-size: clamp(1rem, 2vw, 2rem);
-}
 
-h2 {
-  font-size: clamp(0.8rem, 1.5vw, 2rem);
-}
-
-h3 {
-  font-size: clamp(0.6rem, 1.2vw, 1.5rem);
-}
-h4 {
-  font-size: clamp(0.6rem, 1.2vw, 1.5rem);
-}
-
-h5 {
-  font-family: "Roboto", sans-serif;
-}
 .form-button {
   background-color: #343a40;
   color: #fff;
@@ -42,6 +25,9 @@ h5 {
 }
 .respIcon {
   font-size: clamp(1rem, 2vw, 2rem);
+  color: "#000";
+  padding: 4px;
+  border-radius: 5px;
 }
 
 body {

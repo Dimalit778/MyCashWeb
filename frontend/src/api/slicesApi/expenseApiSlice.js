@@ -1,59 +1,56 @@
-import { apiSlice } from './apiSlice';
+import { apiSlice } from "./apiSlice";
 
-const URL = '/api/transactions';
+const URL = "/api/transactions";
 
 export const expenseApiSlice = apiSlice.injectEndpoints({
-  tagTypes: ['Expense'],
+  tagTypes: ["Expense"],
   endpoints: (builder) => ({
     //? -- GET Expense
     getExpense: builder.query({
       query: (expenseId) => `${URL}/getExpense/${expenseId}`,
-      credentials: 'include',
-      providesTags: ['Expense'],
+      credentials: "include",
+      providesTags: ["Expense"],
     }),
     //? -- GET ALL EXPENSES
     getAllExpenses: builder.query({
-      query: () => ({
+      query: ({ date, type }) => ({
         url: `${URL}/getAllExpenses`,
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        params: { date, type },
+        credentials: "include",
       }),
-      providesTags: ['Expense'],
+      providesTags: ["Expense"],
     }),
     //? -- ADD  EXPENSE
     addExpense: builder.mutation({
       query: (data) => ({
         url: `${URL}/addExpense`,
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         body: data,
       }),
-      invalidatesTags: ['Expense'],
+      invalidatesTags: ["Expense"],
     }),
     //? -- UPDATE EXPENSE
     updateExpense: builder.mutation({
       query: ({ _id, ...rest }) => ({
         url: `${URL}/updateExpense/${_id}`,
-        method: 'PATCH',
-        credentials: 'include',
+        method: "PATCH",
+        credentials: "include",
         body: rest,
       }),
-      invalidatesTags: ['Expense'],
+      invalidatesTags: ["Expense"],
     }),
     //? -- DELETE EXPENSE
     deleteExpense: builder.mutation({
       query: (expenseId) => ({
         url: `${URL}/deleteExpense/${expenseId}`,
-        method: 'DELETE',
-        credentials: 'include',
+        method: "DELETE",
+        credentials: "include",
       }),
-      invalidatesTags: ['Expense'],
+      invalidatesTags: ["Expense"],
     }),
   }),
 });
-export const {
-  useGetAllExpensesQuery,
-  useAddExpenseMutation,
-  useDeleteExpenseMutation,
-  useUpdateExpenseMutation,
-} = expenseApiSlice;
+export const { useGetAllExpensesQuery, useAddExpenseMutation, useDeleteExpenseMutation, useUpdateExpenseMutation } =
+  expenseApiSlice;

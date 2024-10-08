@@ -1,4 +1,5 @@
 import { sidebarLinks } from "constants";
+import { Theme } from "constants/colors";
 import React from "react";
 import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
@@ -11,7 +12,7 @@ const BottomBar = ({ className }) => {
   };
 
   return (
-    <Nav className={`${className} fixed-bottom d-flex flex-nowrap border-top   `}>
+    <Nav className={`${className} fixed-bottom d-flex flex-nowrap border-top   `} style={{ backgroundColor: "black" }}>
       {sidebarLinks.map((link) => {
         const isActive = pathname === link.route;
 
@@ -20,7 +21,8 @@ const BottomBar = ({ className }) => {
             <Nav.Link
               as={Link}
               to={link.route}
-              className={`d-flex flex-column align-items-center ${isActive && "bg-primary"}`}
+              className="d-flex flex-column align-items-center"
+              style={{ backgroundColor: isActive ? Theme.orange : "transparent" }}
               onClick={handleNavClick}
             >
               <img src={link.imgURL} alt={link.label} width={30} height={30} className="mb-1" />

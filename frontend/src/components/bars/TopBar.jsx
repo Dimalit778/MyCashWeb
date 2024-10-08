@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "api/slicesApi/userApiSlice";
 import { logout } from "api/slicesApi/authSlice";
-import "./bars.css";
 import BrandLogo from "components/BrandLogo";
 import avatarIcon from "assets/icons/avatarIcon.svg";
 import logoutIcon from "assets/icons/logoutIcon.svg";
@@ -24,21 +23,21 @@ const TopBar = ({ className }) => {
     }
   };
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className={`${className} p-2`}>
+    <Navbar expand="lg" className={`${className} p-2`} style={{ backgroundColor: "black" }}>
       <Container fluid>
         <Navbar.Brand>
           <BrandLogo />
         </Navbar.Brand>
-        <div className="ms-auto">
+        <Nav className="ms-auto">
           {!userInfo ? (
             <>
               {/* --- > LOGIN AND REGISTER BUTTONS < --- */}
               <div className=" d-flex gap-3 pe-3 justify-content-center mx-auto     ">
-                <button className="logRegBtn">
+                <Button className="logRegBtn">
                   <Nav.Link as={Link} to="/register" className="">
                     SIGN UP
                   </Nav.Link>
-                </button>
+                </Button>
                 <button className="logRegBtn">
                   <Nav.Link as={Link} to="/login" className="">
                     LOGIN
@@ -64,7 +63,7 @@ const TopBar = ({ className }) => {
               </div>
             </div>
           )}
-        </div>
+        </Nav>
       </Container>
     </Navbar>
   );

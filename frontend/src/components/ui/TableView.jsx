@@ -13,24 +13,16 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp, Delete } from "@mui/icons-material";
 import "./ui.css";
-
 import { numberFormat } from "hooks/numberFormat";
-import { useDeleteExpenseMutation } from "api/slicesApi/expenseApiSlice";
-import { useDeleteIncomeMutation } from "api/slicesApi/incomeApiSlice";
-import EditForm from "forms/EditForm";
 
-const Row = ({ item, actionType, index }) => {
+import EditForm from "./EditForm";
+
+const Row = ({ item, type, index }) => {
   const [open, setOpen] = useState(false);
   const { _id, title, category, amount, date } = item;
-  const [deleteExpense] = useDeleteExpenseMutation();
-  const [deleteIncome] = useDeleteIncomeMutation();
 
   const handleDelete = () => {
-    if (actionType === "expense") {
-      deleteExpense(_id);
-    } else {
-      deleteIncome(_id);
-    }
+    console.log("delete ", _id, type);
   };
   return (
     <>
@@ -60,7 +52,7 @@ const Row = ({ item, actionType, index }) => {
                   <TableRow>
                     <TableCell>{date}</TableCell>
                     <TableCell>
-                      <EditForm item={item} actionType={actionType} />
+                      <EditForm item={item} actionType={type} />
                       <IconButton onClick={handleDelete} className="text-danger">
                         <Delete />
                       </IconButton>
@@ -76,7 +68,7 @@ const Row = ({ item, actionType, index }) => {
   );
 };
 
-const TableView = ({ list, actionType }) => {
+const TableView = ({ list, type }) => {
   return (
     <TableContainer component={Paper} className="bg-dark text-light">
       <Table className="table table-dark table-striped">
@@ -91,7 +83,7 @@ const TableView = ({ list, actionType }) => {
         </TableHead>
         <TableBody>
           {list.map((item, index) => (
-            <Row key={item._id} item={item} index={index + 1} actionType={actionType} />
+            <Row key={item._id} item={item} index={index + 1} type={type} />
           ))}
         </TableBody>
       </Table>

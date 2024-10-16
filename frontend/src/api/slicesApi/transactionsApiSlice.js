@@ -1,4 +1,4 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../../config/apiSlice";
 
 const URL = "/api/transactions";
 
@@ -35,11 +35,11 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 
     // Add transaction (expense or income)
     addTransaction: builder.mutation({
-      query: ({ type, data }) => ({
-        url: `${URL}/add${type}`,
+      query: ({ data }) => ({
+        url: `${URL}/add`,
         method: "POST",
         credentials: "include",
-        body: data,
+        body: data, // Include type in the body instead of params
       }),
       invalidatesTags: ["Transaction"],
     }),
@@ -60,6 +60,7 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
       query: ({ type, id }) => ({
         url: `${URL}/delete${type}/${id}`,
         method: "DELETE",
+        params: { type, id },
         credentials: "include",
       }),
       invalidatesTags: ["Transaction"],

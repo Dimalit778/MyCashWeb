@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const expenseSchema = mongoose.Schema({
   title: {
@@ -18,23 +18,11 @@ const expenseSchema = mongoose.Schema({
   },
   category: {
     type: String,
-    enum: [
-      'Food',
-      'Shopping',
-      'Online Purchases',
-      'Events',
-      'Utilities',
-      'Party',
-      'Bills',
-      'Loans',
-      'Other',
-    ],
     required: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 });
-export default mongoose.model.Expenses ||
-  mongoose.model('Expense', expenseSchema);
+export default mongoose.model.Expenses || mongoose.model("Expense", expenseSchema);

@@ -1,30 +1,25 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import PieActiveArc from "components/charts/PieActiveArc";
-import Loader from "components/Loader";
-import TableView from "./TableView";
-import { numberFormat } from "hooks/numberFormat";
-import AddForm from "forms/AddForm";
-
-import { Col, Container, Row } from "react-bootstrap";
-
+import Loader from "components/custom/Loader";
+import AddForm from "components/ui/AddForm";
+import { Col, Container, Modal, Row } from "react-bootstrap";
 import CustomCalendar from "components/calender/CustomCalendar";
-import CustomProgressBar from "components/charts/DynamicProgressBar";
-import FinanceChart from "components/charts/FinanceBarChart";
-import FinanceBarChart from "components/charts/FinanceBarChart";
 import { format } from "date-fns";
 import { useGetMonthlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
+import MyButton from "components/custom/MyButton";
+import TableView from "./TableView";
 
 const FinanceView = ({ type }) => {
   const [date, setDate] = useState(new Date());
-  const onChange = (date) => setDate(date);
-  console.log("date", type);
-  const {
-    data: allTransactions,
-    isLoading,
-    error,
-  } = useGetMonthlyTransactionsQuery({ date: format(date, "yyyy-MM-dd"), type: type });
-  const isExpense = type === "expense";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onChange = useCallback((newDate) => setDate(newDate), []);
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+  const formattedDate = useMemo(() => format(date, "yyyy-MM-dd"), [date]);
+
+  const { data: allTransactions, isLoading, error } = useGetMonthlyTransactionsQuery({ date: formattedDate, type });
 
   if (isLoading) return <Loader />;
   if (error) return <div className="text-danger">Error loading {type}s!</div>;
@@ -55,21 +50,28 @@ const FinanceView = ({ type }) => {
           </div>
         </div>
       </Row>
-      <div className="row mt-3 bg-primary ">
-        <div className="card p-0 bg-transparent">
-          <div className=" p-0">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <AddForm actionType={type} date={date} />
-            </div>
-            <h5 className=" mt-3 text-center text-light">
-              Total {isExpense ? "Expenses" : "Incomes"}: {numberFormat(totalAmount)}
+      <Row className="mt-3 ">
+        <div className="card p-0 bg-dark">
+          <div className="d-flex justify-content-evenly align-items-center p-2 ">
+            <MyButton onClick={openModal} bgColor="grey" color="black">
+              Add {type}
+            </MyButton>
+            <h5 className="text-light">
+              Total {type}: {totalAmount}
             </h5>
-            <div>
-              <TableView list={allData} actionType={type} />
-            </div>
           </div>
+          <TableView list={allData} type={type} />
         </div>
-      </div>
+      </Row>
+
+      <Modal show={isModalOpen} onHide={closeModal} contentClassName="bg-dark">
+        <Modal.Header closeButton closeVariant="white" className="border-secondary ">
+          <Modal.Title className="text-center">Add {type}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <AddForm type={type} date={date} onClose={closeModal} />
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

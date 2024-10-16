@@ -10,11 +10,6 @@ export const getMonthlyTransactions = async (req, res) => {
     if (!date || !type) {
       return res.status(400).json({ message: "Date and type are required" });
     }
-
-    if (type !== "income" && type !== "expense") {
-      return res.status(400).json({ message: "Invalid transaction type" });
-    }
-
     // Parse date
     const [year, month] = date.split("-");
     if (!year || !month) {
@@ -25,7 +20,7 @@ export const getMonthlyTransactions = async (req, res) => {
     const startDate = `${year}-${month}-01`;
     const lastDay = new Date(year, month, 0).getDate();
     const endDate = `${year}-${month}-${lastDay}`;
-    const Model = type === "income" ? Income : Expense;
+    const Model = type === "Income" ? Income : Expense;
 
     const result = await Model.aggregate([
       {
@@ -85,11 +80,9 @@ export const getMonthlyTransactions = async (req, res) => {
   }
 };
 export const getYearlyTransactions = async (req, res) => {
-  console.log("---------- getYearlyTransactions");
   try {
     const userId = req.user._id;
     const { year } = req.query;
-    console.log("Year:", year);
     // Input validation
     if (!year) {
       return res.status(400).json({ message: "Date is required" });
@@ -172,5 +165,64 @@ export const getYearlyTransactions = async (req, res) => {
   } catch (error) {
     console.error("Error in getYearlyTransactions:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+// Add Transaction
+export const addTransaction = async (req, res) => {
+  const userId = req.user._id;
+
+  const { title, amount, category, date, type } = req.body;
+  console.log("Add Transaction:", title, amount, category, date, type);
+
+  try {
+    // Validations
+    if (!title || !date || !category || !type) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
+    if (amount <= 0 || typeof amount !== "number") {
+      return res.status(400).json({ message: "Amount must be a positive number!" });
+    }
+
+    const Model = type === "Income" ? Income : Expense;
+    const transaction = new Model({
+      title,
+      amount,
+      date,
+      category,
+      user: userId,
+    });
+
+    await transaction.save();
+    res.status(200).json({ transaction });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+// Update Transaction
+export const updateTransaction = async (req, res) => {
+  const transactionId = req.params.id;
+  try {
+    const result = await Transaction.findOneAndUpdate({ _id: transactionId }, req.body, { new: true });
+
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: "Transaction not found" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Delete Transaction
+export const deleteTransaction = async (req, res) => {
+  const { id, type } = req.params;
+  console.log("id", id, "type", type);
+  try {
+    await Transaction.findByIdAndDelete(id);
+    res.status(200).json({ message: "Transaction Deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };

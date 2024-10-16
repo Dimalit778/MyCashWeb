@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const incomeSchema = mongoose.Schema({
   title: {
@@ -19,12 +19,12 @@ const incomeSchema = mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Work', 'Online Business', 'rent', 'Other'],
+
     required: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 });
-export default mongoose.model.Incomes || mongoose.model('Income', incomeSchema);
+export default mongoose.model.Incomes || mongoose.model("Income", incomeSchema);

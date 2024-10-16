@@ -1,50 +1,48 @@
 import React from "react";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useLogoutMutation } from "api/slicesApi/userApiSlice";
-import { logout } from "api/slicesApi/authSlice";
-import BrandLogo from "components/BrandLogo";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import BrandLogo from "components/custom/BrandLogo";
 import avatarIcon from "assets/icons/avatarIcon.svg";
 import logoutIcon from "assets/icons/logoutIcon.svg";
+import useAuth from "hooks/useAuth";
 
 const TopBar = ({ className }) => {
   const { userInfo } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const [logoutApi] = useLogoutMutation();
-
+  const { logout } = useAuth();
+  const location = useLocation();
   const logoutHandler = async () => {
-    console.log("logoutHandler");
     try {
-      await logoutApi().unwrap();
-      dispatch(logout());
+      await logout();
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <Navbar expand="lg" className={`${className} p-2`} style={{ backgroundColor: "black" }}>
+    <Navbar expand="lg" className={`${className} topBar p-2`} style={{}}>
       <Container fluid>
-        <Navbar.Brand>
-          <BrandLogo />
+        <Navbar.Brand as={Link} to="/">
+          <BrandLogo className="me-2" />
         </Navbar.Brand>
         <Nav className="ms-auto">
           {!userInfo ? (
-            <>
-              {/* --- > LOGIN AND REGISTER BUTTONS < --- */}
-              <div className=" d-flex gap-3 pe-3 justify-content-center mx-auto     ">
-                <Button className="logRegBtn">
-                  <Nav.Link as={Link} to="/register" className="">
-                    SIGN UP
-                  </Nav.Link>
-                </Button>
-                <button className="logRegBtn">
-                  <Nav.Link as={Link} to="/login" className="">
-                    LOGIN
-                  </Nav.Link>
-                </button>
-              </div>
-            </>
+            <div className="d-flex justify-content-center gap-2">
+              <Nav.Link
+                as={Link}
+                to="/register"
+                className={`btn-outline-light ${location.pathname === "/register" ? "active" : ""}`}
+              >
+                Sign Up
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/login"
+                className={`btn-outline-light ${location.pathname === "/login" ? "active" : ""}`}
+              >
+                Login
+              </Nav.Link>
+            </div>
           ) : (
             <div className="d-flex align-items-center">
               <div className="me-4">

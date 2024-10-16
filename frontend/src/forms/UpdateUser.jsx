@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateUserMutation } from "../api/slicesApi/userApiSlice";
-import { setCredentials } from "../api/slicesApi/authSlice";
+import { setCredentials } from "../config/authSlice";
 import { toast } from "react-hot-toast";
-import Loader from "../components/Loader";
+import Loader from "../components/custom/Loader";
 import { Form } from "react-bootstrap";
 
 export const UpdateUser = () => {

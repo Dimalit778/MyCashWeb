@@ -7,14 +7,76 @@
   color: #3498db !important;
 }
 
-/* -- Finance Stats -- */
-/* .stats-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 0.5rem;
-  color: white;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+/* ADD FORM STYLES  */
+.category-group {
+  position: relative;
 }
-.stats-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-} */
+
+.category-input-container {
+  position: relative;
+}
+
+.category-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  background-color: #343a40;
+  border: 1px solid #495057;
+  border-top: none;
+  border-radius: 0 0 0.25rem 0.25rem;
+}
+
+.category-list .list-group-item {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 1px solid #495057;
+}
+
+.category-list .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.category-list .list-group-item:hover {
+  background-color: #495057;
+}
+
+.category-list .btn-danger {
+  padding: 0.1rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* Styling for the form inputs */
+.form-control {
+  background-color: #495057 !important;
+  color: #fff !important;
+  border: 1px solid #6c757d !important;
+}
+
+.form-control::placeholder {
+  color: #adb5bd;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+/* Button styling */
+.btn-outline-light:hover {
+  color: #343a40;
+}
+/* Custom styles for react-datepicker */
+.custom-datepicker {
+  background-color: darkcyan !important;
+  color: black !important;
+  border: 2px solid #495057 !important;
+}
+
+.react-datepicker__header {
+  background-color: #696969 !important;
+  border-bottom: 1px solid #495057 !important;
+}

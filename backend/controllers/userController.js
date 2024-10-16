@@ -5,17 +5,8 @@ import Income from "../models/incomeModel.js";
 import Expense from "../models/expenseModel.js";
 import User from "../models/userModel.js";
 
-const getAll = asyncHandler(async (req, res) => {
-  const userId = req.id;
-  const user = await User.findById(userId);
-  if (!user) return res.status(404).send({ message: "User not found" });
-  if (!user?.isAdmin) return res.status(404).send({ message: "Not authorized" });
-  const allUsers = await User.find({ isAdmin: false });
-
-  return res.status(200).send(allUsers);
-});
 const getUser = async (req, res) => {
-  const userId = req.id;
+  const userId = req.user._id;
   try {
     const user = await User.findById(userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -97,5 +88,43 @@ const deleteUser = async (req, res) => {
     return res.status(200).json({ message: err.message });
   }
 };
+const addCategory = async (req, res) => {
+  const { type, category } = req.body;
 
-export { getAll, updateUser, getUser, deleteUser };
+  if (!type || !category) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+  if (type !== "Income" && type !== "Expense") {
+    return res.status(400).json({ message: "Invalid type" });
+  }
+  try {
+    const transactionType = type === "Income" ? "incomes" : "expenses";
+    const user = await User.findById(req.user._id);
+    user.addCategory(transactionType, category);
+    await user.save();
+    res.json(user.categories);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteCategory = async (req, res) => {
+  const { type, category } = req.body;
+
+  if (!type || !category) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+  if (type !== "Income" && type !== "Expense") {
+    return res.status(400).json({ message: "Invalid type" });
+  }
+  try {
+    const user = await User.findById(req.user._id);
+    user.removeCategory(type, category);
+    await user.save();
+    res.json(user.categories);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { updateUser, getUser, deleteUser, addCategory, deleteCategory };

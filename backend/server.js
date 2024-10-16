@@ -39,9 +39,6 @@ app.use(
 app.use("/api/users", protectRoute, userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/transactions", protectRoute, transactionsRoute);
-app.use("/test", (req, res) => {
-  res.send("test");
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

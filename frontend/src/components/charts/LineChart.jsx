@@ -1,51 +1,52 @@
 import React, { useMemo } from "react";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { groupByMonth } from "utils/date";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const allMonths = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  { long: "January", short: "Jan" },
+  { long: "February", short: "Feb" },
+  { long: "March", short: "Mar" },
+  { long: "April", short: "Apr" },
+  { long: "May", short: "May" },
+  { long: "June", short: "Jun" },
+  { long: "July", short: "Jul" },
+  { long: "August", short: "Aug" },
+  { long: "September", short: "Sep" },
+  { long: "October", short: "Oct" },
+  { long: "November", short: "Nov" },
+  { long: "December", short: "Dec" },
 ];
 
-const LineChart = React.memo(({ allExpenses, allIncomes }) => {
-  const chartData = useMemo(() => {
-    const groupedIncomes = groupByMonth(allIncomes);
-    const groupedExpenses = groupByMonth(allExpenses);
+const formatAmount = (amount) => {
+  if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+  if (amount >= 1000) return `$${(amount / 1000).toFixed(1)}K`;
+  return `$${amount.toFixed(1)}`;
+};
 
+const LineChart = React.memo(({ monthlyData }) => {
+  const chartData = useMemo(() => {
     return {
-      labels: allMonths,
+      labels: allMonths.map((month) => month.short),
       datasets: [
         {
           label: "Monthly Incomes",
-          data: allMonths.map((month) => groupedIncomes[month] || 0),
-          backgroundColor: "rgba(40, 167, 69, 0.6)", // Bootstrap success color
+          data: allMonths.map((_, index) => monthlyData[index]?.incomes || 0),
+          backgroundColor: "rgba(40, 167, 69, 0.6)",
           borderColor: "rgba(40, 167, 69, 1)",
-          gap: 5,
           borderWidth: 1,
         },
         {
           label: "Monthly Expenses",
-          data: allMonths.map((month) => groupedExpenses[month] || 0),
-          backgroundColor: "rgba(220, 53, 69, 0.6)", // Bootstrap danger color
+          data: allMonths.map((_, index) => monthlyData[index]?.expenses || 0),
+          backgroundColor: "rgba(220, 53, 69, 0.6)",
           borderColor: "rgba(220, 53, 69, 1)",
           borderWidth: 1,
         },
       ],
     };
-  }, [allExpenses, allIncomes]);
+  }, [monthlyData]);
 
   const options = {
     responsive: true,
@@ -55,12 +56,22 @@ const LineChart = React.memo(({ allExpenses, allIncomes }) => {
         position: "top",
         labels: {
           color: "#fff",
-
           padding: 20,
-
           font: {
-            size: 16,
+            size: 14,
             family: "Monospace",
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          title: (context) => {
+            return allMonths[context[0].dataIndex].long;
+          },
+          label: (context) => {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y;
+            return `${label}: ${formatAmount(value)}`;
           },
         },
       },
@@ -81,7 +92,7 @@ const LineChart = React.memo(({ allExpenses, allIncomes }) => {
         ticks: {
           color: "#fff",
           callback: function (value) {
-            return "$" + value.toLocaleString();
+            return formatAmount(value);
           },
         },
       },

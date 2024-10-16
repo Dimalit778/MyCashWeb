@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Transformation } from "cloudinary-react";
 import toast from "react-hot-toast";
-import { setCredentials } from "api/slicesApi/authSlice";
+import { setCredentials } from "config/authSlice";
 import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
 import uploadUserImg from "./../assets/uploadUserImg.png";
-import MyButton from "components/MyButton";
+import MyButton from "components/custom/MyButton";
 import { Col, Container, Row } from "react-bootstrap";
 
 const UploadImage = () => {

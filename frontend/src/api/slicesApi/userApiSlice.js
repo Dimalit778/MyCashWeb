@@ -1,12 +1,10 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../../config/apiSlice";
 
 const USER_URL = "/api/users";
 const AUTH_URL = "/api/auth";
 
 export const userApiSlice = apiSlice.injectEndpoints({
-  // ---------->   { AUTH URL ROUTES  }
   endpoints: (builder) => ({
-    //@ ---> Google Auth User
     googleAuth: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/googleAuth`,
@@ -16,7 +14,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    //?  GET  USER DATA
     getUser: builder.query({
       query: () => ({
         url: `${USER_URL}/getUser`,
@@ -24,7 +21,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    //? ---> Login User
     login: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/login`,
@@ -34,7 +30,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    //? ---> signup User
     signUp: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/signup`,
@@ -44,7 +39,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    //? ---> Logout User
     logout: builder.mutation({
       query: () => ({
         url: `${AUTH_URL}/logout`,
@@ -52,7 +46,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-    //? --->   Verify Email
     verifyEmail: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/verify-email/${data}`,
@@ -60,7 +53,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-    //? --->   Forgot password
     forgotPassword: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/forgot-password`,
@@ -69,7 +61,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    //? --->   Verify reset Link
     verifyLink: builder.mutation({
       query: ({ id, token }) => ({
         url: `${AUTH_URL}/reset-password/${id}/${token}`,
@@ -77,7 +68,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-    //? --->   Reset password
     resetPassword: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/reset-password/${data.id}/${data.token}`,
@@ -86,10 +76,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-
-    // ---------->   { USER URL ROUTES  }
-
-    //? ---> Update User
     updateUser: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/updateUser`,
@@ -107,8 +93,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-
-    //@ ---> Upload Image
     uploadImage: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/uploadImage`,
@@ -117,7 +101,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    //@ ---> Delete Image From Cloudinary
     deleteImage: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/deleteImage`,
@@ -126,8 +109,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    //?~~~~~~~~~~ -- ADMIN ->
-    // --->  GET ALL USERS
     allUsers: builder.query({
       query: () => ({
         url: `${USER_URL}/getAll`,
@@ -135,7 +116,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    //-----> Admin -  DELETE USER
     AdminDeleteUser: builder.mutation({
       query: (data) => ({
         url: `${USER_URL}/deleteUser`,

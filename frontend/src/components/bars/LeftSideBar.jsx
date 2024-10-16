@@ -3,25 +3,22 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
 import { sidebarLinks } from "constants"; // Adjust the path as needed
-import BrandLogo from "components/BrandLogo";
-import { useDispatch, useSelector } from "react-redux";
-import { useLogoutMutation } from "api/slicesApi/userApiSlice";
-import { logout } from "api/slicesApi/authSlice";
+import BrandLogo from "components/custom/BrandLogo";
+import { useSelector } from "react-redux";
+
 import { Theme } from "constants/colors";
-import MyButton from "components/MyButton";
+import MyButton from "components/custom/MyButton";
+import useAuth from "hooks/useAuth";
 
 const LeftSideBar = ({ className }) => {
   const { pathname } = useLocation();
   const { userInfo } = useSelector((state) => state.auth);
-  const name = "dima";
-  const email = "dima@gmail.com";
-  const dispatch = useDispatch();
-  const [logoutApi] = useLogoutMutation();
+
+  const { logout } = useAuth();
 
   const logoutHandler = async () => {
     try {
-      await logoutApi().unwrap();
-      dispatch(logout());
+      await logout();
     } catch (error) {
       console.log(error);
     }
@@ -36,8 +33,8 @@ const LeftSideBar = ({ className }) => {
       <Link to={`/profile/${userInfo.id}`} className="flex p-2 text-center text-light text-decoration-none">
         <img src={avatarIcon} alt="profile" className="rounded-circle me-2" width={80} height={80} />
         <div className="mt-2">
-          <p className="mb-0">{name}</p>
-          <small className="">@{email}</small>
+          <p className="mb-0">{userInfo.name}</p>
+          <small className="">@{userInfo.email}</small>
         </div>
       </Link>
 

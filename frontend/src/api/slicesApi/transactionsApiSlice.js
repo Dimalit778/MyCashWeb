@@ -35,11 +35,11 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 
     // Add transaction (expense or income)
     addTransaction: builder.mutation({
-      query: ({ data }) => ({
+      query: (formattedData) => ({
         url: `${URL}/add`,
         method: "POST",
         credentials: "include",
-        body: data, // Include type in the body instead of params
+        body: formattedData,
       }),
       invalidatesTags: ["Transaction"],
     }),
@@ -58,9 +58,8 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
     // Delete transaction (expense or income)
     deleteTransaction: builder.mutation({
       query: ({ type, id }) => ({
-        url: `${URL}/delete${type}/${id}`,
+        url: `${URL}/delete/${id}/${type}`,
         method: "DELETE",
-        params: { type, id },
         credentials: "include",
       }),
       invalidatesTags: ["Transaction"],

@@ -2,13 +2,14 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import PieActiveArc from "components/charts/PieActiveArc";
 import Loader from "components/custom/Loader";
-import AddForm from "components/ui/AddForm";
+import AddForm from "components/table/AddForm";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import CustomCalendar from "components/calender/CustomCalendar";
 import { format } from "date-fns";
 import { useGetMonthlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
-import MyButton from "components/custom/MyButton";
-import TableView from "./TableView";
+
+import DynamicProgressBars from "components/charts/DynamicProgressBar";
+import TableView from "components/table/TableView";
 
 const FinanceView = ({ type }) => {
   const [date, setDate] = useState(new Date());
@@ -27,41 +28,18 @@ const FinanceView = ({ type }) => {
   const { sortByCategory, allData, totalAmount } = allTransactions;
 
   return (
-    <Container fluid className=" text-light  ">
-      <Row className="g-3 ">
-        <Col className="col-12 col-lg-6 d-flex">
-          <div className=" w-100 ">
-            <div className="d-flex flex-column ">
-              <CustomCalendar date={date} onChange={onChange} />
-            </div>
-            <div className="card-body d-flex flex-column mt-4 gap-3">
-              {/* <CustomProgressBar list={categoryTotals} date={date} /> */}
-            </div>
-          </div>
+    <Container fluid className="  ">
+      <Row className="g-3 " style={{ minHeight: "70vh" }}>
+        <Col sm={12} lg={6} className="  ">
+          <CustomCalendar date={date} onChange={onChange} />
+          <DynamicProgressBars categories={sortByCategory} />
         </Col>
-        <div className="col-12 col-lg-6 d-flex">
-          <div className="  w-100">
-            <div className="card-body d-flex flex-column">
-              <div className="">
-                <PieActiveArc list={sortByCategory} />
-                {/* <FinanceBarChart list={sortByCategory} /> */}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Col sm={12} lg={6} className="d-flex  ">
+          <PieActiveArc list={sortByCategory} />
+        </Col>
       </Row>
-      <Row className="mt-3 ">
-        <div className="card p-0 bg-dark">
-          <div className="d-flex justify-content-evenly align-items-center p-2 ">
-            <MyButton onClick={openModal} bgColor="grey" color="black">
-              Add {type}
-            </MyButton>
-            <h5 className="text-light">
-              Total {type}: {totalAmount}
-            </h5>
-          </div>
-          <TableView list={allData} type={type} />
-        </div>
+      <Row className="mt-3 px-2 ">
+        <TableView list={allData} type={type} totalAmount={totalAmount} openModal={openModal} />
       </Row>
 
       <Modal show={isModalOpen} onHide={closeModal} contentClassName="bg-dark">
@@ -69,7 +47,7 @@ const FinanceView = ({ type }) => {
           <Modal.Title className="text-center">Add {type}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddForm type={type} date={date} onClose={closeModal} />
+          <AddForm type={type} date={date} closeModal={closeModal} />
         </Modal.Body>
       </Modal>
     </Container>

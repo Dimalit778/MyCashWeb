@@ -170,14 +170,12 @@ export const getYearlyTransactions = async (req, res) => {
 // Add Transaction
 export const addTransaction = async (req, res) => {
   const userId = req.user._id;
-
   const { title, amount, category, date, type } = req.body;
-  console.log("Add Transaction:", title, amount, category, date, type);
 
   try {
     // Validations
     if (!title || !date || !category || !type) {
-      return res.status(400).json({ message: "All fields are required!" });
+      return res.status(400).json({ message: "All fields are required!!!!!!!!!!!!!!!" });
     }
     if (amount <= 0 || typeof amount !== "number") {
       return res.status(400).json({ message: "Amount must be a positive number!" });
@@ -218,9 +216,9 @@ export const updateTransaction = async (req, res) => {
 // Delete Transaction
 export const deleteTransaction = async (req, res) => {
   const { id, type } = req.params;
-  console.log("id", id, "type", type);
+  const transaction = type === "Income" ? Income : Expense;
   try {
-    await Transaction.findByIdAndDelete(id);
+    await transaction.findByIdAndDelete(id);
     res.status(200).json({ message: "Transaction Deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });

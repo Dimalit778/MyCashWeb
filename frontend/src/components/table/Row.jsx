@@ -1,29 +1,18 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Collapse,
-  IconButton,
-  Box,
-} from "@mui/material";
+import { TableCell, TableRow, Collapse, IconButton, Box, Table, TableBody, TableHead } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp, Delete } from "@mui/icons-material";
-import "./ui.css";
 import { numberFormat } from "hooks/numberFormat";
+import EditForm from "components/table/EditForm";
 
-import EditForm from "./EditForm";
-
-const Row = ({ item, type, index }) => {
+const Row = ({ item, type, index, handleDelete }) => {
   const [open, setOpen] = useState(false);
   const { _id, title, category, amount, date } = item;
 
-  const handleDelete = () => {
+  const onDelete = async () => {
     console.log("delete ", _id, type);
+    await handleDelete(_id);
   };
+
   return (
     <>
       <TableRow className="bg-dark">
@@ -53,7 +42,7 @@ const Row = ({ item, type, index }) => {
                     <TableCell>{date}</TableCell>
                     <TableCell>
                       <EditForm item={item} actionType={type} />
-                      <IconButton onClick={handleDelete} className="text-danger">
+                      <IconButton onClick={onDelete} className="text-danger">
                         <Delete />
                       </IconButton>
                     </TableCell>
@@ -68,27 +57,4 @@ const Row = ({ item, type, index }) => {
   );
 };
 
-const TableView = ({ list, type }) => {
-  return (
-    <TableContainer component={Paper} className="bg-dark text-light">
-      <Table className="table table-dark table-striped">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>No.</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Amount</TableCell>
-            <TableCell>Category</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {list.map((item, index) => (
-            <Row key={item._id} item={item} index={index + 1} type={type} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
-
-export default TableView;
+export default Row;

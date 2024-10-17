@@ -1,0 +1,13 @@
+.custom-progress {
+  height: 20px;
+}
+
+.custom-progress .progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 25px;
+  overflow: visible;
+  color: #000; /* Black text */
+  font-weight: bold;
+}

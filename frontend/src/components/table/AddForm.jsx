@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useAddTransactionMutation } from "api/slicesApi/transactionsApiSlice.js";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "config/authSlice";
-import "./ui.css";
+import "./tableStyle.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MyButton from "components/custom/MyButton";
@@ -48,8 +48,7 @@ const AddForm = ({ type, closeModal }) => {
         amount: amount,
         type: type,
       };
-      console.log("Submitting data:", formattedData);
-      const result = await addTransaction(formattedData);
+      const result = await addTransaction(formattedData).unwrap();
       if ("error" in result) {
         console.error("API Error:", result.error);
         toast.error("Error adding item. Please try again.");
@@ -62,6 +61,9 @@ const AddForm = ({ type, closeModal }) => {
       console.error("Submission error:", error);
       toast.error("An unexpected error occurred. Please try again.");
     }
+  };
+  const addCategory = (category) => {
+    console.log("add category", category);
   };
 
   return (

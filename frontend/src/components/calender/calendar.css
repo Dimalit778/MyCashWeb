@@ -11,6 +11,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: var(--oswald-font);
+  font-weight: bold;
+  letter-spacing: 0.06rem;
 }
 .calendar-header h2 {
   cursor: pointer;

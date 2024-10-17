@@ -14,6 +14,6 @@ router
   .get("/monthly", getMonthlyTransactions)
   .get("/yearly", getYearlyTransactions)
   .post("/add", addTransaction)
-  .delete("/delete/:type/:id", deleteTransaction);
+  .delete("/delete/:id/:type", deleteTransaction);
 
 export default router;

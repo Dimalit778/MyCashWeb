@@ -4,9 +4,10 @@ import { Image, Transformation } from "cloudinary-react";
 import toast from "react-hot-toast";
 import { setCredentials } from "config/authSlice";
 import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
-import uploadUserImg from "./../assets/uploadUserImg.png";
+import uploadUserImg from "assets/uploadUserImg.png";
 import MyButton from "components/custom/MyButton";
 import { Col, Container, Row } from "react-bootstrap";
+import { Theme } from "constants/colors";
 
 const UploadImage = () => {
   const [userImage, setUserImage] = useState("");
@@ -57,8 +58,8 @@ const UploadImage = () => {
   const isLoading = isUploading || isDeleting || isUpdating;
 
   return (
-    <Container className="text-center py-3">
-      <Row className=" g-5 bg-primary">
+    <Container className="darkCard">
+      <Row className="g-5">
         <Col md={6}>
           <div className="d-flex ms-3">
             {userInfo.imageUrl && !imagePreview ? (
@@ -78,22 +79,16 @@ const UploadImage = () => {
           <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} />
           <label htmlFor="fileInput" className="me-4">
             <MyButton
-              className="me-3"
-              variant={"dark"}
+              bgColor={Theme.secondary}
               disabled={isLoading}
               onClick={() => document.getElementById("fileInput").click()}
             >
               Upload Image
             </MyButton>
           </label>
-          <button
-            type="button"
-            className="btn btn-secondary border border-1 border-light text-light"
-            disabled={isLoading}
-            onClick={handleSubmit}
-          >
+          <MyButton type="button" bgColor={Theme.orange} disabled={isLoading} onClick={handleSubmit}>
             Save
-          </button>
+          </MyButton>
 
           {userInfo?.imageUrl && (
             <div className="mt-3">

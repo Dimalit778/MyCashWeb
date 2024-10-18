@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import PieActiveArc from "components/charts/PieActiveArc";
-import Loader from "components/custom/Loader";
+
 import AddForm from "components/table/AddForm";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import CustomCalendar from "components/calender/CustomCalendar";
@@ -10,6 +10,7 @@ import { useGetMonthlyTransactionsQuery } from "api/slicesApi/transactionsApiSli
 
 import DynamicProgressBars from "components/charts/DynamicProgressBar";
 import TableView from "components/table/TableView";
+import FinanceSkeleton from "components/loader/FinanceSkeleton";
 
 const FinanceView = ({ type }) => {
   const [date, setDate] = useState(new Date());
@@ -22,7 +23,7 @@ const FinanceView = ({ type }) => {
 
   const { data: allTransactions, isLoading, error } = useGetMonthlyTransactionsQuery({ date: formattedDate, type });
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <FinanceSkeleton />;
   if (error) return <div className="text-danger">Error loading {type}s!</div>;
 
   const { sortByCategory, allData, totalAmount } = allTransactions;
@@ -30,7 +31,7 @@ const FinanceView = ({ type }) => {
   return (
     <Container fluid className="  ">
       <Row className="g-3 " style={{ minHeight: "70vh" }}>
-        <Col sm={12} lg={6} className="  ">
+        <Col sm={12} lg={6} className=" ">
           <CustomCalendar date={date} onChange={onChange} />
           <DynamicProgressBars categories={sortByCategory} />
         </Col>

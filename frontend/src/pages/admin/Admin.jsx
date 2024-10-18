@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useAdminDeleteUserMutation, useAllUsersQuery } from "api/slicesApi/adminApiSlice";
+import { useAdminDeleteUserMutation, useAllUsersQuery } from "api/slicesApi/userApiSlice";
 
 import { Image, Transformation } from "cloudinary-react";
 import Loader from "components/custom/Loader";

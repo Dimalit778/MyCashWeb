@@ -94,13 +94,12 @@ const addCategory = async (req, res) => {
   if (!type || !category) {
     return res.status(400).json({ message: "All fields are required!" });
   }
-  if (type !== "Income" && type !== "Expense") {
+  if (type !== "incomes" && type !== "expenses") {
     return res.status(400).json({ message: "Invalid type" });
   }
   try {
-    const transactionType = type === "Income" ? "incomes" : "expenses";
     const user = await User.findById(req.user._id);
-    user.addCategory(transactionType, category);
+    user.addCategory(type, category);
     await user.save();
     res.json(user.categories);
   } catch (err) {
@@ -110,11 +109,12 @@ const addCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   const { type, category } = req.body;
+  console.log(type, category);
 
   if (!type || !category) {
     return res.status(400).json({ message: "All fields are required!" });
   }
-  if (type !== "Income" && type !== "Expense") {
+  if (type !== "incomes" && type !== "expenses") {
     return res.status(400).json({ message: "Invalid type" });
   }
   try {
@@ -126,5 +126,13 @@ const deleteCategory = async (req, res) => {
     console.log(err);
   }
 };
+const getCategories = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.json(user.categories);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-export { updateUser, getUser, deleteUser, addCategory, deleteCategory };
+export { updateUser, getUser, deleteUser, addCategory, deleteCategory, getCategories };

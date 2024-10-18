@@ -11,14 +11,16 @@ const DynamicProgressBars = ({ categories }) => {
   const colors = ["success", "info", "warning", "danger", "primary"];
 
   return (
-    <div className="p-4">
+    <div className="p-3 mt-2">
       {categories.map((category, index) => {
         const percentage = (category.total / total) * 100;
         return (
-          <div key={category._id} className="mb-3">
-            <div className="d-flex justify-content-between mb-1">
-              <span className="fw-bold text-capitalize">{category._id}</span>
-              <CountUp start={0} end={category.total} separator="," decimals={2} prefix="$" duration={2.5} />
+          <div key={category._id} className="mb-2">
+            <div className="d-flex justify-content-between mb-1 align-items-center">
+              <span className="fw-bold text-capitalize small-text">{category._id}</span>
+              <span className="small-text">
+                <CountUp start={0} end={category.total} separator="," decimals={2} prefix="$" duration={2.5} />
+              </span>
             </div>
             <ProgressBar
               now={percentage}

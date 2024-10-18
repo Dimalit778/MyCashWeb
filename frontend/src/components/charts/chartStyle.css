@@ -1,13 +1,18 @@
 .custom-progress {
-  height: 20px;
+  height: 20px; /* Smaller height for the progress bar */
 }
 
 .custom-progress .progress-bar {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 25px;
+  padding-left: 5px; /* Reduced padding */
   overflow: visible;
   color: #000; /* Black text */
   font-weight: bold;
+  font-size: 0.75rem; /* Smaller font size for the percentage */
+}
+
+.small-text {
+  font-size: 0.85rem; /* Smaller font size for category name and amount */
 }

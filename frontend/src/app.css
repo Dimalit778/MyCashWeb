@@ -8,6 +8,13 @@
 .topBar {
   background: linear-gradient(to top, #434343 0%, #000000 45%);
 }
+.darkCard {
+  background-color: var(--dark);
+  color: var(--light);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 .imgStyle {
   max-width: 100%;

@@ -1,39 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Form } from "react-bootstrap";
+import React from "react";
+import { Form, Row, Col } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { useAddTransactionMutation } from "api/slicesApi/transactionsApiSlice.js";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "config/authSlice";
-import "./tableStyle.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import CategoryPicker from "./CategoryPicker";
+import toast from "react-hot-toast";
 import MyButton from "components/custom/MyButton";
-
-const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
-  <div className="form-control bg-secondary text-black border-dark" onClick={onClick} ref={ref}>
-    {value || "Select a date"}
-    <span className="mx-2">📅</span>
-  </div>
-));
+import { useAddTransactionMutation } from "api/slicesApi/transactionsApiSlice";
 
 const AddForm = ({ type, closeModal }) => {
-  const user = useSelector(selectCurrentUser);
-  const [categories, setCategories] = useState([]);
-  const [addTransaction, { isLoading }] = useAddTransactionMutation();
+  const [addTransaction] = useAddTransactionMutation();
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-
-  useEffect(() => {
-    // Initialize categories based on the transaction type
-    setCategories(type === "Income" ? user.categories.incomes : user.categories.expenses);
-  }, [type, user.categories]);
 
   const onSubmit = async (data) => {
     try {
@@ -62,9 +44,6 @@ const AddForm = ({ type, closeModal }) => {
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
-  const addCategory = (category) => {
-    console.log("add category", category);
-  };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="bg-dark">
@@ -90,69 +69,29 @@ const AddForm = ({ type, closeModal }) => {
         />
         {errors.amount && <Form.Text className="text-danger">{errors.amount.message}</Form.Text>}
       </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Date</Form.Label>
-        <Controller
-          control={control}
-          name="date"
-          rules={{ required: "Date is required" }}
-          render={({ field: { onChange, value } }) => (
-            <DatePicker
-              selected={value}
-              onChange={onChange}
-              dateFormat="dd/MM/yyyy"
-              wrapperClassName="w-100"
-              customInput={<CustomInput />}
-              calendarClassName="custom-datepicker"
+      <Row>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>Date</Form.Label>
+            <Form.Control type="date" {...register("date")} className="bg-secondary text-black border-dark" />
+            {errors.date && <Form.Text className="text-danger">{errors.date.message}</Form.Text>}
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>Category</Form.Label>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "Category is required" }}
+              render={({ field }) => <CategoryPicker type={type} value={field.value} onChange={field.onChange} />}
             />
-          )}
-        />
-        {errors.date && <Form.Text className="text-danger">{errors.date.message}</Form.Text>}
-      </Form.Group>
+            {errors.category && <Form.Text className="text-danger">{errors.category.message}</Form.Text>}
+          </Form.Group>
+        </Col>
+      </Row>
 
-      <Form.Group className="mb-3">
-        <Form.Label>Category</Form.Label>
-        <Controller
-          name="category"
-          control={control}
-          rules={{ required: "Category is required" }}
-          render={({ field }) => (
-            <>
-              <Form.Select {...field} className="mb-2 bg-secondary text-black border-dark">
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-                <option value="new">Add new category</option>
-              </Form.Select>
-              {field.value === "new" && (
-                <div className="d-flex mb-2">
-                  <Form.Control
-                    type="text"
-                    placeholder="New category name"
-                    className="bg-secondary text-black border-dark"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        if (e.target.value && !categories.includes(e.target.value)) {
-                          setCategories([...categories, e.target.value]);
-                          field.onChange(e.target.value);
-                        }
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        />
-        {errors.category && <Form.Text className="text-danger">{errors.category.message}</Form.Text>}
-      </Form.Group>
-
-      <MyButton type="submit" bgColor="orange" color="black" isLoading={isLoading} disabled={isLoading}>
+      <MyButton type="submit" bgColor="orange" color="black" isLoading={isSubmitting} disabled={isSubmitting}>
         Create
       </MyButton>
     </Form>

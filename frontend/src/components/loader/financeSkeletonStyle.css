@@ -1,0 +1,205 @@
+.skeleton-container {
+  background-color: black;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Date Picker Skeleton */
+.skeleton-date {
+  background-color: #34495e;
+  height: 50px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+}
+
+.skeleton-arrow {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.skeleton-date-text {
+  width: 150px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+/* Bar Chart Skeleton */
+.skeleton-bars {
+  margin-top: 20px;
+}
+
+.skeleton-bar-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 30px;
+  gap: 10px;
+}
+
+.skeleton-category {
+  width: 80px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.skeleton-progress {
+  flex-grow: 1;
+  height: 25px;
+  background-color: #465c71;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.skeleton-progress-bar {
+  width: 70%;
+  height: 100%;
+}
+
+.skeleton-amount {
+  width: 100px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+/* Pie Chart Skeleton */
+.skeleton-pie-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.skeleton-pie {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.skeleton-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.skeleton-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.skeleton-legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.skeleton-legend-text {
+  width: 60px;
+  height: 15px;
+  border-radius: 3px;
+}
+
+/* Table Section */
+.skeleton-table-section {
+  background-color: #2c3e50;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.skeleton-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.skeleton-add-button {
+  width: 120px;
+  height: 35px;
+  border-radius: 5px;
+}
+
+.skeleton-total {
+  width: 200px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.skeleton-table {
+  width: 100%;
+}
+
+.skeleton-table-head {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.skeleton-th {
+  height: 25px;
+  border-radius: 4px;
+}
+
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.skeleton-td {
+  height: 30px;
+  border-radius: 4px;
+}
+
+/* Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-arrow,
+.skeleton-date-text,
+.skeleton-category,
+.skeleton-progress-bar,
+.skeleton-amount,
+.skeleton-pie,
+.skeleton-legend-color,
+.skeleton-legend-text,
+.skeleton-add-button,
+.skeleton-total,
+.skeleton-th,
+.skeleton-td {
+  background: linear-gradient(to right, #34495e 4%, #465c71 25%, #34495e 36%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .skeleton-pie {
+    width: 200px;
+    height: 200px;
+  }
+
+  .skeleton-table-head,
+  .skeleton-table-row {
+    grid-template-columns: 0.5fr 1.5fr 1fr 0.5fr;
+  }
+
+  .skeleton-amount {
+    width: 70px;
+  }
+}

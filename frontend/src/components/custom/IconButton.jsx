@@ -1,12 +1,41 @@
-const IconButton = ({ onClick, label, color, bgColor }) => {
+import React from "react";
+
+const IconButton = ({
+  onClick,
+  icon,
+  color = "white",
+  bgColor = "transparent",
+  size = "md",
+  className = "",
+  ...props
+}) => {
+  const sizeClasses = {
+    sm: "btn-sm p-1",
+    md: "btn-md p-2",
+    lg: "btn-lg p-1",
+  };
+
+  const buttonClasses = `
+    btn 
+    ${sizeClasses[size]} 
+    ${className}
+  `.trim();
+
+  const buttonStyle = {
+    color: color,
+    backgroundColor: bgColor,
+
+    border: "1px solid ",
+    borderColor: color,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 0.3s ease",
+  };
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{ color: color, backgroundColor: bgColor }}
-      className="btn btn-lg rounded-circle p-3 shadow-sm text-white"
-    >
-      {label}
+    <button type="button" onClick={onClick} style={buttonStyle} className={buttonClasses} {...props}>
+      {icon}
     </button>
   );
 };

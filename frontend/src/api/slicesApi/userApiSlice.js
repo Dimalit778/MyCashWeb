@@ -125,6 +125,31 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getCategories: builder.query({
+      query: () => ({
+        url: `${USER_URL}/getCategories`,
+        credentials: "include",
+      }),
+      providesTags: ["User"],
+    }),
+    addCategory: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/addCategory`,
+        credentials: "include",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    deleteCategory: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/deleteCategory`,
+        credentials: "include",
+        method: "DELETE",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -144,4 +169,7 @@ export const {
   useDeleteUserMutation,
   useGetUserQuery,
   useAdminDeleteUserMutation,
+  useAddCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetCategoriesQuery,
 } = userApiSlice;

@@ -7,7 +7,7 @@ const FinanceSkeleton = () => {
       <div className="row g-3">
         {/* First Column - Charts */}
         <div className="col-12 col-lg-6">
-          <div className="skeleton-date">
+          <div className="skeleton-date bg-dark">
             <div className="skeleton-arrow"></div>
             <div className="skeleton-date-text"></div>
             <div className="skeleton-arrow"></div>
@@ -41,7 +41,7 @@ const FinanceSkeleton = () => {
       </div>
 
       {/* Table Section */}
-      <div className="skeleton-table-section mt-4">
+      <div className=" bg-dark mt-4 p-3  rounded">
         <div className="skeleton-table-header">
           <div className="skeleton-add-button"></div>
           <div className="skeleton-total"></div>

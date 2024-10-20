@@ -1,5 +1,4 @@
 import React from "react";
-
 import CountUp from "react-countup";
 
 export const CardStats = ({ title, amount, isBalance, isPositive }) => {

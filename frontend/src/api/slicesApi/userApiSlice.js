@@ -1,4 +1,4 @@
-import { apiSlice } from "../../config/apiSlice";
+import { apiSlice } from "../../store/apiSlice";
 
 const USER_URL = "/api/users";
 const AUTH_URL = "/api/auth";

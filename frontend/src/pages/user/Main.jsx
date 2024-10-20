@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-
-import Loader from "components/custom/Loader";
-
 import LineChart from "components/charts/LineChart";
-
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { CardStats } from "components/ui/CardStats";
+import { CardStats } from "components/finance/CardStats";
 import { useGetYearlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
+import MainSkeleton from "components/loader/MainSkeleton";
 
 const Main = () => {
   const currentYear = new Date().getFullYear();
@@ -15,7 +12,7 @@ const Main = () => {
 
   const { data, isLoading, error } = useGetYearlyTransactionsQuery({ year });
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <MainSkeleton />;
   if (error) return <div>Error</div>;
   const { monthlyData, yearSummary } = data;
 

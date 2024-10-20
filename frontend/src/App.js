@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "./app.css";
+import "./index.css";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Admin from "pages/admin/Admin";
 import { ContactUs, Expenses, Incomes, Main, Settings } from "pages/user";
@@ -10,7 +11,7 @@ import ProtectedRoute from "components/ProtectedRoute";
 import { setNavigate } from "utils/navigate";
 import HomeRoot from "components/HomeRoot";
 import { useSelector } from "react-redux";
-import { selectIsAuthenticated } from "config/authSlice";
+import { selectIsAuthenticated } from "store/authSlice";
 
 function App() {
   const navigate = useNavigate();

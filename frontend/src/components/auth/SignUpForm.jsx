@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
 import "./authStyle.css";
-import Loader from "components/custom/Loader";
+import Loader from "components/loader/Loader";
 const SignUpForm = ({ signUpUser, signGoogleClick, isLoading, setUserData, userData }) => {
   return (
     <div className="auth-container">

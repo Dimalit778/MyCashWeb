@@ -34,7 +34,8 @@ export default function PieActiveArc({ list }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: "bottom",
+        display: true,
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
           font: {
@@ -73,7 +74,7 @@ export default function PieActiveArc({ list }) {
   };
 
   return (
-    <div style={{ minHeight: "250px", width: "100%" }}>
+    <div style={{ minHeight: "200px", width: "100%" }}>
       <PolarArea data={chartData} options={chartOptions} />
     </div>
   );

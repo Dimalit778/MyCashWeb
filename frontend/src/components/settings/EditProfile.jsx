@@ -1,9 +1,14 @@
 import MyButton from "components/custom/MyButton";
 import { Theme } from "constants/colors";
+import { inputStyle } from "constants/styles";
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "store/authSlice";
 
-export default function EditProfile({ userInfo }) {
+export default function EditProfile() {
+  const userInfo = useSelector(selectCurrentUser);
+
   const [user, setUser] = useState(userInfo);
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -41,7 +46,8 @@ export default function EditProfile({ userInfo }) {
             <div className="col-sm-9">
               <input
                 type="text"
-                className="form-control bg-secondary text-light border-dark"
+                style={inputStyle}
+                className="form-control"
                 id="firstName"
                 value={user.name}
                 onChange={(e) => setUser((prev) => ({ ...prev, firstName: e.target.value }))}
@@ -57,7 +63,8 @@ export default function EditProfile({ userInfo }) {
             <div className="col-sm-9">
               <input
                 type="text"
-                className="form-control bg-secondary text-light border-dark"
+                style={inputStyle}
+                className="form-control"
                 id="lastName"
                 value={user.name}
                 onChange={(e) => setUser((prev) => ({ ...prev, lastName: e.target.value }))}
@@ -75,7 +82,8 @@ export default function EditProfile({ userInfo }) {
             <div className="col-sm-9 ">
               <input
                 type="email"
-                className="form-control bg-secondary text-light border-dark"
+                style={inputStyle}
+                className="form-control "
                 id="email"
                 value={user.email}
                 onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
@@ -90,7 +98,8 @@ export default function EditProfile({ userInfo }) {
               <label htmlFor="newPassword">New Password</label>
               <input
                 type="password"
-                className="form-control mt-1 bg-secondary text-light border-dark w-75"
+                style={inputStyle}
+                className="form-control mt-1 w-75"
                 id="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -100,7 +109,8 @@ export default function EditProfile({ userInfo }) {
               <label htmlFor="confirmPassword">Confirm Password</label>
               <input
                 type="password"
-                className="form-control mt-1 bg-secondary text-light border-dark w-75"
+                style={inputStyle}
+                className="form-control mt-1 w-75"
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

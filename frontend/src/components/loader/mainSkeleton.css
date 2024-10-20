@@ -1,0 +1,126 @@
+.skeleton-container {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.skeleton-button {
+  width: 40px;
+  height: 40px;
+  background-color: #34495e;
+  border-radius: 5px;
+}
+
+.skeleton-year {
+  width: 160px;
+  height: 40px;
+  background-color: #34495e;
+  border-radius: 5px;
+}
+
+.skeleton-card {
+  background-color: #1e2126;
+  border-radius: 10px;
+  padding: 20px;
+  height: 100px;
+}
+
+.skeleton-card-title {
+  width: 70%;
+  height: 20px;
+  background-color: #465c71;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.skeleton-card-amount {
+  width: 90%;
+  height: 30px;
+  background-color: #465c71;
+  border-radius: 5px;
+}
+
+.skeleton-chart-card {
+  background-color: #1e2126;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.skeleton-chart-legend {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.skeleton-legend-item {
+  width: 100px;
+  height: 20px;
+  background-color: #465c71;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+
+.skeleton-chart {
+  height: 300px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.skeleton-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.skeleton-bar {
+  width: 20px;
+  height: 100px;
+  background-color: #465c71;
+  margin-bottom: 5px;
+}
+
+.skeleton-month-label {
+  width: 30px;
+  height: 20px;
+  background-color: #465c71;
+  border-radius: 5px;
+}
+
+/* Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-button,
+.skeleton-year,
+.skeleton-card-title,
+.skeleton-card-amount,
+.skeleton-legend-item,
+.skeleton-bar,
+.skeleton-month-label {
+  background: linear-gradient(to right, #1e2126 0%, #2a2f37 20%, #2a2f37 40%, #1e2126 60%, #1e2126 100%);
+  background-size: 200% 100%;
+  animation: shimmer 25s infinite linear;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .skeleton-chart {
+    height: 200px;
+  }
+
+  .skeleton-bar {
+    width: 15px;
+  }
+
+  .skeleton-month-label {
+    width: 20px;
+    height: 15px;
+  }
+}

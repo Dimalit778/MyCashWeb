@@ -1,4 +1,4 @@
-import FinanceView from "components/ui/FinanceView";
+import FinanceView from "components/finance/FinanceView";
 import React from "react";
 
 const Expenses = () => {

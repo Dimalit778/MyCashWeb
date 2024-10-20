@@ -1,4 +1,6 @@
 import BrandLogo from "components/custom/BrandLogo";
+import { Theme } from "constants/colors";
+import { inputStyle } from "constants/styles";
 
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
@@ -13,20 +15,14 @@ const ContactUs = () => {
     // Your email sending logic here
   };
 
-  const inputStyle = {
-    backgroundColor: "#1e1e1e",
-    color: "white",
-    border: "1px solid #444",
-    borderRadius: "4px",
-    padding: "10px",
-  };
-
   return (
-    <Container fluid className="bg-primary text-light ">
+    <Container fluid className="p-4 ">
       <Row>
-        <Col md={5}>
-          <h1 className="display-4 mb-5">Contact Me</h1>
-          <h2 className="h3 mb-4">Get in touch</h2>
+        <Col md={5} className="ps-5 ">
+          <h1 className="display-4 mb-4" style={{ color: Theme.orange }}>
+            Contact Me
+          </h1>
+          <h2 className="h3 mb-4 text-secondary">Get in touch</h2>
           <p>Email: Mycash@outlook.com</p>
           <p>Phone: +972 052-6731280</p>
         </Col>

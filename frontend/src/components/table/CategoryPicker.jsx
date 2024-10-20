@@ -1,5 +1,5 @@
 import { useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
-import Loader from "components/custom/Loader";
+import Loader from "components/loader/Loader";
 
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";

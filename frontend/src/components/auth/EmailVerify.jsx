@@ -6,8 +6,8 @@ import Swal from "sweetalert2";
 import { useVerifyEmailMutation } from "api/slicesApi/userApiSlice.js";
 import { useParams } from "react-router-dom";
 
-import { setCredentials } from "config/authSlice";
-import Loader from "components/custom/Loader";
+import { setCredentials } from "store/authSlice";
+import Loader from "components/loader/Loader";
 
 const EmailVerify = () => {
   const [verifyEmail] = useVerifyEmailMutation();

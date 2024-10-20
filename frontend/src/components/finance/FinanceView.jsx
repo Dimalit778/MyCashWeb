@@ -1,16 +1,14 @@
-import React, { useCallback, useMemo, useState } from "react";
-
-import PieActiveArc from "components/charts/PieActiveArc";
-
+import React, { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import AddForm from "components/table/AddForm";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import CustomCalendar from "components/calender/CustomCalendar";
 import { format } from "date-fns";
 import { useGetMonthlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
-
-import DynamicProgressBars from "components/charts/DynamicProgressBar";
-import TableView from "components/table/TableView";
 import FinanceSkeleton from "components/loader/FinanceSkeleton";
+
+const PieActiveArc = lazy(() => import("components/charts/PieActiveArc"));
+const DynamicProgressBars = lazy(() => import("components/charts/DynamicProgressBar"));
+const Table = lazy(() => import("components/table/Table"));
 
 const FinanceView = ({ type }) => {
   const [date, setDate] = useState(new Date());
@@ -29,18 +27,24 @@ const FinanceView = ({ type }) => {
   const { sortByCategory, allData, totalAmount } = allTransactions;
 
   return (
-    <Container fluid className="  ">
+    <Container fluid>
       <Row className="g-3 " style={{ minHeight: "70vh" }}>
         <Col sm={12} lg={6} className=" ">
           <CustomCalendar date={date} onChange={onChange} />
-          <DynamicProgressBars categories={sortByCategory} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <DynamicProgressBars categories={sortByCategory} />
+          </Suspense>
         </Col>
-        <Col sm={12} lg={6} className="d-flex  ">
-          <PieActiveArc list={sortByCategory} />
+        <Col sm={12} lg={6} className="d-flex justify-content-center ">
+          <Suspense fallback={<div>Loading...</div>}>
+            <PieActiveArc list={sortByCategory} />
+          </Suspense>
         </Col>
       </Row>
       <Row className="mt-3 px-2 ">
-        <TableView list={allData} type={type} totalAmount={totalAmount} openModal={openModal} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Table list={allData} type={type} totalAmount={totalAmount} openModal={openModal} />
+        </Suspense>
       </Row>
 
       <Modal show={isModalOpen} onHide={closeModal} contentClassName="bg-dark">

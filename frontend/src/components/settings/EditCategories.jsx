@@ -7,7 +7,7 @@ import MyButton from "components/custom/MyButton";
 import { Theme } from "constants/colors";
 import "./settings.css";
 import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
-import Loader from "components/custom/Loader";
+import Loader from "components/loader/Loader";
 
 export default function EditCategories() {
   const { data: categories } = useGetCategoriesQuery();

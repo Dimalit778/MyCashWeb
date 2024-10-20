@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./authStyle.css";
-import Loader from "components/custom/Loader";
+import Loader from "components/loader/Loader";
 
 const LoginForm = ({ loginUser, signGoogleClick, isLoading, setUserData, userData }) => {
   const navigate = useNavigate();

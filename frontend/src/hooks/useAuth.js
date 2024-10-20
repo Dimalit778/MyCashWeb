@@ -1,5 +1,5 @@
 import { useGetUserQuery, useLogoutMutation } from "api/slicesApi/userApiSlice";
-import { clearCredentials } from "config/authSlice";
+import { clearCredentials } from "store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

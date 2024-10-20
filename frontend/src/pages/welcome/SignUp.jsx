@@ -6,7 +6,7 @@ import { useSignUpMutation } from "../../api/slicesApi/userApiSlice";
 
 import { validEmail } from "hooks/validedForm";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "config/authSlice";
+import { setCredentials } from "store/authSlice";
 
 import SignUpForm from "components/auth/SignUpForm";
 

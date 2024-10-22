@@ -1,64 +1,30 @@
-import React, { useState } from "react";
-
-// import Swal from "sweetalert2";
+import React from "react";
 import { toast } from "react-hot-toast";
 import { useSignUpMutation } from "../../api/slicesApi/userApiSlice";
-
-import { validEmail } from "hooks/validedForm";
-import { useDispatch } from "react-redux";
-import { setCredentials } from "store/authSlice";
-
 import SignUpForm from "components/auth/SignUpForm";
 
 const SignUp = () => {
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const dispatch = useDispatch();
-
   const [signUp, { isLoading }] = useSignUpMutation();
 
-  const signUpUser = async (e) => {
-    const { name, email, password } = userData;
-    e.preventDefault();
-    if (!name || !email || !password) {
-      return toast.error("All fields are required");
-    }
-
-    if (!validEmail(email)) return toast.error("Email Address Not Valid");
-
-    if (password.length < 6) return toast.error("Password must be at least 6 characters");
-
+  const handleSignUp = async (formData) => {
     try {
-      const res = await signUp({ name, email, password }).unwrap();
+      const res = await signUp(formData).unwrap();
       if (!res) {
-        toast.error(res.error);
+        toast.error("Registration failed");
         return;
       }
-      dispatch(setCredentials({ ...res }));
-      // alert();
+
+      toast.success("Registration successful!");
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || "Registration failed");
     }
   };
 
-  const signGoogleClick = () => {
-    // Implement Google Sign-Up logic here
-    console.log("Google Sign-Up clicked");
+  const handleGoogleSignUp = () => {
+    toast.error("Google Sign-Up not implemented yet");
   };
 
-  return (
-    <SignUpForm
-      signUpUser={signUpUser}
-      signGoogleClick={signGoogleClick}
-      isLoading={isLoading}
-      setUserData={setUserData}
-      userData={userData}
-    />
-  );
+  return <SignUpForm onSubmit={handleSignUp} onGoogleClick={handleGoogleSignUp} isLoading={isLoading} />;
 };
 
 export default SignUp;

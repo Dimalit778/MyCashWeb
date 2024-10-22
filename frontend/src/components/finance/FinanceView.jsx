@@ -1,62 +1,75 @@
-import React, { lazy, Suspense, useCallback, useMemo, useState } from "react";
-import AddForm from "components/table/AddForm";
-import { Col, Container, Modal, Row } from "react-bootstrap";
+import React, { lazy, Suspense, useCallback, useState, useMemo } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import CustomCalendar from "components/calender/CustomCalendar";
-import { format } from "date-fns";
-import { useGetMonthlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
 import FinanceSkeleton from "components/loader/FinanceSkeleton";
+import { useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
+import TransactionForm from "components/table/TransactionFormModal";
+import { useAddTransactionMutation, useUpdateTransactionMutation } from "api/slicesApi/transactionsApiSlice";
+import ErrorBoundary from "components/ErrorBoundary";
 
 const PieActiveArc = lazy(() => import("components/charts/PieActiveArc"));
 const DynamicProgressBars = lazy(() => import("components/charts/DynamicProgressBar"));
 const Table = lazy(() => import("components/table/Table"));
 
-const FinanceView = ({ type }) => {
-  const [date, setDate] = useState(new Date());
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const FinanceView = ({ type, date, onDateChange, data, isLoading, error }) => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const { data: allCategories } = useGetCategoriesQuery();
 
-  const onChange = useCallback((newDate) => setDate(newDate), []);
-  const openModal = useCallback(() => setIsModalOpen(true), []);
-  const closeModal = useCallback(() => setIsModalOpen(false), []);
-  const formattedDate = useMemo(() => format(date, "yyyy-MM-dd"), [date]);
+  const categories = useMemo(
+    () => (allCategories ? (type === "Income" ? allCategories.incomes : allCategories.expenses) : []),
+    [allCategories, type]
+  );
 
-  const { data: allTransactions, isLoading, error } = useGetMonthlyTransactionsQuery({ date: formattedDate, type });
+  const openAddModal = useCallback(() => setIsAddModalOpen(true), []);
+  const closeAddModal = useCallback(() => setIsAddModalOpen(false), []);
+  const openEditModal = useCallback((item) => setEditingItem(item), []);
+  const closeEditModal = useCallback(() => setEditingItem(null), []);
 
   if (isLoading) return <FinanceSkeleton />;
-  if (error) return <div className="text-danger">Error loading {type}s!</div>;
+  if (error)
+    return (
+      <div className="text-danger">
+        Error loading {type}s: {error.message}
+      </div>
+    );
 
-  const { sortByCategory, allData, totalAmount } = allTransactions;
+  const { sortByCategory, allData, totalAmount } = data || {};
 
   return (
     <Container fluid>
-      <Row className="g-3 " style={{ minHeight: "70vh" }}>
-        <Col sm={12} lg={6} className=" ">
-          <CustomCalendar date={date} onChange={onChange} />
-          <Suspense fallback={<div>Loading...</div>}>
-            <DynamicProgressBars categories={sortByCategory} />
-          </Suspense>
+      <Row className="g-3" style={{ minHeight: "70vh" }}>
+        <Col sm={12} lg={6}>
+          <CustomCalendar date={date} onChange={onDateChange} />
+          <ErrorBoundary fallback={<div>Error loading progress bars</div>}>
+            <Suspense fallback={<div>Loading progress bars...</div>}>
+              <DynamicProgressBars categories={sortByCategory} />
+            </Suspense>
+          </ErrorBoundary>
         </Col>
-        <Col sm={12} lg={6} className="d-flex justify-content-center ">
-          <Suspense fallback={<div>Loading...</div>}>
-            <PieActiveArc list={sortByCategory} />
-          </Suspense>
+        <Col sm={12} lg={6} className="d-flex justify-content-center">
+          <ErrorBoundary fallback={<div>Error loading pie chart</div>}>
+            <Suspense fallback={<div>Loading pie chart...</div>}>
+              <PieActiveArc list={sortByCategory} />
+            </Suspense>
+          </ErrorBoundary>
         </Col>
       </Row>
-      <Row className="mt-3 px-2 ">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Table list={allData} type={type} totalAmount={totalAmount} openModal={openModal} />
-        </Suspense>
+      <Row className="mt-3 px-2">
+        <ErrorBoundary fallback={<div>Error loading transactions table</div>}>
+          <Suspense fallback={<div>Loading transactions...</div>}>
+            <Table
+              list={allData}
+              type={type}
+              totalAmount={totalAmount}
+              openAddModal={openAddModal}
+              openEditModal={openEditModal}
+            />
+          </Suspense>
+        </ErrorBoundary>
       </Row>
-
-      <Modal show={isModalOpen} onHide={closeModal} contentClassName="bg-dark">
-        <Modal.Header closeButton closeVariant="white" className="border-secondary ">
-          <Modal.Title className="text-center">Add {type}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <AddForm type={type} date={date} closeModal={closeModal} />
-        </Modal.Body>
-      </Modal>
     </Container>
   );
 };
 
-export default FinanceView;
+export default React.memo(FinanceView);

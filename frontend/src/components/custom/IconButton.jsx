@@ -5,6 +5,7 @@ const IconButton = ({
   icon,
   color = "white",
   bgColor = "transparent",
+  border = "1px solid white",
   size = "md",
   className = "",
   ...props
@@ -25,7 +26,7 @@ const IconButton = ({
     color: color,
     backgroundColor: bgColor,
 
-    border: "1px solid ",
+    border: border,
     borderColor: color,
     display: "inline-flex",
     alignItems: "center",

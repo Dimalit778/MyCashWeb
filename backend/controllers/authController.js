@@ -3,27 +3,24 @@ import User from "../models/userModel.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body;
-  console.log(email, password, name);
+  const { email, password, firstName, lastName } = req.body;
+  console.log(email, password, firstName, lastName);
 
   try {
-    if (!email || !password || !name) {
+    if (!email || !password || !firstName || !lastName) {
       throw new Error("All fields are required");
     }
-
     const userAlreadyExists = await User.findOne({ email });
-    console.log("userAlreadyExists", userAlreadyExists);
-
     if (userAlreadyExists) {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
-
     const hashedPassword = await bcryptjs.hash(password, 10);
     // const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
     const user = new User({
-      name,
-      email: email.toLowerCase(),
+      firstName,
+      lastName,
+      email: email,
       password: hashedPassword,
       // verificationToken,
       // verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours

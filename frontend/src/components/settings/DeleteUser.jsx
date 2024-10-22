@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useDeleteUserMutation } from "api/slicesApi/userApiSlice.js";
-import useAuth from "hooks/useAuth";
+import { useDeleteUserMutation, useLogoutMutation } from "api/slicesApi/userApiSlice.js";
 
 export default function DeleteUser() {
-  const { logout } = useAuth();
+  const [logout] = useLogoutMutation();
   const [deleteUser] = useDeleteUserMutation();
   const navigate = useNavigate();
 

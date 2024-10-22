@@ -4,10 +4,10 @@ import { inputStyle } from "constants/styles";
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "store/authSlice";
+import { currentUser } from "store/authSlice";
 
 export default function EditProfile() {
-  const userInfo = useSelector(selectCurrentUser);
+  const userInfo = useSelector(currentUser);
 
   const [user, setUser] = useState(userInfo);
   const [isEditing, setIsEditing] = useState(false);

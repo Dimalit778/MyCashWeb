@@ -2,15 +2,15 @@ import React from "react";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 import BrandLogo from "components/custom/BrandLogo";
 import avatarIcon from "assets/icons/avatarIcon.svg";
 import logoutIcon from "assets/icons/logoutIcon.svg";
-import useAuth from "hooks/useAuth";
+
+import { useLogoutMutation } from "api/slicesApi/userApiSlice";
 
 const TopBar = ({ className }) => {
   const { userInfo } = useSelector((state) => state.auth);
-  const { logout } = useAuth();
+  const [logout] = useLogoutMutation();
   const location = useLocation();
   const logoutHandler = async () => {
     try {

@@ -9,12 +9,31 @@ import WelcomeAnimation from "components/custom/WelcomeAnimation";
 import Footer from "components/footer/footer";
 
 const Welcome = () => {
+  const headerText = {
+    textTransform: "uppercase",
+    fontSize: "4.5rem",
+    letterSpacing: "0.2rem",
+    fontWeight: "bold",
+    color: "white",
+  };
+
+  const strokeText = {
+    textTransform: "uppercase",
+    fontSize: "4.5rem",
+    letterSpacing: "0.5rem",
+    fontWeight: "bold",
+    textOverflow: "inherit",
+    color: "white",
+    fontFamily: "Arial, Helvetica, sans-serif",
+    WebkitTextStrokeWidth: "1px",
+    WebkitTextStrokeColor: "white",
+  };
   return (
     <>
       <Container fluid className="">
         <Row className="mt-3 pb-5 g-3 text-center  ">
-          <span className="header ">Manage Your </span>
-          <span className="stroke-text ">Money</span>
+          <span style={headerText}>Manage Your </span>
+          <span style={strokeText}>Money</span>
           <WelcomeAnimation />
         </Row>
 

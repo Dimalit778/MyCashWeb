@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useGoogleAuthMutation, useLoginMutation } from "api/slicesApi/userApiSlice";
@@ -7,11 +7,6 @@ import { GoogleAuth } from "api/fireBase/Firebase";
 import LoginForm from "components/auth/LoginForm";
 
 const Login = () => {
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-  });
-
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const [googleAuth] = useGoogleAuthMutation();
@@ -32,15 +27,9 @@ const Login = () => {
     }
   };
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-    const { email, password } = userData;
-    if (!email) {
-      return toast.error("Email Address Not Valid");
-    }
-    if (!password) return toast.error("Enter Password");
+  const handleLogin = async (formData) => {
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await login(formData).unwrap();
       if (!res) return toast.error(res.error);
 
       navigate("/main");
@@ -49,15 +38,7 @@ const Login = () => {
     }
   };
 
-  return (
-    <LoginForm
-      loginUser={loginUser}
-      signGoogleClick={signGoogleClick}
-      isLoading={isLoading}
-      setUserData={setUserData}
-      userData={userData}
-    />
-  );
+  return <LoginForm onSubmit={handleLogin} onGoogleClick={signGoogleClick} isLoading={isLoading} />;
 };
 
 export default Login;

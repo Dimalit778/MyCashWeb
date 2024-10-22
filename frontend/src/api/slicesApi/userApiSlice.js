@@ -129,6 +129,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: `${USER_URL}/getCategories`,
         credentials: "include",
+        method: "GET",
       }),
       providesTags: ["User"],
     }),

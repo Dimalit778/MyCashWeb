@@ -2,26 +2,36 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userApiSlice } from "api/slicesApi/userApiSlice";
 
 const initialState = {
-  userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null,
+  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
 };
+console.log(localStorage.getItem("user"));
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      state.userInfo = action.payload;
-      localStorage.setItem("userInfo", JSON.stringify(action.payload));
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     clearCredentials: (state) => {
-      state.userInfo = null;
-      localStorage.removeItem("userInfo");
+      state.user = null;
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
     builder.addMatcher(userApiSlice.endpoints.login.matchFulfilled, (state, { payload }) => {
       state.userInfo = payload.user;
-      localStorage.setItem("userInfo", JSON.stringify(payload.user));
+      localStorage.setItem("user", JSON.stringify(payload.user));
+    });
+
+    builder.addMatcher(userApiSlice.endpoints.googleAuth.matchFulfilled, (state, { payload }) => {
+      state.userInfo = payload.user;
+      localStorage.setItem("user", JSON.stringify(payload.user));
+    });
+    builder.addMatcher(userApiSlice.endpoints.signUp.matchFulfilled, (state, { payload }) => {
+      state.userInfo = payload.user;
+      localStorage.setItem("user", JSON.stringify(payload.user));
     });
     builder.addMatcher(userApiSlice.endpoints.logout.matchFulfilled, (state) => {
       state.userInfo = null;
@@ -35,5 +45,5 @@ export const { setCredentials, clearCredentials } = authSlice.actions;
 export default authSlice.reducer;
 
 // Selectors
-export const selectCurrentUser = (state) => state.auth.userInfo;
-export const selectIsAuthenticated = (state) => !!state.auth.userInfo;
+export const currentUser = (state) => state.auth.user;
+export const isAuthenticated = (state) => !!state.auth.user;

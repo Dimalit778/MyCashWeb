@@ -1,6 +1,7 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
-import "./PaginationStyle.css";
+
+import styled from "styled-components";
 
 const PaginationPages = ({ currentPage, totalPages, onPageChange }) => {
   const pageItems = [];
@@ -21,11 +22,45 @@ const PaginationPages = ({ currentPage, totalPages, onPageChange }) => {
   }
 
   return (
-    <Pagination className="justify-content-center pagination-dark">
+    <StyledPagination size="sm" className="justify-content-center pagination-dark mt-5 mb-0">
       <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} />
       {pageItems}
       <Pagination.Next onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} />
-    </Pagination>
+    </StyledPagination>
   );
 };
+
 export default PaginationPages;
+
+const StyledPagination = styled(Pagination)`
+  &.pagination-dark {
+    .page-item .page-link {
+      background-color: #343a40;
+      border-color: #454d55;
+      color: #fff;
+    }
+
+    .page-item.active .page-link {
+      background: var(--light-grey);
+      border-color: #454d55;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .page-item.disabled .page-link {
+      background-color: #343a40;
+      border-color: #454d55;
+      color: #6c757d;
+    }
+
+    .page-link:hover {
+      background-color: #23272b;
+      border-color: #454d55;
+      color: #fff;
+    }
+
+    .page-link:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+`;

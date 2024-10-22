@@ -5,16 +5,15 @@ import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
 import { sidebarLinks } from "constants"; // Adjust the path as needed
 import BrandLogo from "components/custom/BrandLogo";
 import { useSelector } from "react-redux";
-
 import { Theme } from "constants/colors";
 import MyButton from "components/custom/MyButton";
-import useAuth from "hooks/useAuth";
+import { currentUser } from "store/authSlice";
+import { useLogoutMutation } from "api/slicesApi/userApiSlice";
 
 const LeftSideBar = ({ className }) => {
   const { pathname } = useLocation();
-  const { userInfo } = useSelector((state) => state.auth);
-
-  const { logout } = useAuth();
+  const user = useSelector(currentUser);
+  const [logout] = useLogoutMutation();
 
   const logoutHandler = async () => {
     try {
@@ -30,11 +29,11 @@ const LeftSideBar = ({ className }) => {
         <BrandLogo />
       </div>
 
-      <Link to={`/profile/${userInfo.id}`} className="flex p-2 text-center text-light text-decoration-none">
+      <Link to={`/profile/${user.id}`} className="flex p-2 text-center text-light text-decoration-none">
         <img src={avatarIcon} alt="profile" className="rounded-circle me-2" width={80} height={80} />
         <div className="mt-2">
-          <p className="mb-0">{userInfo.name}</p>
-          <small className="">@{userInfo.email}</small>
+          <p className="mb-0">{user.name}</p>
+          <small className="">@{user.email}</small>
         </div>
       </Link>
 

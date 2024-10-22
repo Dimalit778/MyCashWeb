@@ -1,63 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import "./authStyle.css";
-import Loader from "components/loader/Loader";
+import TextInput from "components/custom/TextInput";
+import IconButton from "components/custom/IconButton";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import MyButton from "components/custom/MyButton";
+import { Theme } from "constants/colors";
 
-const LoginForm = ({ loginUser, signGoogleClick, isLoading, setUserData, userData }) => {
+const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   return (
     <div className="auth-container">
       <div className="auth-form-wrapper">
         <h1 className="auth-title">LOGIN</h1>
-        <form className="auth-form" onSubmit={loginUser}>
-          <div className="form-group">
-            <input
-              required
-              type="email"
-              className="form-control"
-              placeholder="Email"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                color: "#fff",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-              }}
-              onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Password"
-              required
-              autoComplete="on"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                color: "#fff",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-              }}
-              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-            />
-            <span className="password-toggle">
-              <i className="fas fa-eye"></i>
-            </span>
-          </div>
-          {isLoading && <Loader />}
+        <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+            name="email"
+            control={control}
+            type="email"
+            placeholder="Email"
+            className="form-control"
+            rules={{
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            }}
+          />
+
+          <TextInput
+            name="password"
+            control={control}
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className="form-control"
+            autoComplete="none"
+            rules={{
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            }}
+            endAdornment={
+              <IconButton
+                icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
+                onClick={() => setShowPassword(!showPassword)}
+                color="white"
+                border="none"
+              />
+            }
+          />
+
           <div className="d-grid gap-2">
-            <button type="submit" className="btn-submit btn-block">
+            <MyButton type="submit" bgColor={Theme.orange} isLoading={isLoading}>
               Login
-            </button>
-            <button onClick={signGoogleClick} className="btn btn-outline-light btn-block">
+            </MyButton>
+            <button type="button" onClick={signGoogleClick} className="btn btn-outline-light btn-block">
               <FontAwesomeIcon icon={faGoogle} className="me-2" />
               Sign in with Google
             </button>
           </div>
+
           <Link to="/forgot-password" className="forgot-password">
             Forgot password?
           </Link>
+
           <div className="auth-prompt">
             <p>Don't have an account?</p>
             <button type="button" className="btn btn-outline-light btn-sm" onClick={() => navigate("/register")}>

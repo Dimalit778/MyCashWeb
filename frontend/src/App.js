@@ -11,19 +11,18 @@ import ProtectedRoute from "components/ProtectedRoute";
 import { setNavigate } from "utils/navigate";
 import HomeRoot from "components/HomeRoot";
 import { useSelector } from "react-redux";
-import { selectIsAuthenticated } from "store/authSlice";
+import { isAuthenticated } from "store/authSlice";
 
 function App() {
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
+  const auth = useSelector(isAuthenticated);
   useEffect(() => {
     setNavigate(navigate);
   }, [navigate]);
 
   return (
     <Routes>
-      {!isAuthenticated && (
+      {!auth && (
         <Route path="/" element={<HomeRoot />}>
           <Route index element={<Welcome />} />
           <Route path="login" element={<Login />} />
@@ -35,9 +34,10 @@ function App() {
           <Route path="main" element={<Main />} />
           <Route path="admin" element={<Admin />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="contact" element={<ContactUs />} />
+
           <Route path="expenses" element={<Expenses />} />
           <Route path="incomes" element={<Incomes />} />
-          <Route path="contact" element={<ContactUs />} />
         </Route>
       </Route>
 

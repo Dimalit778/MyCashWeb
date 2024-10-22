@@ -109,7 +109,6 @@ const addCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   const { type, category } = req.body;
-  console.log(type, category);
 
   if (!type || !category) {
     return res.status(400).json({ message: "All fields are required!" });

@@ -12,7 +12,20 @@ const BottomBar = ({ className }) => {
   };
 
   return (
-    <Nav className={`${className} fixed-bottom d-flex flex-nowrap border-top   `} style={{ backgroundColor: "black" }}>
+    <Nav
+      className={`${className} d-flex flex-nowrap border-top   `}
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "black",
+        height: "50px",
+        zIndex: 999,
+        width: "100%",
+        boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.5)",
+      }}
+    >
       {sidebarLinks.map((link) => {
         const isActive = pathname === link.route;
 

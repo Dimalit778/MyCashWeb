@@ -1,20 +1,26 @@
-import TransactionForm from "components/transactions/TransactionModal";
-import { TransactionPageProvider } from "components/transactions/TransactionPage";
-import { Calendar, ProgressBars, Chart, TransactionsTable } from "components/transactions/TransactionSubComp";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
+import {
+  DynamicProgressBar,
+  MonthlyCalendar,
+  MonthlyPieChart,
+  TransactionForm,
+  TransactionsTable,
+  TransactionProvider,
+} from "components/transactions";
+
 const Expenses = () => {
   return (
-    <TransactionPageProvider type="Expense">
-      <Container fluid>
+    <TransactionProvider type="Expense">
+      <Container fluid className="border-1 border border-light">
         <Row className="g-3" style={{ minHeight: "70vh" }}>
           <Col sm={12} lg={6}>
-            <Calendar />
-            <ProgressBars />
+            <MonthlyCalendar />
+            <DynamicProgressBar />
           </Col>
           <Col sm={12} lg={6} className="d-flex justify-content-center">
-            <Chart />
+            <MonthlyPieChart />
           </Col>
         </Row>
         <Row className="mt-3 px-2">
@@ -24,7 +30,7 @@ const Expenses = () => {
         </Row>
       </Container>
       <TransactionForm />
-    </TransactionPageProvider>
+    </TransactionProvider>
   );
 };
 

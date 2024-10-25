@@ -4,7 +4,6 @@ import { userApiSlice } from "api/slicesApi/userApiSlice";
 const initialState = {
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
 };
-console.log(localStorage.getItem("user"));
 
 const authSlice = createSlice({
   name: "auth",
@@ -21,21 +20,21 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(userApiSlice.endpoints.login.matchFulfilled, (state, { payload }) => {
-      state.userInfo = payload.user;
+      state.user = payload.user;
       localStorage.setItem("user", JSON.stringify(payload.user));
     });
 
     builder.addMatcher(userApiSlice.endpoints.googleAuth.matchFulfilled, (state, { payload }) => {
-      state.userInfo = payload.user;
+      state.user = payload.user;
       localStorage.setItem("user", JSON.stringify(payload.user));
     });
     builder.addMatcher(userApiSlice.endpoints.signUp.matchFulfilled, (state, { payload }) => {
-      state.userInfo = payload.user;
+      state.user = payload.user;
       localStorage.setItem("user", JSON.stringify(payload.user));
     });
     builder.addMatcher(userApiSlice.endpoints.logout.matchFulfilled, (state) => {
-      state.userInfo = null;
-      localStorage.removeItem("userInfo");
+      state.user = null;
+      localStorage.removeItem("user");
     });
   },
 });
@@ -46,4 +45,3 @@ export default authSlice.reducer;
 
 // Selectors
 export const currentUser = (state) => state.auth.user;
-export const isAuthenticated = (state) => !!state.auth.user;

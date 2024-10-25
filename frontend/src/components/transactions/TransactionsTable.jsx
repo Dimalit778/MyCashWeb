@@ -5,34 +5,30 @@ import React, { useMemo, useState } from "react";
 import PaginationPages from "./Pagination";
 import MyButton from "components/custom/MyButton";
 import { Theme } from "constants/colors";
-import { useDeleteTransactionMutation } from "api/slicesApi/transactionsApiSlice";
 import CountUp from "react-countup";
-import { useTransactionPageContext } from "components/transactions/TransactionPage";
+import { useTransactionContext } from "components/transactions/TransactionProvider";
+import Loader from "components/loader/Loader";
 
 const ITEMS_PER_PAGE = 5;
 
-export default function Table({ list, type, totalAmount }) {
-  const { openAddModal, openEditModal, handleDelete } = useTransactionPageContext();
+export default function TransactionsTable() {
+  const { data, isLoading, type, openAddModal, openEditModal, handleDelete } = useTransactionContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const [deleteTransaction] = useDeleteTransactionMutation();
 
-  const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE);
+  const { allData, totalAmount } = data;
+
+  const totalPages = Math.ceil(allData.length / ITEMS_PER_PAGE);
 
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return list.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [list, currentPage]);
+    return allData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [allData, currentPage]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const onDelete = async (id) => {
-    try {
-      await deleteTransaction({ id, type });
-    } catch (error) {
-      console.error("Failed to delete transaction:", error);
-    }
-  };
+  if (isLoading) return <Loader />;
+
   return (
     <div className="card bg-dark ">
       <div className="card-body">
@@ -51,9 +47,10 @@ export default function Table({ list, type, totalAmount }) {
           <table className="table table-dark table-hover">
             <thead className="table-header-grey">
               <tr>
-                <th>Title</th>
+                <th>Name</th>
                 <th>Amount</th>
                 <th>Category</th>
+                <th>Description</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
@@ -61,12 +58,12 @@ export default function Table({ list, type, totalAmount }) {
             <tbody>
               {currentItems.map((item, index) => (
                 <tr key={item._id}>
-                  {/* <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td> */}
-                  <td>{item.title}</td>
+                  <td>{item.name}</td>
                   <td>${item.amount.toLocaleString()}</td>
                   <td>
                     <span className={`badge bg-${getCategoryColor(item.category)}`}>{item.category}</span>
                   </td>
+                  <td>{item.description}</td>
                   <td>{new Date(item.date).toLocaleDateString()}</td>
                   <td>
                     <div className="d-flex gap-3">

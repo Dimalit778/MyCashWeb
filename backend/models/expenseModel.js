@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const expenseSchema = mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
     trim: true,
-    maxLength: 50,
+    maxLength: 20,
   },
   amount: {
     type: Number,
@@ -19,6 +19,10 @@ const expenseSchema = mongoose.Schema({
   category: {
     type: String,
     required: true,
+  },
+  description: {
+    type: String,
+    maxLength: 40,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

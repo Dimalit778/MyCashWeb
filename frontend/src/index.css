@@ -100,7 +100,7 @@ p {
 .btn-outline-light:hover,
 .btn-outline-light:focus,
 .btn-outline-light.active {
-  color: var(--dark);
-  background: var(--light);
+  color: var(--light);
+  background: var(--light-grey);
   border-color: var(--dark);
 }

@@ -8,18 +8,19 @@ import { useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
 import FinanceSkeleton from "components/loader/FinanceSkeleton";
 import { format } from "date-fns";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
-const TransactionPageContext = createContext();
+const TransactionContext = createContext();
 
-export function useTransactionPageContext() {
-  const context = useContext(TransactionPageContext);
+export function useTransactionContext() {
+  const context = useContext(TransactionContext);
   if (context === undefined) {
     throw new Error("useTransactionPageContext must be used within a TransactionPageProvider");
   }
   return context;
 }
 
-export function TransactionPageProvider({ children, type }) {
+export function TransactionProvider({ children, type }) {
   const [date, setDate] = useState(new Date());
   const [modalType, setModalType] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
@@ -67,19 +68,19 @@ export function TransactionPageProvider({ children, type }) {
         closeModal();
       } catch (err) {
         console.error(`Error ${modalType === "add" ? "adding" : "updating"} transaction:`, err);
-        // Handle error (e.g., show toast notification)
+        throw err; // Re-throw the error to be caught in the form
       }
     },
     [modalType, addTransaction, updateTransaction, type, closeModal]
   );
-
   const handleDelete = useCallback(
     async (id) => {
       try {
         await deleteTransaction({ id, type });
+        toast.success("Transaction deleted successfully");
       } catch (error) {
         console.error("Failed to delete transaction:", error);
-        // Handle error (e.g., show toast notification)
+        toast.error("Failed to delete transaction");
       }
     },
     [deleteTransaction, type]
@@ -104,5 +105,5 @@ export function TransactionPageProvider({ children, type }) {
     handleDelete,
   };
 
-  return <TransactionPageContext.Provider value={value}>{children}</TransactionPageContext.Provider>;
+  return <TransactionContext.Provider value={value}>{children}</TransactionContext.Provider>;
 }

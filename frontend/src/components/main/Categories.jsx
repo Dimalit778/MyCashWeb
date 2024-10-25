@@ -1,22 +1,19 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "components/custom/IconButton";
 import MyButton from "components/custom/MyButton";
 import { Theme } from "constants/colors";
-import "./settings.css";
+import "styles/CategoriesStyle.css";
 import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
-import Loader from "components/loader/Loader";
 
-export default function EditCategories() {
-  const { data: categories } = useGetCategoriesQuery();
+const Categories = () => {
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
 
   const [newIncomeCategory, setNewIncomeCategory] = useState("");
   const [newExpenseCategory, setNewExpenseCategory] = useState("");
   const [addCategory, { isLoading }] = useAddCategoryMutation();
-  const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
-  if (!categories) return <Loader />;
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   const handleAdd = async (type, category) => {
     try {
@@ -33,6 +30,8 @@ export default function EditCategories() {
       console.error("Failed to delete category:", error);
     }
   };
+
+  if (categoriesLoading) return <div>Loading...</div>;
 
   const renderCategoryList = (type, title) => (
     <div className="my-card">
@@ -76,11 +75,12 @@ export default function EditCategories() {
   );
 
   return (
-    <Container fluid className="edit-categories-container">
-      <Row>
-        <Col md={6}>{renderCategoryList("incomes", "Income Categories")}</Col>
-        <Col md={6}>{renderCategoryList("expenses", "Expense Categories")}</Col>
-      </Row>
-    </Container>
+    <div className="container mt-5 bg-body">
+      <div className="row g-3">
+        <div className="col-md-6">{renderCategoryList("incomes", "Income Categories")}</div>
+        <div className="col-md-6">{renderCategoryList("expenses", "Expense Categories")}</div>
+      </div>
+    </div>
   );
-}
+};
+export default Categories;

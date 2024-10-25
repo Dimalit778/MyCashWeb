@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Nav } from "react-bootstrap";
+
 import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
 import { sidebarLinks } from "constants"; // Adjust the path as needed
 import BrandLogo from "components/custom/BrandLogo";
@@ -17,6 +17,7 @@ const LeftSideBar = ({ className }) => {
 
   const logoutHandler = async () => {
     try {
+      console.log("logout");
       await logout();
     } catch (error) {
       console.log(error);
@@ -24,7 +25,7 @@ const LeftSideBar = ({ className }) => {
   };
 
   return (
-    <Nav className={`d-flex flex-column  p-2  ${className}`} style={{ height: "100vh" }}>
+    <div className="d-flex flex-column p-2 " style={{ height: "100vh", backgroundColor: "black" }}>
       <div className="mb-3">
         <BrandLogo />
       </div>
@@ -44,7 +45,7 @@ const LeftSideBar = ({ className }) => {
             <li key={link.label}>
               <NavLink
                 to={link.route}
-                className="nav-link  p-2 rounded"
+                className="nav-link p-2 rounded"
                 style={{ backgroundColor: isActive ? Theme.orange : "transparent" }}
               >
                 <img src={link.imgURL} alt={link.label} width={28} height={28} />
@@ -57,7 +58,7 @@ const LeftSideBar = ({ className }) => {
       <MyButton bgColor={"transparent"} className="mt-auto w-auto" onClick={logoutHandler}>
         Logout
       </MyButton>
-    </Nav>
+    </div>
   );
 };
 

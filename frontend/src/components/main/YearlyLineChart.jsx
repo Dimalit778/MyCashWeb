@@ -25,7 +25,7 @@ const formatAmount = (amount) => {
   return `$${amount.toFixed(1)}`;
 };
 
-const LineChart = React.memo(({ monthlyData }) => {
+const YearlyLineChart = React.memo(({ monthlyData }) => {
   const chartData = useMemo(() => {
     return {
       labels: allMonths.map((month) => month.short),
@@ -100,10 +100,10 @@ const LineChart = React.memo(({ monthlyData }) => {
   };
 
   return (
-    <div style={{ height: "60vh" }}>
+    <div className="text-light border-light shadow-lg mt-3 p-3 rounded bg-primary " style={{ height: "60vh" }}>
       <Bar options={options} data={chartData} />
     </div>
   );
 });
 
-export default LineChart;
+export default YearlyLineChart;

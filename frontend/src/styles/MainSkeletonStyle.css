@@ -87,6 +87,60 @@
   border-radius: 5px;
 }
 
+/* Skeleton styles */
+.skeleton-category-card {
+  background: #1e2a35;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.skeleton-category-title {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 24px;
+  background: inherit;
+}
+
+.skeleton-category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.skeleton-category-text {
+  width: 80%;
+  height: 24px;
+  background: inherit;
+}
+
+.skeleton-category-delete {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: inherit;
+}
+
+.skeleton-category-add {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.skeleton-category-input {
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.skeleton-category-button {
+  width: 80px;
+  height: 40px;
+  border-radius: 8px;
+}
+
 /* Animation */
 @keyframes shimmer {
   0% {
@@ -103,7 +157,11 @@
 .skeleton-card-amount,
 .skeleton-legend-item,
 .skeleton-bar,
-.skeleton-month-label {
+.skeleton-month-label,
+.skeleton-legend-item,
+.skeleton-category-item,
+.skeleton-category-input,
+.skeleton-category-button {
   background: linear-gradient(to right, #1e2126 0%, #2a2f37 20%, #2a2f37 40%, #1e2126 60%, #1e2126 100%);
   background-size: 200% 100%;
   animation: shimmer 25s infinite linear;

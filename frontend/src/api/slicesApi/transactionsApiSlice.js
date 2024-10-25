@@ -5,12 +5,12 @@ const URL = "/api/transactions";
 export const transactionsApiSlice = apiSlice.injectEndpoints({
   tagTypes: ["Transaction"],
   endpoints: (builder) => ({
-    // Get single transaction (expense or income)
-    getTransaction: builder.query({
-      query: ({ type, id }) => `${URL}/get${type}/${id}`,
-      credentials: "include",
-      providesTags: ["Transaction"],
-    }),
+    // // Get single transaction (expense or income)
+    // getTransaction: builder.query({
+    //   query: ({ type, id }) => `${URL}/get${type}/${id}`,
+    //   credentials: "include",
+    //   providesTags: ["Transaction"],
+    // }),
 
     // Get all transactions (expenses or incomes)
     getMonthlyTransactions: builder.query({
@@ -46,11 +46,11 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 
     // Update transaction (expense or income)
     updateTransaction: builder.mutation({
-      query: ({ type, _id, ...rest }) => ({
-        url: `${URL}/update${type}/${_id}`,
+      query: (data) => ({
+        url: `${URL}/update`,
         method: "PATCH",
         credentials: "include",
-        body: rest,
+        body: data,
       }),
       invalidatesTags: ["Transaction"],
     }),

@@ -1,16 +1,38 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import "./mainSkeleton.css";
+import "styles/MainSkeletonStyle.css";
+
+const CategorySkeleton = ({ count = 3 }) => {
+  const skeletonItems = Array(count).fill(null);
+
+  return (
+    <div className="skeleton-category-card">
+      <div className="skeleton-category-title"></div>
+      {skeletonItems.map((_, index) => (
+        <div key={index} className="skeleton-category-item">
+          <div className="skeleton-category-text"></div>
+          <div className="skeleton-category-delete"></div>
+        </div>
+      ))}
+      <div className="skeleton-category-add">
+        <div className="skeleton-category-input"></div>
+        <div className="skeleton-category-button"></div>
+      </div>
+    </div>
+  );
+};
 
 const MainSkeleton = () => {
   return (
     <Container fluid className="skeleton-container">
+      {/* Year Selector Skeleton */}
       <div className="d-flex justify-content-center align-items-center mb-4">
         <div className="skeleton-button me-4"></div>
         <div className="skeleton-year"></div>
         <div className="skeleton-button ms-4"></div>
       </div>
 
+      {/* Stats Cards Skeleton */}
       <Row className="g-3 mt-1">
         {[1, 2, 3].map((i) => (
           <Col xs={12} md={4} key={i}>
@@ -22,7 +44,8 @@ const MainSkeleton = () => {
         ))}
       </Row>
 
-      <div className="skeleton-chart-card  mt-4">
+      {/* Chart Skeleton */}
+      <div className="skeleton-chart-card mt-4">
         <div className="skeleton-chart-legend">
           <div className="skeleton-legend-item"></div>
           <div className="skeleton-legend-item"></div>
@@ -37,6 +60,16 @@ const MainSkeleton = () => {
           ))}
         </div>
       </div>
+
+      {/* Categories Skeleton */}
+      <Row className="g-4 mt-4">
+        <Col xs={12} md={6}>
+          <CategorySkeleton />
+        </Col>
+        <Col xs={12} md={6}>
+          <CategorySkeleton />
+        </Col>
+      </Row>
     </Container>
   );
 };

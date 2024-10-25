@@ -1,10 +1,11 @@
 import React from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import CountUp from "react-countup";
-import "./chartStyle.css";
-import { useTransactionPageContext } from "components/transactions/TransactionPage";
+import "styles/DynamicProgressBarStyle.css";
+import { useTransactionContext } from "./TransactionProvider";
+
 const DynamicProgressBars = () => {
-  const { data, categories: userCategories, isLoading } = useTransactionPageContext();
+  const { data, categories: userCategories, isLoading } = useTransactionContext();
 
   if (isLoading) return <div>Loading progress bars...</div>;
 
@@ -34,9 +35,9 @@ const DynamicProgressBars = () => {
               </span>
             </div>
             <ProgressBar
-              now={percentage}
+              now={percentage || 0}
               variant={colors[index % colors.length]}
-              label={`${percentage.toFixed(2)}%`}
+              label={percentage ? `${percentage.toFixed(2)}%` : null}
               className="custom-progress"
             />
           </div>

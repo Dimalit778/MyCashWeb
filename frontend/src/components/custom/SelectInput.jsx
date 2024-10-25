@@ -1,16 +1,9 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { Controller } from "react-hook-form";
+import "styles/SelectInputStyle.css";
 
-function SelectInput({
-  name,
-  control,
-  label,
-  options,
-  rules,
-  className = "bg-secondary text-black border-dark",
-  ...rest
-}) {
+function SelectInput({ name, control, label, options, rules, ...rest }) {
   return (
     <Form.Group className="mb-3">
       {label && <Form.Label>{label}</Form.Label>}
@@ -20,8 +13,10 @@ function SelectInput({
         rules={rules}
         render={({ field, fieldState: { error } }) => (
           <>
-            <Form.Select {...field} className={className} isInvalid={!!error} {...rest}>
-              <option value="">Select a {label.toLowerCase()}</option>
+            <Form.Select bsPrefix="form-control form-select" {...field} isInvalid={!!error} {...rest}>
+              <option value="" disabled>
+                Select a {label?.toLowerCase()}
+              </option>
               {options.map((option) => (
                 <option key={option} value={option}>
                   {option}

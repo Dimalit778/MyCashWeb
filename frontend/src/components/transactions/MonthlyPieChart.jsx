@@ -1,6 +1,7 @@
 import React from "react";
 import { Chart as ChartJS, RadialLinearScale, ArcElement, Tooltip, Legend } from "chart.js";
 import { PolarArea } from "react-chartjs-2";
+import { useTransactionContext } from "components/transactions/TransactionProvider";
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
@@ -16,7 +17,9 @@ const darkThemeColors = [
   "rgba(83, 102, 255, 0.8)", // Indigo
 ];
 
-export default function PieActiveArc({ list }) {
+export default function MonthlyPieChart() {
+  const { data, isLoading } = useTransactionContext();
+  const list = data?.sortByCategory || [];
   const chartData = {
     labels: list.map((item) => item._id),
     datasets: [

@@ -11,7 +11,6 @@ const AnimatedButton = styled(motion.div)`
   color: white;
   position: relative;
   overflow: hidden;
-  cursor: pointer;
 
   span {
     position: relative;
@@ -25,8 +24,7 @@ const AnimatedButton = styled(motion.div)`
 
   .highlight {
     position: absolute;
-    background-color: rgb(255, 238, 207);
-
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
     height: 100%;
     top: 0;
     border-radius: 4rem;

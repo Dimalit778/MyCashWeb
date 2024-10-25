@@ -53,9 +53,10 @@ export const getMonthlyTransactions = async (req, res) => {
             {
               $project: {
                 _id: 1,
-                title: 1,
+                name: 1,
                 amount: 1,
                 category: 1,
+                description: 1,
                 date: 1,
               },
             },
@@ -170,11 +171,11 @@ export const getYearlyTransactions = async (req, res) => {
 // Add Transaction
 export const addTransaction = async (req, res) => {
   const userId = req.user._id;
-  const { title, amount, category, date, type } = req.body;
+  const { name, amount, category, date, description, type } = req.body;
 
   try {
     // Validations
-    if (!title || !date || !category || !type) {
+    if (!name || !date || !category || !type) {
       return res.status(400).json({ message: "All fields are required!!!!!!!!!!!!!!!" });
     }
     if (amount <= 0 || typeof amount !== "number") {
@@ -183,10 +184,11 @@ export const addTransaction = async (req, res) => {
 
     const Model = type === "Income" ? Income : Expense;
     const transaction = new Model({
-      title,
+      name,
       amount,
       date,
       category,
+      description: description || "",
       user: userId,
     });
 
@@ -198,10 +200,19 @@ export const addTransaction = async (req, res) => {
 };
 // Update Transaction
 export const updateTransaction = async (req, res) => {
-  const transactionId = req.params.id;
-  try {
-    const result = await Transaction.findOneAndUpdate({ _id: transactionId }, req.body, { new: true });
+  const { _id, type, ...updateData } = req.body;
 
+  let Model;
+  if (type === "Income") {
+    Model = Income;
+  } else if (type === "Expense") {
+    Model = Expense;
+  } else {
+    return res.status(400).json({ error: "Invalid transaction type" });
+  }
+
+  try {
+    const result = await Model.findByIdAndUpdate(_id, updateData, { new: true });
     if (result) {
       res.json(result);
     } else {

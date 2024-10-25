@@ -2,11 +2,11 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { isAuthenticated } from "store/authSlice";
+import { currentUser } from "store/authSlice";
 
 const ProtectedRoute = () => {
-  const auth = useSelector(isAuthenticated);
-  return auth ? <Outlet /> : <Navigate to="/login" replace />;
+  const user = useSelector(currentUser);
+  return user ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;

@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <footer className="py-2 mt-5" style={{ background: `linear-gradient(to bottom, #434343, #000000)` }}>
+    <footer className="py-2 mt-5" style={{ background: `linear-gradient(to top, #434343, #000000)` }}>
       <Container>
         <Row className="text-center text-light mb-1">
           <Col md={6} className="mb-3 mb-md-0">

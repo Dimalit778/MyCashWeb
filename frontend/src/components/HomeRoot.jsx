@@ -11,14 +11,15 @@ const HomeRoot = () => {
     return <Navigate to="/main" replace />;
   }
   return (
-    <div className="homeRoot min-vh-100">
+    <div className="bg-black min-vh-100">
       <Helmet>
         <title>MyCash</title>
       </Helmet>
       <Toaster position="top-right" toastOptions={{ duration: 3000, style: { marginTop: "5rem" } }} />
       <TopBar className="sticky-top" />
-
-      <Outlet />
+      <div className="main-content">
+        <Outlet />
+      </div>
     </div>
   );
 };

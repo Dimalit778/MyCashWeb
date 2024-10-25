@@ -1,11 +1,4 @@
-.homeRoot {
-  background-image: url(./assets/welcomeImages/color3.jpg);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  color: var(--light);
-}
-.topBar {
+/* .topBar {
   background: linear-gradient(to top, #434343 0%, #000000 45%);
 }
 .darkCard {
@@ -25,4 +18,10 @@
   color: "#000";
   padding: 4px;
   border-radius: 5px;
+} */
+/* Add this to your main content wrapper */
+.main-content {
+  padding-top: 72px; /* Adjust this value based on your TopBar height */
+  min-height: 100vh;
+  background-color: #000; /* Match your page background */
 }

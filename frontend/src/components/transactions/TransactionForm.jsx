@@ -2,29 +2,31 @@ import React, { useEffect } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import TextInput from "components/custom/TextInput";
-import { useTransactionPageContext } from "./TransactionPage";
+import { useTransactionContext } from "./TransactionProvider";
 import SelectInput from "components/custom/SelectInput";
 import MyButton from "components/custom/MyButton";
 
 const TransactionForm = () => {
-  const { modalType, editingItem, closeModal, handleTransaction, type, categories } = useTransactionPageContext();
+  const { modalType, editingItem, closeModal, handleTransaction, type, categories } = useTransactionContext();
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      title: "",
+      name: "",
       amount: "",
       category: "",
       date: new Date().toISOString().split("T")[0],
+      description: "",
     },
   });
 
   useEffect(() => {
     if (modalType === null) {
       reset({
-        title: "",
+        name: "",
         amount: "",
         category: "",
         date: new Date().toISOString().split("T")[0],
+        description: "",
       });
     } else if (editingItem) {
       reset({
@@ -34,9 +36,21 @@ const TransactionForm = () => {
     }
   }, [modalType, editingItem, reset]);
 
-  const onSubmit = (data) => {
-    handleTransaction(editingItem ? { ...data, _id: editingItem._id } : data);
-    closeModal();
+  const onSubmit = async (data) => {
+    try {
+      // Convert amount to number
+      const formData = {
+        ...data,
+        amount: Number(data.amount),
+        _id: editingItem?._id,
+      };
+      await handleTransaction(formData);
+      closeModal(); // Only close if successful
+    } catch (err) {
+      console.error(err);
+      console.log("Error submitting form:", err);
+      // Don't close modal if there's an error
+    }
   };
 
   return (
@@ -46,19 +60,30 @@ const TransactionForm = () => {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)} className="bg-dark">
-          <TextInput name="title" control={control} label="Title" rules={{ required: "Title is required" }} />
-
-          <TextInput
-            name="amount"
-            control={control}
-            label="Amount"
-            type="number"
-            step="0.01"
-            rules={{
-              required: "Amount is required",
-              min: { value: 0.01, message: "Amount must be greater than 0" },
-            }}
-          />
+          <Row>
+            <Col>
+              <TextInput
+                name="name"
+                control={control}
+                label="Name"
+                rules={{ required: "Name is required" }}
+                className="form-control"
+              />
+            </Col>
+            <Col>
+              <TextInput
+                name="amount"
+                control={control}
+                label="Amount"
+                type="number"
+                step="0.01"
+                rules={{
+                  required: "Amount is required",
+                  min: { value: 0.01, message: "Amount must be greater than 0" },
+                }}
+              />
+            </Col>
+          </Row>
           <Row>
             <Col>
               <TextInput name="date" control={control} label="Date" type="date" />
@@ -73,9 +98,12 @@ const TransactionForm = () => {
               />
             </Col>
           </Row>
+          <Row>
+            <TextInput name="description" control={control} label="Description" />
+          </Row>
 
           <MyButton type="submit" bgColor="orange" color="black">
-            Create
+            {modalType === "add" ? "Create" : "Update"}
           </MyButton>
         </Form>
       </Modal.Body>

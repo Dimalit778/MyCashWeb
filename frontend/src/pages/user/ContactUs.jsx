@@ -16,7 +16,7 @@ const ContactUs = () => {
   };
 
   return (
-    <Container fluid className="p-4 ">
+    <Container fluid className="p-4 bg-primary ">
       <Row>
         <Col md={5} className="ps-5 ">
           <h1 className="display-4 mb-4" style={{ color: Theme.orange }}>

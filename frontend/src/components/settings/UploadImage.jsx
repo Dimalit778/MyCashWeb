@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Transformation } from "cloudinary-react";
 import toast from "react-hot-toast";
-import { setCredentials } from "store/authSlice";
+import { currentUser, setCredentials } from "store/authSlice";
 import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
 import uploadUserImg from "assets/uploadUserImg.png";
 import MyButton from "components/custom/MyButton";
@@ -12,7 +12,7 @@ import { Theme } from "constants/colors";
 const UploadImage = () => {
   const [userImage, setUserImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-  const { userInfo } = useSelector((state) => state.auth);
+  const user = useSelector(currentUser);
   const dispatch = useDispatch();
 
   const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation();
@@ -30,10 +30,10 @@ const UploadImage = () => {
   };
 
   const handleDeleteImage = async () => {
-    if (!userInfo.imageUrl) return toast.error("No image for this user");
+    if (!user.profileImage) return toast.error("No image for this user");
     try {
-      await deleteImage({ imageUrl: userInfo.imageUrl });
-      const res = await updateUser({ imageUrl: null }).unwrap();
+      await deleteImage({ profileImage: user.profileImage });
+      const res = await updateUser({ profileImage: null }).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success("Photo was deleted");
     } catch (error) {
@@ -45,7 +45,7 @@ const UploadImage = () => {
     if (!userImage) return toast.error("Please add an image");
     try {
       const res = await uploadImage({ userImage }).unwrap();
-      const result = await updateUser({ imageUrl: res.public_id }).unwrap();
+      const result = await updateUser({ profileImage: res.public_id }).unwrap();
       dispatch(setCredentials({ ...result }));
       toast.success("Profile updated successfully");
       setImagePreview("");
@@ -62,8 +62,8 @@ const UploadImage = () => {
       <Row className="g-5">
         <Col md={6}>
           <div className="d-flex ms-3">
-            {userInfo.imageUrl && !imagePreview ? (
-              <Image cloudName="dx6oxmki4" publicId={userInfo.imageUrl} className="cloudImage">
+            {user.profileImage && !imagePreview ? (
+              <Image cloudName="dx6oxmki4" publicId={user.profileImage} className="cloudImage">
                 <Transformation width="200" height="200" gravity="auto" crop="fill" quality="auto" />
               </Image>
             ) : imagePreview ? (
@@ -90,7 +90,7 @@ const UploadImage = () => {
             Save
           </MyButton>
 
-          {userInfo?.imageUrl && (
+          {user?.profileImage && (
             <div className="mt-3">
               <MyButton
                 buttonText="Delete Photo"

@@ -1,25 +1,27 @@
 import React, { useState } from "react";
 import { format, addMonths, subMonths, addYears, subYears } from "date-fns";
-import "./calendar.css";
+import "styles/MonthlyCalendarStyle.css";
+import { useTransactionContext } from "components/transactions/TransactionProvider";
 
-const CustomCalendar = ({ onChange, date }) => {
+const MonthlyCalendar = () => {
+  const { date, setDate } = useTransactionContext();
   const [isExpanded, setIsExpanded] = useState(false);
   const currentDate = new Date();
 
   const goToPreviousMonth = () => {
-    onChange(subMonths(date, 1));
+    setDate(subMonths(date, 1));
   };
 
   const goToNextMonth = () => {
-    onChange(addMonths(date, 1));
+    setDate(addMonths(date, 1));
   };
 
   const goToPreviousYear = () => {
-    onChange(subYears(date, 1));
+    setDate(subYears(date, 1));
   };
 
   const goToNextYear = () => {
-    onChange(addYears(date, 1));
+    setDate(addYears(date, 1));
   };
 
   const toggleExpand = () => {
@@ -27,7 +29,7 @@ const CustomCalendar = ({ onChange, date }) => {
   };
 
   const selectMonth = (month) => {
-    onChange(new Date(date.getFullYear(), month, 1));
+    setDate(new Date(date.getFullYear(), month, 1));
     setIsExpanded(false);
   };
 
@@ -94,4 +96,4 @@ const CustomCalendar = ({ onChange, date }) => {
   );
 };
 
-export default CustomCalendar;
+export default MonthlyCalendar;

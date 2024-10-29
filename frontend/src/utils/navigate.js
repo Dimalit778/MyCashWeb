@@ -1,12 +1,12 @@
-let navigateFunction;
+let navigate = null;
 
-export const setNavigate = (nav) => {
-  navigateFunction = nav;
+export const setNavigate = (navigateFunc) => {
+  navigate = navigateFunc;
 };
 
 export const getNavigate = () => {
-  if (!navigateFunction) {
-    throw new Error("Navigate function not set. Ensure setNavigate is called before using navigation.");
+  if (!navigate) {
+    throw new Error("Navigation function not initialized. Call setNavigate first.");
   }
-  return navigateFunction;
+  return navigate;
 };

@@ -22,7 +22,7 @@ const PaginationPages = ({ currentPage, totalPages, onPageChange }) => {
   }
 
   return (
-    <StyledPagination size="sm" className="justify-content-center pagination-dark mt-5 mb-0">
+    <StyledPagination size="sm" className="justify-content-center pagination-dark mt-3 mb-0">
       <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} />
       {pageItems}
       <Pagination.Next onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} />

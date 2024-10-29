@@ -3,28 +3,28 @@ import { Col, Container, Row } from "react-bootstrap";
 
 import {
   DynamicProgressBar,
-  MonthlyCalendar,
   MonthlyPieChart,
   TransactionForm,
   TransactionsTable,
   TransactionProvider,
+  CalenderMonth,
 } from "components/transactions";
 
 const Expenses = () => {
   return (
     <TransactionProvider type="Expense">
-      <Container fluid className="border-1 border border-light">
-        <Row className="g-3" style={{ minHeight: "70vh" }}>
+      <Container fluid>
+        <Row style={{ minHeight: "70vh" }}>
           <Col sm={12} lg={6}>
-            <MonthlyCalendar />
+            <CalenderMonth />
             <DynamicProgressBar />
           </Col>
-          <Col sm={12} lg={6} className="d-flex justify-content-center">
+          <Col sm={12} lg={6}>
             <MonthlyPieChart />
           </Col>
         </Row>
-        <Row className="mt-3 px-2">
-          <Col sm={12}>
+        <Row>
+          <Col sm={12} className="mt-5 ">
             <TransactionsTable />
           </Col>
         </Row>

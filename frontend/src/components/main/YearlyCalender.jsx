@@ -5,17 +5,19 @@ import React from "react";
 
 export default function YearlyCalender({ year, setYear }) {
   return (
-    <div className="d-flex justify-content-center align-items-center bg-primary  ">
+    <div className="d-flex pt-2 justify-content-center align-items-center ">
       <IconButton
         icon={<FontAwesomeIcon icon={faAngleLeft} />}
         onClick={() => setYear((prev) => prev - 1)}
-        className="border-1 border-light btn-sm me-4 bg-transparent"
+        className="border-1 border-light btn-sm me-5 bg-transparent"
       />
-      <h1 className="text-light"> {year}</h1>
+      <h1 className=" mb-0" style={{ fontSize: "3rem", fontFamily: "cursive", fontWeight: "bold", color: "white" }}>
+        {year}
+      </h1>
       <IconButton
         icon={<FontAwesomeIcon icon={faAngleRight} />}
         onClick={() => setYear((prev) => prev + 1)}
-        className="border-1 border-light btn-sm ms-4 bg-transparent"
+        className="border-1 border-light btn-sm ms-5 bg-transparent"
       />
     </div>
   );

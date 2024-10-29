@@ -6,6 +6,7 @@ import MyButton from "components/custom/MyButton";
 import { Theme } from "constants/colors";
 import "styles/CategoriesStyle.css";
 import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
+import toast from "react-hot-toast";
 
 const Categories = () => {
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
@@ -16,6 +17,8 @@ const Categories = () => {
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const handleAdd = async (type, category) => {
+    if (categories[type].includes(category)) return toast.error("Category already exists");
+    if (categories[type].length >= 8) return toast.error("Maximum number of categories reached");
     try {
       await addCategory({ type, category }).unwrap();
     } catch (error) {
@@ -34,9 +37,9 @@ const Categories = () => {
   if (categoriesLoading) return <div>Loading...</div>;
 
   const renderCategoryList = (type, title) => (
-    <div className="my-card">
+    <div className="my-card ">
       <div className="my-card-header">{title}</div>
-      <div className="my-card-body">
+      <div className="my-card-body ">
         <div className="my-card-list">
           {categories[type].map((category, index) => (
             <div key={index} className="my-card-item">
@@ -75,11 +78,9 @@ const Categories = () => {
   );
 
   return (
-    <div className="container mt-5 bg-body">
-      <div className="row g-3">
-        <div className="col-md-6">{renderCategoryList("incomes", "Income Categories")}</div>
-        <div className="col-md-6">{renderCategoryList("expenses", "Expense Categories")}</div>
-      </div>
+    <div className="row g-3 mt-3">
+      <div className="col-md-6">{renderCategoryList("incomes", "Income Categories")}</div>
+      <div className="col-md-6">{renderCategoryList("expenses", "Expense Categories")}</div>
     </div>
   );
 };

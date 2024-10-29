@@ -100,7 +100,7 @@ const YearlyLineChart = React.memo(({ monthlyData }) => {
   };
 
   return (
-    <div className="text-light border-light shadow-lg mt-3 p-3 rounded bg-primary " style={{ height: "60vh" }}>
+    <div className="text-light border-light shadow-lg p-3 rounded bg-dark" style={{ height: "70vh" }}>
       <Bar options={options} data={chartData} />
     </div>
   );

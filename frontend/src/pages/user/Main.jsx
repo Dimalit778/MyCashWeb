@@ -22,8 +22,9 @@ const Main = () => {
   if (isLoading) return <MainSkeleton />;
 
   const { monthlyData = [], yearSummary = {} } = data || {};
+
   return (
-    <div className="container border-1 border border-light">
+    <div className="d-flex flex-column gap-4 ">
       <YearlyCalender year={year} setYear={setYear} />
       <YearlyStats yearSummary={yearSummary} />
       <YearlyLineChart monthlyData={monthlyData} />

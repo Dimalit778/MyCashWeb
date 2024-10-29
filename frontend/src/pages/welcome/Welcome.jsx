@@ -6,7 +6,7 @@ import groupImg from "assets/welcomeImages/group.jpg";
 import WelcomeAnimation from "components/custom/WelcomeAnimation";
 import Footer from "components/footer/footer";
 import "styles/WelcomeStyle.css";
-
+import { motion } from "framer-motion";
 const Welcome = () => {
   return (
     <div className="welcome-wrapper">
@@ -18,9 +18,12 @@ const Welcome = () => {
             <Row className="text-center mb-5">
               <Col>
                 <h1 className="main-title mb-0">MANAGE YOUR</h1>
+
                 <h1 className="stroke-title">MONEY</h1>
                 <div className="animation-wrapper">
-                  <WelcomeAnimation />
+                  <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+                    <WelcomeAnimation />
+                  </motion.div>
                 </div>
               </Col>
             </Row>

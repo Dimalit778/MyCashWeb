@@ -22,6 +22,9 @@
 }
 
 .my-card-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
   min-height: 150px;
   max-height: 300px;
   overflow-y: auto;
@@ -32,12 +35,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 15px;
+  padding: 8px 15px;
   background-color: #465c71;
   color: #ecf0f1;
   border: none;
-  margin-bottom: 10px;
+  margin: 0;
   border-radius: 8px;
+  height: 50px; /* Fixed height for consistency */
+  box-sizing: border-box; /* Ensure padding is included within the height */
   transition: background-color 0.3s ease;
   text-transform: capitalize;
 }

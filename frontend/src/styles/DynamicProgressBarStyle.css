@@ -1,18 +1,59 @@
+/* DynamicProgressBarStyle.css */
+.progress-container {
+  padding: 1rem 0.4rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 .custom-progress {
-  height: 20px; /* Smaller height for the progress bar */
+  height: 42px;
+  position: relative;
 }
 
-.custom-progress .progress-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  overflow: visible;
-  color: #000; /* Black text */
-  font-weight: bold;
-  font-size: 0.75rem; /* Smaller font size for the percentage */
+.text-style {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  font-family: "Oswald", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06rem;
 }
 
-.small-text {
-  font-size: 0.85rem; /* Smaller font size for category name and amount */
+/* Loading skeleton */
+.progress-skeleton {
+  padding: 1.5rem;
+}
+
+.skeleton-item {
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-header {
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-bar {
+  height: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+@media screen and (max-width: 768px) {
+  .custom-progress {
+    height: 24px;
+  }
 }

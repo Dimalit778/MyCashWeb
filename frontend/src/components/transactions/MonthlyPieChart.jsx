@@ -6,19 +6,10 @@ import { useTransactionContext } from "components/transactions/TransactionProvid
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 // Dark theme color palette
-const darkThemeColors = [
-  "rgba(255, 99, 132, 0.8)", // Pink
-  "rgba(54, 162, 235, 0.8)", // Blue
-  "rgba(255, 206, 86, 0.8)", // Yellow
-  "rgba(75, 192, 192, 0.8)", // Teal
-  "rgba(153, 102, 255, 0.8)", // Purple
-  "rgba(255, 159, 64, 0.8)", // Orange
-  "rgba(199, 199, 199, 0.8)", // Gray
-  "rgba(83, 102, 255, 0.8)", // Indigo
-];
+const darkThemeColors = ["#007bff", "#6c757d", "#28a745", "#dc3545", "#ffc107", "#17a2b8", "#f8f9fa", "#343a40"];
 
 export default function MonthlyPieChart() {
-  const { data, isLoading } = useTransactionContext();
+  const { data } = useTransactionContext();
   const list = data?.sortByCategory || [];
   const chartData = {
     labels: list.map((item) => item._id),
@@ -39,8 +30,10 @@ export default function MonthlyPieChart() {
       legend: {
         position: "bottom",
         display: true,
+
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
+
           font: {
             size: 12,
           },
@@ -76,9 +69,5 @@ export default function MonthlyPieChart() {
     },
   };
 
-  return (
-    <div style={{ minHeight: "200px", width: "100%" }}>
-      <PolarArea data={chartData} options={chartOptions} />
-    </div>
-  );
+  return <PolarArea data={chartData} options={chartOptions} style={{ padding: "2rem", width: "100%" }} />;
 }

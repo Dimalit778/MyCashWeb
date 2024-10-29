@@ -1,6 +1,6 @@
 import {
+  CalenderMonth,
   DynamicProgressBar,
-  MonthlyCalendar,
   MonthlyPieChart,
   TransactionForm,
   TransactionProvider,
@@ -11,17 +11,17 @@ import { Col, Container, Row } from "react-bootstrap";
 const Incomes = () => {
   return (
     <TransactionProvider type="Income">
-      <Container fluid className="bg-primary">
-        <Row className="g-3" style={{ minHeight: "70vh" }}>
+      <Container fluid>
+        <Row style={{ minHeight: "70vh" }}>
           <Col sm={12} lg={6}>
-            <MonthlyCalendar />
+            <CalenderMonth />
             <DynamicProgressBar />
           </Col>
-          <Col sm={12} lg={6} className="d-flex justify-content-center">
+          <Col sm={12} lg={6}>
             <MonthlyPieChart />
           </Col>
         </Row>
-        <Row className="mt-3 px-2">
+        <Row className="mt-5 ">
           <Col sm={12}>
             <TransactionsTable />
           </Col>

@@ -6,6 +6,7 @@ import Expense from "../models/expenseModel.js";
 import User from "../models/userModel.js";
 
 const getUser = async (req, res) => {
+  console.log("getUser backend");
   const userId = req.user._id;
   try {
     const user = await User.findById(userId).select("-password");

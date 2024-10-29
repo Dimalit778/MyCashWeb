@@ -1,6 +1,6 @@
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 
-import { getNavigate } from "utils/navigate";
+import { clearCredentials } from "./authSlice";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: "https://mycashserver.onrender.com",
@@ -8,17 +8,13 @@ const baseQuery = fetchBaseQuery({
 });
 const baseQueryWithErrorHandling = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+
   if (result.error && result.error.status === 401) {
-    const navigate = getNavigate();
-    navigate("/", {
-      state: {
-        redirectUrl: window.location.pathname,
-      },
-    });
+    api.dispatch(clearCredentials());
   }
+
   return result;
 };
-
 export const apiSlice = createApi({
   baseQuery: baseQueryWithErrorHandling,
 

@@ -58,7 +58,7 @@ const UploadImage = () => {
   const isLoading = isUploading || isDeleting || isUpdating;
 
   return (
-    <Container className="darkCard">
+    <Container className="p-3 border border-1 border-secondary rounded bg-dark">
       <Row className="g-5">
         <Col md={6}>
           <div className="d-flex ms-3">

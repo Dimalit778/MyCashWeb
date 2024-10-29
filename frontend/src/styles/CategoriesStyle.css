@@ -8,7 +8,7 @@
 }
 
 .my-card-header {
-  color: #ecf0f1;
+  color: black;
   text-align: center;
   font-family: var(--oswald-font);
   letter-spacing: 0.06rem;
@@ -25,10 +25,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;
-  min-height: 150px;
-  max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 15px;
 }
 
 .my-card-item {

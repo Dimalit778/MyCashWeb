@@ -8,10 +8,9 @@ import DeleteUser from "components/settings/DeleteUser";
 
 const Settings = () => {
   return (
-    <Container fluid className="d-flex flex-column py-3 gap-5 bg-primary ">
+    <Container fluid className="d-flex flex-column py-3 gap-5 ">
       <UploadImage />
       <EditProfile />
-
       <DeleteUser />
     </Container>
   );

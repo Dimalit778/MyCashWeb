@@ -9,6 +9,8 @@ import CountUp from "react-countup";
 import { useTransactionContext } from "components/transactions/TransactionProvider";
 import Loader from "components/loader/Loader";
 
+import Swal from "sweetalert2";
+
 const ITEMS_PER_PAGE = 5;
 
 export default function TransactionsTable() {
@@ -24,6 +26,22 @@ export default function TransactionsTable() {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return allData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [allData, currentPage]);
+
+  const deleteAlert = (id) => {
+    Swal.fire({
+      title: `Delete ${type}?`,
+      icon: "warning",
+      showCancelButton: true,
+
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Delete",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(id);
+      }
+    });
+  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -85,7 +103,7 @@ export default function TransactionsTable() {
                           icon={<FontAwesomeIcon icon={faXmark} />}
                           color="white"
                           bgColor="red"
-                          onClick={() => handleDelete(item._id)}
+                          onClick={() => deleteAlert(item._id)}
                         />
                       </div>
                     </td>

@@ -17,7 +17,6 @@ export default function EditProfile() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event) => {
-    console.log("handleSubmit");
     event.preventDefault();
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
@@ -35,7 +34,7 @@ export default function EditProfile() {
   };
 
   return (
-    <Container fluid className="p-4 border border-1 border-secondary rounded">
+    <Container fluid className="p-4 bg-dark border border-1 border-secondary rounded">
       <form onSubmit={handleSubmit}>
         <Row className="mb-3 border-bottom border-secondary ">
           {/* first name */}

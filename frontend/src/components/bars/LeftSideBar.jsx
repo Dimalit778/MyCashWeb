@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
 import { sidebarLinks } from "constants"; // Adjust the path as needed
@@ -10,14 +10,13 @@ import MyButton from "components/custom/MyButton";
 import { currentUser } from "store/authSlice";
 import { useLogoutMutation } from "api/slicesApi/userApiSlice";
 
-const LeftSideBar = ({ className }) => {
+const LeftSideBar = () => {
   const { pathname } = useLocation();
   const user = useSelector(currentUser);
   const [logout] = useLogoutMutation();
 
   const logoutHandler = async () => {
     try {
-      console.log("logout");
       await logout();
     } catch (error) {
       console.log(error);
@@ -30,15 +29,16 @@ const LeftSideBar = ({ className }) => {
         <BrandLogo />
       </div>
 
-      <Link to={`/profile/${user.id}`} className="flex p-2 text-center text-light text-decoration-none">
+      <div className="flex p-2 text-center text-light text-decoration-none">
         <img src={avatarIcon} alt="profile" className="rounded-circle me-2" width={80} height={80} />
         <div className="mt-2">
-          <p className="mb-0">{user.name}</p>
-          <small className="">@{user.email}</small>
+          <h3 className="mb-0">{user.firstName + " " + user.lastName}</h3>
+          <small className="">{user.email}</small>
         </div>
-      </Link>
+      </div>
 
-      <ul className="nav flex-column p-0 gap-2 mt-1 ">
+      <hr style={{ backgroundColor: "gray", height: "3px" }} />
+      <ul className="nav flex-column p-0 gap-2 mt-1 ps-2 ">
         {sidebarLinks.map((link) => {
           const isActive = pathname === link.route;
           return (
@@ -49,13 +49,18 @@ const LeftSideBar = ({ className }) => {
                 style={{ backgroundColor: isActive ? Theme.orange : "transparent" }}
               >
                 <img src={link.imgURL} alt={link.label} width={28} height={28} />
-                <span className="fs-6 fw-normal ms-3 text-light">{link.label}</span>
+                <span
+                  className="ms-3 text-light "
+                  style={{ fontFamily: "Oswald", fontWeight: "bold", fontSize: "1.2rem", letterSpacing: "1px" }}
+                >
+                  {link.label}
+                </span>
               </NavLink>
             </li>
           );
         })}
       </ul>
-      <MyButton bgColor={"transparent"} className="mt-auto w-auto" onClick={logoutHandler}>
+      <MyButton bgColor={Theme.dark} className="mt-auto w-auto" onClick={logoutHandler}>
         Logout
       </MyButton>
     </div>

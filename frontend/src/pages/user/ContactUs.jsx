@@ -16,7 +16,7 @@ const ContactUs = () => {
   };
 
   return (
-    <Container fluid className="p-4 bg-primary ">
+    <Container fluid className="p-4  ">
       <Row>
         <Col md={5} className="ps-5 ">
           <h1 className="display-4 mb-4" style={{ color: Theme.orange }}>
@@ -26,8 +26,8 @@ const ContactUs = () => {
           <p>Email: Mycash@outlook.com</p>
           <p>Phone: +972 052-6731280</p>
         </Col>
-        <Col md={7} className="d-flex flex-column justify-content-center ">
-          <div className="p-2 border border-1 border-secondary rounded opacity-75">
+        <Col md={7} className="d-flex flex-column   ">
+          <div className="p-2 border border-1 border-secondary rounded opacity-75 bg-dark">
             <BrandLogo />
             <p className="mt-4 ">
               Our support team can help you with every question you have. You can contact us and our team will response

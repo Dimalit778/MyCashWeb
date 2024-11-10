@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Transformation } from "cloudinary-react";
 import toast from "react-hot-toast";
-import { currentUser, setCredentials } from "store/authSlice";
+import { currentUser, setCredentials } from "services/store/userSlice";
 import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
 import uploadUserImg from "assets/uploadUserImg.png";
-import MyButton from "components/custom/MyButton";
+import MyButton from "components/ui/MyButton";
 import { Col, Container, Row } from "react-bootstrap";
-import { Theme } from "constants/colors";
+import { Theme } from "utils/constants";
 
 const UploadImage = () => {
   const [userImage, setUserImage] = useState("");

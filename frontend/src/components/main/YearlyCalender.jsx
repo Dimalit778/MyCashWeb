@@ -1,6 +1,6 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "components/custom/IconButton";
+import IconButton from "components/ui/IconButton";
 import React from "react";
 
 export default function YearlyCalender({ year, setYear }) {

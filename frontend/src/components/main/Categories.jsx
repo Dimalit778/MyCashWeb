@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import IconButton from "components/custom/IconButton";
-import MyButton from "components/custom/MyButton";
-import { Theme } from "constants/colors";
+import IconButton from "components/ui/IconButton";
+import MyButton from "components/ui/MyButton";
+import { Theme } from "utils/constants";
 import "styles/CategoriesStyle.css";
 import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
 import toast from "react-hot-toast";

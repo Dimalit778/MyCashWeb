@@ -28,3 +28,8 @@ yarn-error.log*
 # from ="/*"
 # to= "/index.html"
 # status = 200
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

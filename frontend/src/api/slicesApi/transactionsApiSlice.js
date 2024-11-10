@@ -1,4 +1,4 @@
-import { apiSlice } from "../../store/apiSlice";
+import { apiSlice } from "../../services/store/apiSlice";
 
 const URL = "/api/transactions";
 

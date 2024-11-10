@@ -1,11 +1,17 @@
-import MyButton from "components/custom/MyButton";
-import { Theme } from "constants/colors";
-import { inputStyle } from "constants/styles";
+import MyButton from "components/ui/MyButton";
+import { Theme } from "utils/constants";
+
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { currentUser } from "store/authSlice";
-
+import { currentUser } from "services/store/userSlice";
+const inputStyle = {
+  backgroundColor: "#1e1e1e",
+  color: "white",
+  border: "1px solid #444",
+  borderRadius: "4px",
+  padding: "6px 10px",
+};
 export default function EditProfile() {
   const userInfo = useSelector(currentUser);
 

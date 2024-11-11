@@ -6,10 +6,12 @@ import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist
 import { apiSlice } from "./store/apiSlice.js";
 import userReducer from "./store/userSlice.js";
 import themeReducer from "./store/themeSlice.js";
+import transactionReducer from "./store/transactionSlice.js";
 
 const rootReducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
+  transaction: transactionReducer,
 });
 
 const persistConfig = {

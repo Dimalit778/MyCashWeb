@@ -1,21 +1,26 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
-import DynamicProgressBars from "./components/DynamicProgressBars";
+import ProgressBar from "./components/progressBar";
 import TransactionModal from "./components/TransactionModal";
 import TransactionsTable from "./components/TransactionsTable";
-import CalenderMonth from "./components/CalendarMonth";
-import MonthlyPieChart from "./components/MonthlyPieChart";
+import CalenderMonth from "./components/calendarMonth";
+import MonthlyPieChart from "./components/monthlyChart";
 import { TransactionProvider } from "./context/TransactionProvider";
+import { useParams } from "react-router-dom";
+import { useTransaction } from "hooks/useTransaction";
 
-const Transaction = ({ transType }) => {
+const Transaction = () => {
+  const { type } = useParams();
+  const { isLoading, data, error } = useTransaction(type);
+  console.log("data", data);
   return (
-    <TransactionProvider type={transType}>
+    <TransactionProvider type={type}>
       <Container fluid>
         <Row style={{ minHeight: "70vh" }}>
           <Col sm={12} lg={6}>
             <CalenderMonth />
-            <DynamicProgressBars />
+            <ProgressBar />
           </Col>
           <Col sm={12} lg={6}>
             <MonthlyPieChart />

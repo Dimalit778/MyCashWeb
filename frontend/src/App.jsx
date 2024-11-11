@@ -1,14 +1,13 @@
-import { MainSkeleton } from "components/main";
+import MainSkeleton from "pages/main/skeleton";
 import MainLayout from "layout/MainLayout";
 import PublicLayout from "layout/PublicLayout";
 import Login from "pages/auth/Login";
 import SignUp from "pages/auth/SignUp";
 import ContactUs from "pages/contact/ContactUs";
-import Landing from "pages/landing/Landing";
-import Main from "pages/main/Main";
-import Settings from "pages/settings/Settings";
-import Expenses from "pages/transactions/Expenses";
-import Incomes from "pages/transactions/Incomes";
+import Landing from "pages/landing";
+import Main from "pages/main";
+import Settings from "pages/settings";
+import Transactions from "pages/transactions";
 import FinanceSkeleton from "pages/transactions/skeleton/FinanceSkeleton";
 import { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -33,21 +32,14 @@ export const App = () => {
             }
           />
           <Route
-            path="expenses"
+            path="transactions/:type"
             element={
               <Suspense fallback={<FinanceSkeleton />}>
-                <Expenses />
+                <Transactions />
               </Suspense>
             }
           />
-          <Route
-            path="incomes"
-            element={
-              <Suspense fallback={<FinanceSkeleton />}>
-                <Incomes />
-              </Suspense>
-            }
-          />
+
           <Route path="settings" element={<Settings />} />
           <Route path="contact" element={<ContactUs />} />
         </Route>

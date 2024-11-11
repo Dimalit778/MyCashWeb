@@ -1,16 +1,10 @@
-import BrandLogo from "components/ui/BrandLogo";
+import BrandLogo from "components/brandLogo";
+import { INPUT_STYLE } from "constants/InputStyles";
+import { THEME } from "constants/Theme";
 
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { Theme } from "utils/constants";
 
-const inputStyle = {
-  backgroundColor: "#1e1e1e",
-  color: "white",
-  border: "1px solid #444",
-  borderRadius: "4px",
-  padding: "6px 10px",
-};
 const ContactUs = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,7 +19,7 @@ const ContactUs = () => {
     <Container fluid className="p-4  ">
       <Row>
         <Col md={5} className="ps-5 ">
-          <h1 className="display-4 mb-4" style={{ color: Theme.orange }}>
+          <h1 className="display-4 mb-4" style={{ color: THEME.orange }}>
             Contact Me
           </h1>
           <h2 className="h3 mb-4 text-secondary">Get in touch</h2>
@@ -51,7 +45,7 @@ const ContactUs = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              style={inputStyle}
+              style={INPUT_STYLE}
               className="form-control"
             />
           </Form.Group>
@@ -62,7 +56,7 @@ const ContactUs = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={inputStyle}
+              style={INPUT_STYLE}
               className="form-control"
             />
           </Form.Group>
@@ -74,7 +68,7 @@ const ContactUs = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
-              style={inputStyle}
+              style={INPUT_STYLE}
               className="form-control"
             />
           </Form.Group>

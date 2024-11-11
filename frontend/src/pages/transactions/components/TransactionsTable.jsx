@@ -1,15 +1,16 @@
 import { faPenToSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "components/ui/IconButton";
+import IconButton from "components/icon";
 import React, { useMemo, useState } from "react";
 import PaginationPages from "./PaginationPages";
-import MyButton from "components/ui/MyButton";
-import { Theme } from "utils/constants";
+import MyButton from "components/button";
+
 import CountUp from "react-countup";
 import { useTransactionContext } from "pages/transactions/context/TransactionProvider";
 import Loader from "components/loader/Loader";
 
 import Swal from "sweetalert2";
+import { THEME } from "constants/Theme";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -52,7 +53,7 @@ const TransactionsTable = () => {
     <div className="card bg-dark" style={{ minHeight: "40vh" }}>
       <div className="card-body ">
         <div className="d-flex justify-content-between align-items-center ">
-          <MyButton bgColor={Theme.orange} onClick={openAddModal}>
+          <MyButton bgColor={THEME.orange} onClick={openAddModal}>
             Add {type}
           </MyButton>
           <div className="d-flex align-items-center ">

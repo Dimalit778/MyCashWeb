@@ -4,11 +4,11 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import "../styles/authStyle.css";
-import TextInput from "components/ui/TextInput";
-import IconButton from "components/ui/IconButton";
+import TextInput from "components/textInput";
+import IconButton from "components/icon";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import MyButton from "components/ui/MyButton";
-import { Theme } from "utils/constants";
+import MyButton from "components/button";
+import { THEME } from "constants/Theme";
 
 const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton type="submit" bgColor={Theme.orange} isLoading={isLoading}>
+            <MyButton type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Login
             </MyButton>
             <MyButton type="button" onClick={signGoogleClick} className="btn btn-outline-light btn-block">

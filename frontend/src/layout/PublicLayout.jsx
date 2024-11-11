@@ -1,4 +1,4 @@
-import TopBar from "components/layout/topBar/TopBar";
+import TopBar from "components/navBars/topBar/TopBar";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
@@ -13,7 +13,7 @@ const PublicLayout = () => {
   return (
     <div className="bg-black min-vh-100">
       <TopBar className="sticky-top" />
-      <div className="main-content">
+      <div className="main-content" style={{ paddingTop: "65px" }}>
         <Outlet />
       </div>
     </div>

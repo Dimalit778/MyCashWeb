@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import TextInput from "components/ui/TextInput";
+import TextInput from "components/textInput";
 import { useTransactionContext } from "../context/TransactionProvider";
-import SelectInput from "components/ui/SelectInput";
-import MyButton from "components/ui/MyButton";
+import SelectInput from "components/selectInput";
+import MyButton from "components/button";
 
 const TransactionModal = () => {
   const { modalType, editingItem, closeModal, handleTransaction, type, categories } = useTransactionContext();

@@ -5,10 +5,10 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import "../styles/authStyle.css";
-import IconButton from "components/ui/IconButton";
-import TextInput from "components/ui/TextInput";
-import MyButton from "components/ui/MyButton";
-import { Theme } from "utils/constants";
+import IconButton from "components/icon";
+import TextInput from "components/textInput";
+import MyButton from "components/button";
+import { THEME } from "constants/Theme";
 
 const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -135,7 +135,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton type="submit" bgColor={Theme.orange} isLoading={isLoading}>
+            <MyButton type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Sign Up
             </MyButton>
             <button

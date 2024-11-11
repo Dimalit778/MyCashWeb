@@ -1,0 +1,83 @@
+@keyframes rotate {
+  to {
+    transform: rotate(0.5turn);
+  }
+}
+
+.custom-button {
+  font-family: "Roboto", sans-serif;
+  min-width: 60px;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #3498db;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.custom-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.custom-button:active {
+  transform: translateY(1px);
+}
+
+.custom-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custom-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: 0.6s;
+}
+
+.custom-button:hover::before {
+  transform: translateX(100%);
+}
+
+.loader-spinner {
+  width: 20px;
+  height: 20px;
+  background: no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) top,
+    no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) left,
+    no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) right,
+    no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) bottom;
+  background-size: 5px 5px;
+  animation: rotate 1s infinite;
+}
+
+.button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.5em;
+  visibility: visible;
+}
+
+.button-content.loading {
+  visibility: hidden;
+}
+
+.spinner-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

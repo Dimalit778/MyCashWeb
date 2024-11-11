@@ -2,9 +2,9 @@ import { Navigate, Outlet } from "react-router-dom";
 
 import { Col, Row } from "react-bootstrap";
 
-import LeftSideBar from "components/layout/leftSideBar/LeftSideBar";
-import BottomBar from "components/layout/bottomBar/BottomBar";
-import TopBar from "components/layout/topBar/TopBar";
+import LeftSideBar from "components/navBars/leftSideBar/LeftSideBar";
+import BottomBar from "components/navBars/bottomBar/BottomBar";
+import TopBar from "components/navBars/topBar/TopBar";
 import { useSelector } from "react-redux";
 import { currentUser } from "services/store/userSlice";
 

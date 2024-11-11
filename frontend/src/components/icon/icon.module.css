@@ -1,0 +1,31 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btnSm {
+  padding: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.btnMd {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.btnLg {
+  padding: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}

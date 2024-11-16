@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image, Transformation } from "cloudinary-react";
 import toast from "react-hot-toast";
-import { currentUser, setCredentials } from "services/store/userSlice";
-import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "api/slicesApi/userApiSlice";
+import { currentUser, setUser } from "services/reducers/userSlice";
+import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "services/api/userApi";
 import uploadUserImg from "assets/uploadUserImg.png";
 import MyButton from "components/button";
 import { Col, Container, Row } from "react-bootstrap";
@@ -34,7 +34,7 @@ const UploadImage = () => {
     try {
       await deleteImage({ profileImage: user.profileImage });
       const res = await updateUser({ profileImage: null }).unwrap();
-      dispatch(setCredentials({ ...res }));
+      dispatch(setUser({ ...res }));
       toast.success("Photo was deleted");
     } catch (error) {
       toast.error(error.message || "Failed to delete photo");
@@ -46,7 +46,7 @@ const UploadImage = () => {
     try {
       const res = await uploadImage({ userImage }).unwrap();
       const result = await updateUser({ profileImage: res.public_id }).unwrap();
-      dispatch(setCredentials({ ...result }));
+      dispatch(setUser({ ...result }));
       toast.success("Profile updated successfully");
       setImagePreview("");
       setUserImage("");

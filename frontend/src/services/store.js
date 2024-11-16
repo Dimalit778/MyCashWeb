@@ -3,15 +3,17 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
-import { apiSlice } from "./store/apiSlice.js";
-import userReducer from "./store/userSlice.js";
-import themeReducer from "./store/themeSlice.js";
-import transactionReducer from "./store/transactionSlice.js";
+
+import userReducer from "./reducers/userSlice.js";
+import themeReducer from "./reducers/themeSlice.js";
+import uiReducer from "./reducers/uiSlice.js";
+import { setupListeners } from "@reduxjs/toolkit/dist/query/index.js";
+import { apiSlice } from "./api/baseQuery.js";
 
 const rootReducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
-  transaction: transactionReducer,
+  ui: uiReducer,
 });
 
 const persistConfig = {
@@ -22,6 +24,7 @@ const persistConfig = {
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Store configuration
 export const store = configureStore({
   reducer: {
     root: persistedReducer,
@@ -30,7 +33,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore redux-persist actions
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(apiSlice.middleware),
@@ -38,3 +40,4 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+setupListeners(store.dispatch);

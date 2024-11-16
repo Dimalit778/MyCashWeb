@@ -7,10 +7,11 @@ import BrandLogo from "components/brandLogo";
 import { useSelector } from "react-redux";
 
 import MyButton from "components/button";
-import { currentUser } from "services/store/userSlice";
-import { useLogoutMutation } from "api/slicesApi/userApiSlice";
+import { currentUser } from "services/reducers/userSlice";
+
 import { HOME_LINKS } from "constants/HomeLinks";
 import { THEME } from "constants/Theme";
+import { useLogoutMutation } from "services/api/authApi";
 
 const LeftSideBar = () => {
   const { pathname } = useLocation();
@@ -19,7 +20,7 @@ const LeftSideBar = () => {
 
   const logoutHandler = async () => {
     try {
-      await logout();
+      await logout().unwrap();
     } catch (error) {
       console.log(error);
     }

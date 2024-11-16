@@ -8,7 +8,7 @@ import Landing from "pages/landing";
 import Main from "pages/main";
 import Settings from "pages/settings";
 import Transactions from "pages/transactions";
-import FinanceSkeleton from "pages/transactions/skeleton/FinanceSkeleton";
+import FinanceSkeleton from "pages/transactions/skeleton/TransactionSkeleton";
 import { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 

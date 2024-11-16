@@ -5,9 +5,10 @@ export const getMonthlyTransactions = async (req, res) => {
   try {
     const userId = req.user._id;
     const { date, type } = req.query;
+    console.log("date", date, "type", type);
 
     // Input validation
-    if (!date || !type) {
+    if (!date || (type !== "income" && type !== "expense")) {
       return res.status(400).json({ message: "Date and type are required" });
     }
     // Parse date
@@ -20,7 +21,7 @@ export const getMonthlyTransactions = async (req, res) => {
     const startDate = `${year}-${month}-01`;
     const lastDay = new Date(year, month, 0).getDate();
     const endDate = `${year}-${month}-${lastDay}`;
-    const Model = type === "Income" ? Income : Expense;
+    const Model = type === "income" ? Income : Expense;
 
     const result = await Model.aggregate([
       {
@@ -105,7 +106,14 @@ export const getYearlyTransactions = async (req, res) => {
 
           total: { $sum: "$amount" },
           transactions: {
-            $push: { id: "$_id", title: "$title", amount: "$amount", date: "$date", category: "$category" },
+            $push: {
+              id: "$_id",
+              name: "$name",
+              amount: "$amount",
+              date: "$date",
+              category: "$category",
+              description: "$description",
+            },
           },
         },
       },

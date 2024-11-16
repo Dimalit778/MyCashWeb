@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { useVerifyEmailMutation } from "api/slicesApi/userApiSlice.js";
+import { useVerifyEmailMutation } from "services/api/userApi.js";
 import { useParams } from "react-router-dom";
 
 import { setCredentials } from "@/services/store/userSlice";

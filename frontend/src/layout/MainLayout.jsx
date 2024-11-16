@@ -2,11 +2,11 @@ import { Navigate, Outlet } from "react-router-dom";
 
 import { Col, Row } from "react-bootstrap";
 
-import LeftSideBar from "components/navBars/leftSideBar/LeftSideBar";
-import BottomBar from "components/navBars/bottomBar/BottomBar";
-import TopBar from "components/navBars/topBar/TopBar";
+import LeftSideBar from "layout/LeftSideBar";
+import BottomBar from "layout/BottomBar";
+import TopBar from "layout/TopBar";
 import { useSelector } from "react-redux";
-import { currentUser } from "services/store/userSlice";
+import { currentUser } from "services/reducers/userSlice";
 
 const MainLayout = () => {
   const user = useSelector(currentUser);

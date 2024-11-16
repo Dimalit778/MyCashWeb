@@ -1,8 +1,8 @@
-import TopBar from "components/navBars/topBar/TopBar";
+import TopBar from "layout/TopBar";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
-import { currentUser } from "services/store/userSlice";
+import { currentUser } from "services/reducers/userSlice";
 
 const PublicLayout = () => {
   const user = useSelector(currentUser);

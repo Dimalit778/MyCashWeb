@@ -1,6 +1,6 @@
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useResetPasswordMutation, useVerifyLinkMutation } from "api/slicesApi/userApiSlice";
+import { useResetPasswordMutation, useVerifyLinkMutation } from "services/api/userApi";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";

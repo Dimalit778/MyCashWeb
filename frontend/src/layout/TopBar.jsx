@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 import BrandLogo from "components/brandLogo";
 import avatarIcon from "assets/icons/avatarIcon.svg";
 import logoutIcon from "assets/icons/logoutIcon.svg";
-
-import { useLogoutMutation } from "api/slicesApi/userApiSlice";
-import { currentUser } from "services/store/userSlice";
+import { currentUser } from "services/reducers/userSlice";
+import { useLogoutMutation } from "services/api/authApi";
 
 const TopBar = ({ className }) => {
   const user = useSelector(currentUser);

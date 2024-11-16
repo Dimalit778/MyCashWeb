@@ -1,0 +1,8 @@
+.chart-container {
+  contain: content;
+  position: relative;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin: 1rem 0;
+}

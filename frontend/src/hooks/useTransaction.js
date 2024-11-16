@@ -8,7 +8,7 @@ import {
   useGetMonthlyTransactionsQuery,
   useUpdateTransactionMutation,
 } from "api/slicesApi/transactionsApiSlice";
-import { useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
+import { useGetCategoriesQuery } from "services/api/userApi";
 import {
   setDate,
   setModalType,
@@ -32,6 +32,7 @@ export const useTransaction = (type) => {
     date: formattedDate,
     type,
   });
+  console.log("useTransaction data", data);
   const { data: categoriesData } = useGetCategoriesQuery();
   const [addTransaction] = useAddTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();

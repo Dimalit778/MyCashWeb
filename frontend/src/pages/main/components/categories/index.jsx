@@ -5,11 +5,12 @@ import IconButton from "components/icon";
 import MyButton from "components/button";
 
 import "./categoriesStyle.css";
-import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "api/slicesApi/userApiSlice";
+import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery } from "services/api/userApi";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-import { MAX_CATEGORIES } from "config/constants";
+
 import { THEME } from "constants/Theme";
+import { MAX_CATEGORIES } from "config/categoryConfig";
 
 const Categories = () => {
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();

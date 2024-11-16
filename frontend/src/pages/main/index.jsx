@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useGetYearlyTransactionsQuery } from "api/slicesApi/transactionsApiSlice";
+
 import MainSkeleton from "./skeleton";
 import YearCalender from "./components/yearCalendar";
 import YearStats from "./components/yearStats";
 import YearChart from "./components/yearChart";
 import Categories from "./components/categories";
+import { useGetYearlyTransactionsQuery } from "services/api/transactionsApi";
 
 const Main = () => {
   const currentYear = new Date().getFullYear();

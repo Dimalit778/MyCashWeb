@@ -2,50 +2,29 @@ import React, { useState } from "react";
 import { format, addMonths, subMonths, addYears, subYears } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import "./calendarStyle.css";
-import { useTransactionContext } from "../../context/TransactionProvider";
+
+import { useDispatch, useSelector } from "react-redux";
+import { selectedDateObject, setSelectedDate } from "services/reducers/uiSlice";
+import { monthItemVariants, overlayVariants } from "./animation";
 
 const CalendarMonth = () => {
-  const { date, setDate } = useTransactionContext();
-
+  const dispatch = useDispatch();
+  const date = useSelector(selectedDateObject);
   const [isExpanded, setIsExpanded] = useState(false);
   const currentDate = new Date();
 
-  const monthItemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24,
-      },
-    },
+  // Handle date changes through Redux
+  const handleDateChange = (newDate) => {
+    dispatch(setSelectedDate(newDate.toISOString().split("T")[0]));
   };
 
-  const overlayVariants = {
-    hidden: {
-      opacity: 0,
-      clipPath: "inset(0 50% 100% 50%)",
-    },
-    visible: {
-      opacity: 1,
-      clipPath: "inset(0 0% 0% 0%)",
-      transition: {
-        type: "spring",
-        bounce: 0,
-        duration: 0.7,
-      },
-    },
-  };
-
-  const handlePrevMonth = () => setDate(subMonths(date, 1));
-  const handleNextMonth = () => setDate(addMonths(date, 1));
-  const handlePrevYear = () => setDate(subYears(date, 1));
-  const handleNextYear = () => setDate(addYears(date, 1));
+  const handlePrevMonth = () => handleDateChange(subMonths(date, 1));
+  const handleNextMonth = () => handleDateChange(addMonths(date, 1));
+  const handlePrevYear = () => handleDateChange(subYears(date, 1));
+  const handleNextYear = () => handleDateChange(addYears(date, 1));
 
   const handleMonthSelect = (month) => {
-    setDate(new Date(date.getFullYear(), month, 1));
+    handleDateChange(new Date(date.getFullYear(), month, 1));
     setIsExpanded(false);
   };
 

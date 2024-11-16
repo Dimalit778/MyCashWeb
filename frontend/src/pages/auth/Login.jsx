@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useGoogleAuthMutation, useLoginMutation } from "api/slicesApi/userApiSlice";
 
 import LoginForm from "pages/auth/components/LoginForm";
-import { firebaseOAuth } from "api/firebaseOAuth";
+import { firebaseOAuth } from "hooks/firebaseOAuth";
+import { useGoogleAuthMutation, useLoginMutation } from "services/api/authApi";
 
 const Login = () => {
   const navigate = useNavigate();

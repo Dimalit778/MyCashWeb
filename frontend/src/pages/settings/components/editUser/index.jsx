@@ -4,7 +4,7 @@ import { THEME } from "constants/Theme";
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { currentUser } from "services/store/userSlice";
+import { currentUser } from "services/reducers/userSlice";
 const inputStyle = {
   backgroundColor: "#1e1e1e",
   color: "white",

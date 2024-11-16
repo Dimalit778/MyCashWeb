@@ -12,12 +12,12 @@ export const HOME_LINKS = [
   },
   {
     imgURL: expenseIcon,
-    route: "/transactions/expenses",
+    route: "/transactions/expense",
     label: "Expense",
   },
   {
     imgURL: incomeIcon,
-    route: "/transactions/incomes",
+    route: "/transactions/income",
     label: "Income",
   },
   {

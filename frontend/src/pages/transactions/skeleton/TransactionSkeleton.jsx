@@ -1,7 +1,7 @@
 import React from "react";
-import "./financeSkeletonStyle.css";
+import "./transactionSkeletonStyle.css";
 
-const FinanceSkeleton = () => {
+const TransactionSkeleton = () => {
   return (
     <div className="skeleton-container">
       <div className="row g-3">
@@ -68,4 +68,4 @@ const FinanceSkeleton = () => {
   );
 };
 
-export default FinanceSkeleton;
+export default TransactionSkeleton;

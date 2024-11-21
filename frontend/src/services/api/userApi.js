@@ -1,8 +1,7 @@
+import { USER_URL } from "config/api";
 import toast from "react-hot-toast";
-import { apiSlice } from "services/api/baseQuery";
-import { setCategories, setUser } from "services/reducers/userSlice";
-
-const USER_URL = "/api/users";
+import { apiSlice } from "services/baseQuery";
+import { setUser } from "services/reducers/userSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -69,65 +68,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    // ---- Categories
-    getCategories: builder.query({
-      query: () => ({
-        url: `${USER_URL}/getCategories`,
-        credentials: "include",
-        method: "GET",
-      }),
-      providesTags: ["User"],
-    }),
-    addCategory: builder.mutation({
-      query: (data) => ({
-        url: `${USER_URL}/addCategory`,
-        method: "POST",
-        body: data,
-        credentials: "include",
-      }),
-      invalidatesTags: ["Categories"],
-      async onQueryStarted({ type, category }, { dispatch, getState }) {
-        try {
-          const currentCategories = getState().root.user.categories;
-          // Optimistically update UI
-          dispatch(
-            setCategories({
-              ...currentCategories,
-              [type]: [...currentCategories[type], category],
-            })
-          );
-        } catch (error) {
-          // Revert optimistic update
-          dispatch(setCategories(getState().root.user.categories));
-          toast.error("Failed to update categories");
-        }
-      },
-    }),
-
-    deleteCategory: builder.mutation({
-      query: (data) => ({
-        url: `${USER_URL}/deleteCategory`,
-        method: "DELETE",
-        body: data,
-        credentials: "include",
-      }),
-      invalidatesTags: ["Categories"],
-      async onQueryStarted({ type, categoryId }, { dispatch, getState }) {
-        const previousCategories = getState().root.user.categories;
-        try {
-          dispatch(
-            setCategories({
-              ...previousCategories,
-              [type]: previousCategories[type].filter((cat) => cat !== categoryId),
-            })
-          );
-        } catch (error) {
-          // Revert to previous state on failure
-          dispatch(setCategories(previousCategories));
-          toast.error("Failed to delete category");
-        }
-      },
-    }),
   }),
 });
 
@@ -135,11 +75,6 @@ export const {
   useUpdateUserMutation,
   useUploadImageMutation,
   useDeleteImageMutation,
-  useAllUsersQuery,
   useDeleteUserMutation,
   useGetUserQuery,
-  useAdminDeleteUserMutation,
-  useAddCategoryMutation,
-  useDeleteCategoryMutation,
-  useGetCategoriesQuery,
 } = userApiSlice;

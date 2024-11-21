@@ -1,4 +1,4 @@
-import { apiSlice } from "./baseQuery";
+import { apiSlice } from "../baseQuery";
 import { clearUser } from "services/reducers/userSlice";
 
 const AUTH_URL = "/api/auth";

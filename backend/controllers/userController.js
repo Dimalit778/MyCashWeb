@@ -1,12 +1,7 @@
-import asyncHandler from "express-async-handler";
-
 import cloudinary from "../cloudinary.js";
-import Income from "../models/incomeModel.js";
-import Expense from "../models/expenseModel.js";
-import User from "../models/userModel.js";
+import User from "../models/userSchema.js";
 
 const getUser = async (req, res) => {
-  console.log("getUser backend");
   const userId = req.user._id;
   try {
     const user = await User.findById(userId).select("-password");
@@ -89,50 +84,30 @@ const deleteUser = async (req, res) => {
     return res.status(200).json({ message: err.message });
   }
 };
-const addCategory = async (req, res) => {
-  const { type, category } = req.body;
 
-  if (!type || !category) {
-    return res.status(400).json({ message: "All fields are required!" });
-  }
-  if (type !== "incomes" && type !== "expenses") {
-    return res.status(400).json({ message: "Invalid type" });
-  }
+const uploadImage = async (req, res) => {
+  const { userImage } = req.body;
+
   try {
-    const user = await User.findById(req.user._id);
-    user.addCategory(type, category);
-    await user.save();
-    res.json(user.categories);
-  } catch (err) {
-    console.log(err);
+    const result = await cloudinary.uploader.upload(userImage, {
+      folder: "images",
+      resource_type: "auto",
+    });
+
+    return res.status(200).send(result);
+  } catch (error) {
+    res.status(200).send({ message: error.message });
+  }
+};
+const deleteImage = async (req, res) => {
+  const { imageUrl } = req.body;
+  try {
+    await cloudinary.uploader.destroy(imageUrl);
+
+    res.status(200).send(" Image deleted successfully");
+  } catch (error) {
+    res.status(200).send({ message: error.message });
   }
 };
 
-const deleteCategory = async (req, res) => {
-  const { type, category } = req.body;
-
-  if (!type || !category) {
-    return res.status(400).json({ message: "All fields are required!" });
-  }
-  if (type !== "incomes" && type !== "expenses") {
-    return res.status(400).json({ message: "Invalid type" });
-  }
-  try {
-    const user = await User.findById(req.user._id);
-    user.removeCategory(type, category);
-    await user.save();
-    res.json(user.categories);
-  } catch (err) {
-    console.log(err);
-  }
-};
-const getCategories = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    res.json(user.categories);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export { updateUser, getUser, deleteUser, addCategory, deleteCategory, getCategories };
+export { updateUser, getUser, deleteUser, uploadImage, deleteImage };

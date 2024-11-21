@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-hot-toast";
 
-import SignUpForm from "pages/auth/components/SignUpForm";
+import SignUpForm from "components/auth/SignUpForm";
 import { useSignUpMutation } from "services/api/authApi";
 
 const SignUp = () => {

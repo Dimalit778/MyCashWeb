@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import LoginForm from "pages/auth/components/LoginForm";
+import LoginForm from "components/auth/LoginForm";
 import { firebaseOAuth } from "hooks/firebaseOAuth";
 import { useGoogleAuthMutation, useLoginMutation } from "services/api/authApi";
 

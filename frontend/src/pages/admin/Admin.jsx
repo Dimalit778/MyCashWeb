@@ -3,7 +3,7 @@ import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 import { useAdminDeleteUserMutation, useAllUsersQuery } from "services/api/userApi";
 
 import { Image, Transformation } from "cloudinary-react";
-import Loader from "components/loader/Loader";
+import Loader from "components/ui/loader/Loader";
 import React, { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import toast from "react-hot-toast";

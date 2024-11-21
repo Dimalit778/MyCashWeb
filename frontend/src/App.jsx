@@ -1,16 +1,24 @@
-import MainSkeleton from "pages/main/skeleton";
+import { Suspense, lazy } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+// Layouts
 import MainLayout from "layout/MainLayout";
 import PublicLayout from "layout/PublicLayout";
-import Login from "pages/auth/Login";
+
+// Components for immediate loading
+import MainSkeleton from "components/main/skeleton";
+import FinanceSkeleton from "components/transactions/skeleton/TransactionSkeleton";
+
+// Pages
+import Landing from "pages/Landing";
 import SignUp from "pages/auth/SignUp";
-import ContactUs from "pages/contact/ContactUs";
-import Landing from "pages/landing";
-import Main from "pages/main";
-import Settings from "pages/settings";
-import Transactions from "pages/transactions";
-import FinanceSkeleton from "pages/transactions/skeleton/TransactionSkeleton";
-import { Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "pages/auth/Login";
+import Settings from "pages/dashboard/Settings";
+import ContactUs from "pages/dashboard/ContactUs";
+// Lazy loaded components
+
+const Home = lazy(() => import("pages/dashboard/Home"));
+const Transactions = lazy(() => import("pages/dashboard/Transactions"));
 
 export const App = () => {
   return (
@@ -24,10 +32,10 @@ export const App = () => {
 
         <Route element={<MainLayout />}>
           <Route
-            path="main"
+            path="home"
             element={
               <Suspense fallback={<MainSkeleton />}>
-                <Main />
+                <Home />
               </Suspense>
             }
           />

@@ -8,7 +8,7 @@ import userReducer from "./reducers/userSlice.js";
 import themeReducer from "./reducers/themeSlice.js";
 import uiReducer from "./reducers/uiSlice.js";
 import { setupListeners } from "@reduxjs/toolkit/dist/query/index.js";
-import { apiSlice } from "./api/baseQuery.js";
+import { apiSlice } from "./baseQuery.js";
 
 const rootReducer = combineReducers({
   user: userReducer,

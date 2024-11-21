@@ -1,13 +1,12 @@
-import { apiSlice } from "services/api/baseQuery";
-
-const URL = "/api/transactions";
+import { TRANSACTION_URL } from "config/api";
+import { apiSlice } from "services/baseQuery";
 
 export const transactionsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get all transactions (expenses or incomes)
     getMonthlyTransactions: builder.query({
       query: ({ type, date }) => ({
-        url: `${URL}/monthly`,
+        url: `${TRANSACTION_URL}/monthly`,
         method: "GET",
         params: { date, type },
         credentials: "include",
@@ -17,7 +16,7 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
     // Get Yearly transactions
     getYearlyTransactions: builder.query({
       query: ({ year }) => ({
-        url: `${URL}/yearly`,
+        url: `${TRANSACTION_URL}/yearly`,
         method: "GET",
         params: { year },
         credentials: "include",
@@ -28,7 +27,7 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
     // Add transaction (expense or income)
     addTransaction: builder.mutation({
       query: (formattedData) => ({
-        url: `${URL}/add`,
+        url: `${TRANSACTION_URL}/add`,
         method: "POST",
         credentials: "include",
         body: formattedData,
@@ -39,7 +38,7 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
     // Update transaction (expense or income)
     updateTransaction: builder.mutation({
       query: (data) => ({
-        url: `${URL}/update`,
+        url: `${TRANSACTION_URL}/update`,
         method: "PATCH",
         credentials: "include",
         body: data,
@@ -49,8 +48,8 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 
     // Delete transaction (expense or income)
     deleteTransaction: builder.mutation({
-      query: ({ type, id }) => ({
-        url: `${URL}/delete/${id}/${type}`,
+      query: ({ id }) => ({
+        url: `${TRANSACTION_URL}/delete/${id}`,
         method: "DELETE",
         credentials: "include",
       }),

@@ -1,10 +1,11 @@
-import User from "../models/userModel.js";
-
+import User from "../models/userSchema.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
-export const signup = async (req, res) => {
+import Category from "../models/categorySchema.js";
+import { DEFAULT_CATEGORIES } from "../config/config.js";
+
+const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-  console.log(email, password, firstName, lastName);
 
   try {
     if (!email || !password || !firstName || !lastName) {
@@ -27,7 +28,10 @@ export const signup = async (req, res) => {
     });
 
     await user.save();
-
+    await Category.create({
+      user: user._id,
+      categories: DEFAULT_CATEGORIES,
+    });
     // jwt
     generateTokenAndSetCookie(res, user._id);
 
@@ -44,7 +48,7 @@ export const signup = async (req, res) => {
   }
 };
 
-export const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
   const { code } = req.body;
   try {
     const user = await User.findOne({
@@ -77,16 +81,15 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    console.log("login", user);
     if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+      return res.status(400).json({ success: false, message: "User not found" });
     }
     const isPasswordValid = await bcryptjs.compare(password, user.password);
-    console.log("isPasswordValid", isPasswordValid);
+
     if (!isPasswordValid) {
       return res.status(400).json({ success: false, message: "Invalid credentials" });
     }
@@ -110,12 +113,12 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
   res.clearCookie("token");
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
-export const forgotPassword = async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -143,7 +146,7 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-export const resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
@@ -174,7 +177,7 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-export const checkAuth = async (req, res) => {
+const checkAuth = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
@@ -187,3 +190,5 @@ export const checkAuth = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export { signup, verifyEmail, login, logout, forgotPassword, resetPassword, checkAuth };

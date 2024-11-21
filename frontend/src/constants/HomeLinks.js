@@ -7,17 +7,17 @@ import settingsIcon from "assets/icons/settingsIcon.svg";
 export const HOME_LINKS = [
   {
     imgURL: homeIcon,
-    route: "/main",
+    route: "/home",
     label: "Home",
   },
   {
     imgURL: expenseIcon,
-    route: "/transactions/expense",
+    route: "/transactions/expenses",
     label: "Expense",
   },
   {
     imgURL: incomeIcon,
-    route: "/transactions/income",
+    route: "/transactions/incomes",
     label: "Income",
   },
   {

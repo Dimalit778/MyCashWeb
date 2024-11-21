@@ -20,8 +20,8 @@ const uiSlice = createSlice({
     openTransactionModal: (state, action) => {
       state.transactionModal = {
         isOpen: true,
-        type: action.payload.type,
-        editingId: action.payload.editingId,
+        type: action.payload.type || null,
+        editingId: action.payload.editingId || null,
       };
     },
     closeTransactionModal: (state) => {

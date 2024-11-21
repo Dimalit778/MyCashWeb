@@ -3,10 +3,6 @@ import { authApiSlice } from "services/api/authApi";
 
 const initialState = {
   user: null,
-  categories: {
-    income: [],
-    expense: [],
-  },
 };
 
 const userSlice = createSlice({
@@ -34,17 +30,13 @@ const userSlice = createSlice({
       })
       .addMatcher(authApiSlice.endpoints.logout.matchFulfilled, (state) => {
         return initialState;
-      })
-      .addMatcher(authApiSlice.endpoints.getCategories.matchFulfilled, (state, { payload }) => {
-        state.categories = payload;
       });
   },
 });
 
-export const { setUser, setCategories, clearUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
 // Selectors
 export const currentUser = (state) => state.root.user.user;
-export const userCategories = (state) => state.root.user.categories;

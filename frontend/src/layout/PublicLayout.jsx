@@ -8,7 +8,7 @@ const PublicLayout = () => {
   const user = useSelector(currentUser);
 
   if (user) {
-    return <Navigate to="/main" replace />;
+    return <Navigate to="/home" replace />;
   }
   return (
     <div className="bg-black min-vh-100">

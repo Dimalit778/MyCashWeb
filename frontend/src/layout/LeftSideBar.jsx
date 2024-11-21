@@ -6,7 +6,7 @@ import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
 import BrandLogo from "components/brandLogo";
 import { useSelector } from "react-redux";
 
-import MyButton from "components/button";
+import MyButton from "components/ui/button";
 import { currentUser } from "services/reducers/userSlice";
 
 import { HOME_LINKS } from "constants/HomeLinks";

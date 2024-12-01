@@ -26,16 +26,25 @@ const getCategories = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const { label, type } = req.body;
+    const { name, type } = req.body;
+
+    // Validate name
+    if (!name || name.length < 2 || name.length > 20) {
+      console.log("fail");
+      return res.status(400).json({
+        message: "Name must be between 2 and 20 characters",
+      });
+    }
+
     const userCategories = await Category.findOne({ user: req.user._id });
 
-    // Validate unique label
+    // Validate unique name
     const isDuplicate = userCategories.categories
       .filter((cat) => cat.type === type)
-      .some((cat) => cat.label.toLowerCase() === label.toLowerCase());
+      .some((cat) => cat.name.toLowerCase() === name.toLowerCase());
 
     if (isDuplicate) {
-      return res.status(400).json({ message: "Category label must be unique" });
+      return res.status(400).json({ message: "Category name must be unique" });
     }
 
     // Check limit
@@ -46,12 +55,15 @@ const addCategory = async (req, res) => {
       return res.status(400).json({ message: `Cannot add more than ${limit} categories` });
     }
 
-    userCategories.categories.push({ label, type });
+    userCategories.categories.push({ name, type });
     await userCategories.save();
-
-    res.json({ categories: userCategories.categories });
+    return res.status(200).json({
+      message: "Category added successfully",
+      categories: userCategories.categories,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Add category error:", error);
+    return res.status(500).json({ message: "Server error adding category" });
   }
 };
 

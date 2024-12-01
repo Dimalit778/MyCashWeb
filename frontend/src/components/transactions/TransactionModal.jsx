@@ -1,26 +1,52 @@
 // src/features/transactions/components/TransactionModal/index.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { closeTransactionModal, selectedDateObject, transactionModal } from "services/reducers/uiSlice";
-
 import TextInput from "components/ui/textInput";
 import SelectInput from "components/ui/selectInput";
 import MyButton from "components/ui/button";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
+import { useGetCategoriesQuery } from "services/api/categoriesApi";
 import { useAddTransactionMutation, useUpdateTransactionMutation } from "services/api/transactionsApi";
 
-const TransactionModal = () => {
-  const { type } = useParams();
+const TransactionModal = ({ type }) => {
   const dispatch = useDispatch();
-  const modalState = useSelector(transactionModal);
+  const { isOpen, editItem } = useSelector(transactionModal);
+
   const selectedDate = useSelector(selectedDateObject);
-  const categories = [];
+  const { data: categoriesData } = useGetCategoriesQuery();
   const [addTransaction, { isLoading: isAdding }] = useAddTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
+
+  const categories = useMemo(() => {
+    const userCategories = categoriesData?.categories?.filter((cat) => cat.type === type) || [];
+
+    // If editing and category was deleted, add it to options
+    if (editItem?.category?.name && !userCategories.find((c) => c._id === editItem.category.id)) {
+      userCategories.push({
+        _id: editItem.category.id,
+        name: editItem.category.name,
+        type,
+        isDeleted: true,
+      });
+    }
+
+    return userCategories;
+  }, [categoriesData, type, editItem]);
+
+  const defaultValues = useMemo(
+    () => ({
+      name: editItem?.name || "",
+      amount: editItem?.amount || "",
+      category: editItem?.category?.id || "", // Use category ID
+
+      date: format(editItem?.date ? new Date(editItem.date) : selectedDate, "yyyy-MM-dd"),
+    }),
+    [editItem, selectedDate]
+  );
 
   const {
     control,
@@ -29,81 +55,54 @@ const TransactionModal = () => {
     formState: { isSubmitting },
     setError,
   } = useForm({
-    defaultValues: {
-      name: "",
-      amount: "",
-      category: "",
-      description: "",
-      date: format(new Date(selectedDate), "yyyy-MM-dd"),
-    },
+    defaultValues,
   });
 
-  // Reset form when modal state changes
   useEffect(() => {
-    if (modalState.isOpen) {
-      const defaultData = modalState.data
-        ? {
-            ...modalState.data,
-            date: format(new Date(modalState.data.date), "yyyy-MM-dd"),
-          }
-        : {
-            name: "",
-            amount: "",
-            category: "",
-            description: "",
-            date: format(new Date(selectedDate), "yyyy-MM-dd"),
-          };
-      reset(defaultData);
+    if (isOpen) {
+      reset(defaultValues);
     }
-  }, [modalState.isOpen, modalState.data, selectedDate, reset]);
-
+  }, [isOpen, reset, defaultValues]);
   const handleClose = () => {
     dispatch(closeTransactionModal());
-    reset();
+    reset(defaultValues);
   };
-
   const onSubmit = async (data) => {
     try {
       const formattedData = {
         ...data,
         amount: Number(data.amount),
         type,
-        date: selectedDate,
+        // Use new category if changed, otherwise keep original
+        category: data.category || editItem?.category,
+        date: new Date(data.date),
       };
-
-      if (modalState.editingId) {
+      console.log(formattedData);
+      if (editItem) {
         await updateTransaction({
           ...formattedData,
-          _id: modalState.editingId,
+          _id: editItem._id,
         }).unwrap();
-        toast.success(`${type} updated successfully`);
+        toast.success(`${type} updated`);
       } else {
         await addTransaction(formattedData).unwrap();
-        toast.success(`${type} added successfully`);
+        toast.success(`${type} added`);
       }
-
       handleClose();
     } catch (error) {
-      const errorMessage = error.data?.message || "Failed to save transaction";
-      toast.error(errorMessage);
-
-      // Set specific field errors if they exist
+      toast.error(error.data?.message || "Failed to save");
       if (error.data?.errors) {
         Object.entries(error.data.errors).forEach(([field, message]) => {
-          setError(field, { type: "manual", message });
+          setError(field, { message });
         });
       }
     }
   };
 
-  // if (isCategoriesLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
   return (
-    <Modal show={modalState.isOpen} onHide={handleClose} contentClassName="bg-dark" className="mt-5" backdrop="static">
+    <Modal show={isOpen} onHide={handleClose} contentClassName="bg-dark" className="mt-5" backdrop="static">
       <Modal.Header closeButton closeVariant="white">
-        <Modal.Title className="text-light">{modalState.editingId ? `Edit ${type}` : `Add ${type}`}</Modal.Title>
+        <Modal.Title className="text-light">{editItem ? `Edit ${type}` : `Add ${type}`}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -165,26 +164,10 @@ const TransactionModal = () => {
                 control={control}
                 label="Category"
                 options={categories}
-                rules={{
-                  required: "Category is required",
-                }}
-              />
-            </Col>
-          </Row>
-
-          <Row className="mb-3">
-            <Col>
-              <TextInput
-                name="description"
-                control={control}
-                label="Description"
-                as="textarea"
-                rules={{
-                  maxLength: {
-                    value: 500,
-                    message: "Description must be less than 500 characters",
-                  },
-                }}
+                renderOption={(option) => ({
+                  value: option._id,
+                  label: `${option.name}${option.isDeleted ? " (deleted)" : ""}`,
+                })}
               />
             </Col>
           </Row>
@@ -197,9 +180,9 @@ const TransactionModal = () => {
               {isSubmitting || isAdding || isUpdating ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" />
-                  {modalState.editingId ? "Updating..." : "Creating..."}
+                  {editItem ? "Updating..." : "Creating..."}
                 </>
-              ) : modalState.editingId ? (
+              ) : editItem ? (
                 "Update"
               ) : (
                 "Create"

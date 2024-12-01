@@ -3,12 +3,10 @@ import { Form } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import "./inputStyle.css";
 
-const SelectInput = ({ name, control, label, options = [], rules }) => {
-  console.log(options);
-  if (Array.isArray(options)) console.log("yes");
+const SelectInput = ({ name, control, label, options, renderOption, rules }) => {
   return (
     <Controller
-      name={name}
+      name="category"
       control={control}
       rules={rules}
       render={({ field, fieldState: { error } }) => (
@@ -16,12 +14,14 @@ const SelectInput = ({ name, control, label, options = [], rules }) => {
           <Form.Label>{label}</Form.Label>
           <Form.Select {...field} isInvalid={!!error} className="bg-dark text-light">
             <option value="">Select {label}</option>
-            {Array.isArray(options) &&
-              options.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+            {options.map((option) => {
+              const { value, label } = renderOption(option);
+              return (
+                <option key={value} value={value} className={option.isDeleted ? "text-muted" : ""}>
+                  {label}
                 </option>
-              ))}
+              );
+            })}
           </Form.Select>
           <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
         </Form.Group>

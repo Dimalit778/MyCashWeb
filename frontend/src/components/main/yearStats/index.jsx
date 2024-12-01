@@ -2,21 +2,21 @@ import React from "react";
 
 import StatsCard from "./StatsCard";
 
-const YearStats = ({ yearSummary }) => {
+const YearStats = ({ yearlyStats }) => {
   const stats = [
     {
       title: "Expenses",
-      amount: yearSummary.totalExpenses,
+      amount: yearlyStats.totalExpenses,
     },
     {
       title: "Balance",
-      amount: yearSummary.yearlyBalance,
+      amount: yearlyStats.yearlyBalance,
       isBalance: true,
-      isPositive: yearSummary.yearlyBalance >= 0,
+      isPositive: yearlyStats.yearlyBalance >= 0,
     },
     {
       title: "Incomes",
-      amount: yearSummary.totalIncomes,
+      amount: yearlyStats.totalIncomes,
     },
   ];
 

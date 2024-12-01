@@ -5,23 +5,24 @@ import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { currentUser } from "services/reducers/userSlice";
-const inputStyle = {
-  backgroundColor: "#1e1e1e",
-  color: "white",
-  border: "1px solid #444",
-  borderRadius: "4px",
-  padding: "6px 10px",
-};
+
 export default function EditProfile() {
   const userInfo = useSelector(currentUser);
 
   const [user, setUser] = useState(userInfo);
+
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const inputStyle = {
+    backgroundColor: "#1e1e1e",
 
+    border: "1px solid #444",
+    borderRadius: "4px",
+    padding: "6px 10px",
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -54,7 +55,7 @@ export default function EditProfile() {
                 style={inputStyle}
                 className="form-control"
                 id="firstName"
-                value={user.name}
+                value={user.firstName}
                 onChange={(e) => setUser((prev) => ({ ...prev, firstName: e.target.value }))}
                 disabled={!isEditing}
               />
@@ -71,7 +72,7 @@ export default function EditProfile() {
                 style={inputStyle}
                 className="form-control"
                 id="lastName"
-                value={user.name}
+                value={user.lastName}
                 onChange={(e) => setUser((prev) => ({ ...prev, lastName: e.target.value }))}
                 disabled={!isEditing}
               />

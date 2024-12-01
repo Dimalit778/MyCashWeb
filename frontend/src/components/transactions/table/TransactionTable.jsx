@@ -1,27 +1,28 @@
-import React, { useMemo, useState } from "react";
-import Swal from "sweetalert2";
-import toast from "react-hot-toast";
-import { format } from "date-fns";
+import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-
-import { useTransactionActions } from "services/actions/useTransactionsActions";
 import { openTransactionModal } from "services/reducers/uiSlice";
 import { ITEMS_PER_PAGE, TABLE_COLORS } from "config/transactionsConfig";
-
 import PaginationPages from "../PaginationPages";
-import EmptyTable from "./EmptyTable";
-import Table from "./Table";
+import { format } from "date-fns";
 import TableHeader from "./TableHeader";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import TableTitles from "./TableTitles";
+import { useDeleteTransactionMutation } from "services/api/transactionsApi";
+import { useParams } from "react-router-dom";
 
-const TransactionsTable = ({ data, total, type }) => {
+const TransactionsTable = ({ transactions, total }) => {
   const dispatch = useDispatch();
-  const { handleDelete } = useTransactionActions();
+  const { type } = useParams();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  // Enhanced filtering and sorting
+  const [deleteTransaction] = useDeleteTransactionMutation();
+  // Sorting By Date and Amount
   const filteredAndSortedItems = useMemo(() => {
-    return [...data].sort((a, b) => {
+    return [...transactions].sort((a, b) => {
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];
       if (sortConfig.key === "date") {
@@ -34,13 +35,28 @@ const TransactionsTable = ({ data, total, type }) => {
       // If the sort key is not "date", "amount", "max_amount", or "min_amount", don't sort
       return 0;
     });
-  }, [data, sortConfig]);
+  }, [transactions, sortConfig]);
+  // Items Per Page
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredAndSortedItems, currentPage]);
-
+  // Pagination Page Number
   const totalPages = Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE);
+  // Category Color
+  const categoryColorMap = useMemo(() => {
+    const colorMap = new Map();
+    let colorIndex = 0;
+
+    currentItems.forEach((item) => {
+      if (!colorMap.has(item.category.name)) {
+        colorMap.set(item.category.name, TABLE_COLORS[colorIndex % TABLE_COLORS.length]);
+        colorIndex++;
+      }
+    });
+
+    return colorMap;
+  }, [currentItems]);
 
   const handleSort = (key) => {
     setSortConfig((prev) => ({
@@ -49,85 +65,152 @@ const TransactionsTable = ({ data, total, type }) => {
     }));
   };
 
-  const handleDeleteClick = async (id) => {
-    try {
-      const result = await Swal.fire({
-        title: `Delete ${type}?`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Delete",
-      });
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-      if (result.isConfirmed) {
-        await handleDelete({ id, type }).unwrap(); // Make sure to use unwrap()
-        toast.success(`${type} deleted successfully`);
+  const handleOpenModal = useCallback(
+    (action, item = null) => {
+      if (action === "add") {
+        dispatch(openTransactionModal({ type: "add", isOpen: true }));
+      } else if (action === "edit" && item) {
+        dispatch(
+          openTransactionModal({
+            type: "edit",
+            editItem: item,
+            isOpen: true,
+          })
+        );
       }
-    } catch (error) {
-      console.error("Delete error:", error);
-      toast.error(error.data?.message || "Failed to delete transaction");
-    }
-  };
-
-  const handleEdit = (item) => {
-    dispatch(
-      openTransactionModal({
-        type: "edit",
-        editingId: item._id,
-        data: item,
-      })
-    );
-  };
-
-  const exportData = () => {
-    const csv = filteredAndSortedItems
-      .map((item) => {
-        return `${item.name},${item.amount},${item.category},${item.description || ""},${format(
-          new Date(item.date),
-          "yyyy-MM-dd"
-        )}`;
-      })
+    },
+    [dispatch]
+  );
+  const handleExport = useCallback(() => {
+    const csvContent = transactions
+      .map((item) => [item.name, item.amount, item.category, format(new Date(item.date), "yyyy-MM-dd")].join(","))
       .join("\n");
 
-    const blob = new Blob([`Name,Amount,Category,Description,Date\n${csv}`], { type: "text/csv" });
+    const blob = new Blob([`Name,Amount,Category,Date\n${csvContent}`], { type: "text/csv" });
+
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = `${type}_transactions.csv`;
     a.click();
-  };
-  const openModal = () => {
-    dispatch(
-      openTransactionModal({
-        type: "add",
-        isOpen: true,
-        editingId: null,
-      })
-    );
+    window.URL.revokeObjectURL(url);
+  }, [transactions, type]);
+
+  const toggleSelection = (id) => {
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
+  const handleDelete = async (ids) => {
+    const isBulk = Array.isArray(selectedItems) && ids.length > 1;
+
+    try {
+      const { isConfirmed } = await Swal.fire({
+        title: isBulk ? `Delete ${ids.length} items?` : `Delete ${type}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: isBulk ? "Delete All" : "Delete",
+      });
+
+      if (!isConfirmed) return;
+
+      if (isBulk) {
+        await Promise.all(ids.map((id) => deleteTransaction({ id, type }).unwrap()));
+        setSelectedItems([]);
+        toast.success(`Deleted ${ids.length} items`);
+      } else {
+        await deleteTransaction({ id: ids[0], type }).unwrap();
+        setSelectedItems([]);
+        toast.success("Transaction deleted");
+      }
+    } catch (error) {
+      toast.error(isBulk ? "Failed to delete items" : "Failed to delete transaction");
+    }
+  };
+  const handleDeleteItems = () => handleDelete(selectedItems);
+
   return (
-    <div className="card bg-dark" style={{ minHeight: "40vh" }}>
+    <div className="card bg-dark mt-5" style={{ minHeight: "40vh" }}>
       <div className="card-body">
-        <TableHeader type={type} total={total} exportData={exportData} openModal={openModal} />
+        <TableHeader type={type} total={total} exportData={handleExport} openModal={handleOpenModal} />
+
         <div className="table-responsive">
-          {!currentItems.length ? (
-            <EmptyTable type={type} />
+          {!transactions.length ? (
+            <div className="d-flex justify-content-center mt-5">
+              <h3 className="text-white">{type} List is empty</h3>
+            </div>
           ) : (
-            <Table
-              items={currentItems}
-              onEdit={handleEdit}
-              onDelete={handleDeleteClick}
-              sortConfig={sortConfig}
-              handleSort={handleSort}
-              colors={TABLE_COLORS}
-            />
+            <table className="table table-dark table-hover ">
+              <TableTitles
+                selectedItems={selectedItems}
+                onDelete={handleDeleteItems}
+                handleSort={handleSort}
+                sortConfig={sortConfig}
+              />
+              <tbody>
+                {currentItems.map((item, index) => (
+                  <tr key={item._id} onClick={() => handleOpenModal("edit", item)} className="align-middle text-center">
+                    <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{item.name}</td>
+
+                    <td style={{ minWidth: "100px" }}>${item.amount.toLocaleString()}</td>
+                    <td style={{ minWidth: "120px" }}>
+                      <div className="d-flex justify-content-center">
+                        <span
+                          className={`badge bg-${categoryColorMap.get(item.category.name)}`}
+                          style={{
+                            padding: "0.5rem 1rem",
+                            fontSize: "0.85rem",
+                            width: "auto",
+                            minWidth: "90px",
+                            display: "inline-block",
+                            textTransform: "capitalize",
+                            fontWeight: "500",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {item.category.name}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td style={{ minWidth: "120px" }}>{format(new Date(item.date), "MMM dd, yyyy")}</td>
+                    <td
+                      className="text-center"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ minWidth: "80px" }} // Minimum width for checkbox
+                    >
+                      <div className="form-check d-flex justify-content-center">
+                        <input
+                          className="form-check-input bg-secondary"
+                          type="checkbox"
+                          checked={selectedItems.includes(item._id)}
+                          onChange={() => toggleSelection(item._id)}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            cursor: "pointer",
+                            width: "1.2rem",
+                            height: "1.2rem",
+                            borderRadius: "3px",
+                          }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
 
-        {totalPages > 1 && (
-          <PaginationPages currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        {transactions.length > 1 && (
+          <PaginationPages currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         )}
       </div>
     </div>

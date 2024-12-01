@@ -3,8 +3,19 @@
     transform: rotate(0.5turn);
   }
 }
-
-.custom-button {
+.sm {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.md {
+  font-size: 14px;
+  padding: 8px 16px;
+}
+.lg {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+.customButton {
   font-family: "Roboto", sans-serif;
   min-width: 60px;
   font-weight: 500;
@@ -22,21 +33,21 @@
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.custom-button:hover {
+.customButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
 
-.custom-button:active {
+.customButton:active {
   transform: translateY(1px);
 }
 
-.custom-button:disabled {
+.customButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.custom-button::before {
+.customButton::before {
   content: "";
   position: absolute;
   top: 0;
@@ -48,11 +59,11 @@
   transition: 0.6s;
 }
 
-.custom-button:hover::before {
+.customButton:hover::before {
   transform: translateX(100%);
 }
 
-.loader-spinner {
+.loaderSpinner {
   width: 20px;
   height: 20px;
   background: no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) top,
@@ -63,19 +74,20 @@
   animation: rotate 1s infinite;
 }
 
-.button-content {
+.buttonContent {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 1.5em;
+  font-weight: 300;
   visibility: visible;
 }
 
-.button-content.loading {
+.buttonContent.loading {
   visibility: hidden;
 }
 
-.spinner-wrapper {
+.spinnerWrapper {
   position: absolute;
   top: 50%;
   left: 50%;

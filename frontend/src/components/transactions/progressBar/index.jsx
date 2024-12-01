@@ -4,28 +4,30 @@ import { AnimatePresence } from "framer-motion";
 import "./progressBar.css";
 import ProgressBarItem from "./ProgressBarItem";
 
-const DynamicProgressBars = ({ data, totalSum }) => {
-  const processedData = useMemo(() => {
-    if (!data?.length || !totalSum) return [];
+const ProgressBars = ({ data, categories, total }) => {
+  const shouldUseGrid = data.length > 10;
 
-    return data.map((item) => ({
-      category: item.category,
-      total: item.total,
-      percentage: (item.total / totalSum) * 100,
-    }));
-  }, [data, totalSum]);
+  const processedCategories = useMemo(() => {
+    if (!data?.length || !total) return categories;
 
-  const shouldUseGrid = data.length > 5;
+    return data
+      .map((category) => ({
+        ...category,
+        percentage: ((category.total / total) * 100).toFixed(1),
+      }))
+      .sort((a, b) => b.total - a.total);
+  }, [data, total, categories]);
 
   return (
     <div className="progress-container">
       <AnimatePresence>
         {shouldUseGrid ? (
-          <Row className="">
-            {processedData.map((item, index) => (
-              <Col xs={12} md={6} key={item.category}>
+          <Row>
+            {processedCategories.map((item, index) => (
+              <Col xs={12} md={6}>
                 <ProgressBarItem
-                  category={item.category}
+                  key={item.category.id}
+                  category={item.category.name}
                   total={item.total}
                   percentage={item.percentage}
                   index={index}
@@ -35,10 +37,10 @@ const DynamicProgressBars = ({ data, totalSum }) => {
           </Row>
         ) : (
           <div className="single-column">
-            {processedData.map((item, index) => (
+            {processedCategories.map((item, index) => (
               <ProgressBarItem
-                key={item.category}
-                category={item.category}
+                key={item.category.id}
+                category={item.category.name}
                 total={item.total}
                 percentage={item.percentage}
                 index={index}
@@ -51,4 +53,4 @@ const DynamicProgressBars = ({ data, totalSum }) => {
   );
 };
 
-export default React.memo(DynamicProgressBars);
+export default React.memo(ProgressBars);

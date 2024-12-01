@@ -1,108 +1,98 @@
 import Transaction from "../models/transactionSchema.js";
 import Category from "../models/categorySchema.js";
-import mongoose from "mongoose";
 import { TRANSACTION_TYPES } from "../config/config.js";
 
 export const getMonthlyTransactions = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { date, type } = req.query;
-
-    // Input validation
-    if (!date || !["income", "expense"].includes(type)) {
-      return res.status(400).json({
-        message: "Valid date and type (income/expense) are required",
-      });
-    }
-
-    // Parse date
-    const [year, month] = date.split("-");
-    if (!year || !month) {
-      return res.status(400).json({
-        message: "Invalid date format. Use YYYY-MM",
-      });
-    }
-
-    const response = await Transaction.getMonthlyStats(userId, type, parseInt(year), parseInt(month));
-
-    res.json(response);
-  } catch (error) {
-    console.error("Error in getMonthlyTransactions:", error);
-    res.status(500).json({ message: "Server Error", error: error.message });
-  }
-};
-export const getYearlyStats = async (req, res) => {
-  try {
-    const userId = req.user._id;
     const { year } = req.query;
-    const currentYear = new Date().getFullYear();
 
-    if (!year || isNaN(year) || year < 2000 || year > currentYear) {
-      return res.status(400).json({
-        success: false,
-        message: `Year must be between 2000 and ${currentYear}`,
-      });
-    }
-
-    const startDate = new Date(year, 0, 1);
-    const endDate = new Date(year, 11, 31, 23, 59, 59);
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31`);
 
     const result = await Transaction.aggregate([
       {
         $match: {
           user: userId,
-          date: { $gte: startDate, $lte: endDate },
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
         },
       },
       {
         $group: {
           _id: {
             month: { $month: "$date" },
-            type: "$type",
+            transactionType: "$transactionType",
+            category: "$category",
           },
-          totalSum: { $sum: "$amount" },
-          transactions: {
-            $push: {
-              _id: "$_id",
-              label: "$label",
-              amount: "$amount",
-              categoryLabel: "$categoryLabel",
-              description: "$description",
-              date: "$date",
-            },
-          },
-          categoryTotals: {
-            $push: {
-              categoryLabel: "$categoryLabel",
-              total: "$amount",
-            },
-          },
+          categoryTotal: { $sum: "$amount" },
+          transactions: { $push: "$$ROOT" },
         },
       },
       {
         $group: {
-          _id: "$_id.month",
-          incomes: {
+          _id: {
+            month: "$_id.month",
+            transactionType: "$_id.transactionType",
+          },
+          categories: {
+            $push: {
+              category: "$_id.category",
+              total: "$categoryTotal",
+            },
+          },
+          transactions: {
+            $push: "$transactions",
+          },
+          totalAmount: { $sum: "$categoryTotal" },
+        },
+      },
+      {
+        $group: {
+          _id: { month: "$_id.month" },
+          expenses: {
             $push: {
               $cond: [
-                { $eq: ["$_id.type", "income"] },
                 {
-                  totalSum: "$totalSum",
-                  categoryTotals: "$categoryTotals",
-                  transactions: "$transactions",
+                  $eq: ["$_id.transactionType", "expenses"],
+                },
+                {
+                  total: "$totalAmount",
+                  categories: "$categories",
+                  transactions: {
+                    $reduce: {
+                      input: "$transactions",
+                      initialValue: [],
+                      in: {
+                        $concatArrays: ["$$value", "$$this"],
+                      },
+                    },
+                  },
                 },
                 null,
               ],
             },
           },
-          expenses: {
+          incomes: {
             $push: {
               $cond: [
-                { $eq: ["$_id.type", "expense"] },
                 {
-                  totalSum: "$totalSum",
-                  categoryTotals: "$categoryTotals",
-                  transactions: "$transactions",
+                  $eq: ["$_id.transactionType", "incomes"],
+                },
+                {
+                  total: "$totalAmount",
+                  categories: "$categories",
+                  transactions: {
+                    $reduce: {
+                      input: "$transactions",
+                      initialValue: [],
+                      in: {
+                        $concatArrays: ["$$value", "$$this"],
+                      },
+                    },
+                  },
                 },
                 null,
               ],
@@ -113,164 +103,230 @@ export const getYearlyStats = async (req, res) => {
       {
         $project: {
           _id: 0,
-          month: "$_id",
-          incomes: { $arrayElemAt: ["$incomes", 0] },
-          expenses: { $arrayElemAt: ["$expenses", 0] },
+          month: "$_id.month",
+          expenses: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$expenses",
+                  as: "expense",
+                  cond: { $ne: ["$$expense", null] },
+                },
+              },
+              0,
+            ],
+          },
+          incomes: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$incomes",
+                  as: "income",
+                  cond: { $ne: ["$$income", null] },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $sort: { month: 1 },
+      },
+    ]);
+    res.json({
+      result,
+    });
+  } catch (error) {
+    console.error("Error in getMonthlyStats:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+export const getMonthlyData = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { year, month, type } = req.query;
+
+    // Fetch transactions
+    const transactions = await Transaction.find({
+      user: userId,
+      transactionType: type,
+      date: {
+        $gte: new Date(`${year}-${month}-01`),
+        $lte: new Date(`${year}-${month}-31`),
+      },
+    });
+
+    // Get total transaction count
+    const total = await Transaction.countDocuments({
+      user: userId,
+      transactionType: type,
+      date: {
+        $gte: new Date(`${year}-${month}-01`),
+        $lte: new Date(`${year}-${month}-31`),
+      },
+    });
+
+    // Calculate total transaction amount
+    const totalAmountData = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: type,
+          date: {
+            $gte: new Date(`${year}-${month}-01`),
+            $lte: new Date(`${year}-${month}-31`),
+          },
         },
       },
       {
         $group: {
           _id: null,
-          months: { $push: "$$ROOT" },
-          totalIncomes: { $sum: "$incomes.totalSum" },
-          totalExpenses: { $sum: "$expenses.totalSum" },
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+    ]);
+    const totalAmount = totalAmountData.length > 0 ? totalAmountData[0].totalAmount : 0;
+
+    // Group transactions by category and calculate totals
+    const categoriesData = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          transactionType: type,
+          date: {
+            $gte: new Date(`${year}-${month}-01`),
+            $lte: new Date(`${year}-${month}-31`),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$category.name",
+          total: { $sum: "$amount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          total: 1,
         },
       },
     ]);
 
-    res.json(result[0]);
+    res.json({
+      transactions,
+
+      total: totalAmount,
+      categories: categoriesData,
+    });
   } catch (error) {
-    console.error("Error in getYearlyStats:", error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
-// try {
-//   const userId = req.user._id;
-//   const { year } = req.query;
-//   const currentYear = new Date().getFullYear();
+// export const getYearlyStats = async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+//     const { year } = req.query;
+//     const currentYear = new Date().getFullYear();
 
-//   if (!year || isNaN(year) || year < 2000 || year > currentYear) {
-//     return res.status(400).json({
-//       success: false,
-//       message: `Year must be between 2000 and ${currentYear}`,
-//     });
-//   }
+//     if (!year || isNaN(year) || year < 2000 || year > currentYear) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Year must be between 2000 and ${currentYear}`,
+//       });
+//     }
 
-//   const startDate = new Date(year, 0, 1);
-//   const endDate = new Date(year, 11, 31, 23, 59, 59);
+//     const startDate = new Date(year, 0, 1);
+//     const endDate = new Date(year, 11, 31, 23, 59, 59);
 
-//   const monthlyData = await Transaction.aggregate([
-//     {
-//       $match: {
-//         user: new mongoose.Types.ObjectId(userId),
-//         date: { $gte: startDate, $lte: endDate },
+//     const result = await Transaction.aggregate([
+//       {
+//         $match: {
+//           user: userId,
+//           date: { $gte: startDate, $lte: endDate },
+//         },
 //       },
-//     },
-//     {
-//       $group: {
-//         _id: {
-//           month: { $month: "$date" },
-//           type: "$type",
+//       {
+//         $lookup: {
+//           from: "categories",
+//           localField: "categoryLabel",
+//           foreignField: "categories.label",
+//           as: "category",
 //         },
-//         total: { $sum: "$amount" },
-//         transactions: {
-//           $push: {
-//             _id: "$_id",
-//             label: "$label",
-//             amount: "$amount",
-//             date: "$date",
-//             categoryLabel: "$categoryLabel",
-//             description: "$description",
-//           },
-//         },
-//         sortByCategory: {
-//           $push: {
-//             $group: {
-//               _id: "$categoryLabel",
-//               total: { $sum: "$amount" },
+//       },
+//       {
+//         $unwind: "$category",
+//       },
+//       {
+//         $group: {
+//           _id: {
+//             month: "$_id.month",
+//             incomes: {
+//               $cond: [
+//                 { $eq: ["$_id.type", "income"] },
+//                 {
+//                   transactions: "$transactions",
+//                   totalIncomes: "$totalAmount",
+//                   categories: {
+//                     $arrayToObject: {
+//                       $map: {
+//                         input: { $filter: { input: "$categories", cond: { $eq: ["$$this.type", "income"] } } },
+//                         in: { k: "$$this.label", v: "$$this.amount" },
+//                       },
+//                     },
+//                   },
+//                 },
+//                 null,
+//               ],
+//             },
+//             expenses: {
+//               $cond: [
+//                 { $eq: ["$_id.type", "expense"] },
+//                 {
+//                   transactions: "$transactions",
+//                   totalExpenses: "$totalAmount",
+//                   categories: {
+//                     $arrayToObject: {
+//                       $map: {
+//                         input: { $filter: { input: "$categories", cond: { $eq: ["$$this.type", "expense"] } } },
+//                         in: { k: "$$this.label", v: "$$this.amount" },
+//                       },
+//                     },
+//                   },
+//                 },
+//                 null,
+//               ],
 //             },
 //           },
 //         },
-//         avgTransaction: { $avg: "$amount" },
-//         minTransaction: { $min: "$amount" },
-//         maxTransaction: { $max: "$amount" },
-//         count: { $sum: 1 },
 //       },
-//     },
-//     { $sort: { "_id.month": 1 } },
-//   ]);
-
-//   // Initialize data structure
-//   const stats = {
-//     monthlyData: Array.from({ length: 12 }, (_, index) => ({
-//       month: index + 1,
-//       monthName: new Date(year, index).toLocaleString("default", { month: "long" }),
-//       [TRANSACTION_TYPES.INCOME]: 0,
-//       [TRANSACTION_TYPES.EXPENSE]: 0,
-//       balance: 0,
-//       [`${TRANSACTION_TYPES.INCOME}Transactions`]: [],
-//       [`${TRANSACTION_TYPES.EXPENSE}Transactions`]: [],
-//       statistics: {
-//         avgTransaction: 0,
-//         minTransaction: 0,
-//         maxTransaction: 0,
-//         transactionCount: 0,
+//       {
+//         $project: {
+//           _id: 0,
+//           month: "$_id.month",
+//           incomes: 1,
+//           expenses: 1,
+//         },
 //       },
-//     })),
-//     totals: {
-//       [TRANSACTION_TYPES.INCOME]: 0,
-//       [TRANSACTION_TYPES.EXPENSE]: 0,
-//       transactions: 0,
-//     },
-//     highestMonth: {
-//       [TRANSACTION_TYPES.INCOME]: { month: null, amount: 0 },
-//       [TRANSACTION_TYPES.EXPENSE]: { month: null, amount: 0 },
-//     },
-//   };
-
-//   // Process data
-//   monthlyData.forEach((item) => {
-//     const monthIndex = item._id.month - 1;
-//     const type = item._id.type;
-//     const monthName = stats.monthlyData[monthIndex].monthName;
-
-//     // Update monthly amounts and transactions
-//     stats.monthlyData[monthIndex].sortByCategory = item.sortByCategory;
-//     stats.monthlyData[monthIndex][type] = item.total;
-//     stats.monthlyData[monthIndex][`${type}Transactions`] = item.transactions;
-//     stats.monthlyData[monthIndex].statistics = {
-//       avgTransaction: item.avgTransaction,
-//       minTransaction: item.minTransaction,
-//       maxTransaction: item.maxTransaction,
-//       transactionCount: item.count,
-//     };
-
-//     // Update totals
-//     stats.totals[type] += item.total;
-//     stats.totals.transactions += item.count;
-
-//     // Update highest months
-//     if (item.total > stats.highestMonth[type].amount) {
-//       stats.highestMonth[type] = { month: monthName, amount: item.total };
-//     }
-
-//     // Calculate monthly balance
-//     stats.monthlyData[monthIndex].balance =
-//       stats.monthlyData[monthIndex][TRANSACTION_TYPES.INCOME] -
-//       stats.monthlyData[monthIndex][TRANSACTION_TYPES.EXPENSE];
-//   });
-
-//   res.json({
-//     success: true,
-//     data: {
-//       year: parseInt(year),
-//       monthlyData: stats.monthlyData,
-//       summary: {
-//         ...stats.totals,
-//         yearlyBalance: stats.totals[TRANSACTION_TYPES.INCOME] - stats.totals[TRANSACTION_TYPES.EXPENSE],
-//         highestMonths: stats.highestMonth,
+//       { $sort: { month: 1 } },
+//       {
+//         $group: {
+//           _id: null,
+//           months: { $push: "$$ROOT" },
+//           yearlyIncomesSum: { $sum: "$incomes.totalIncomes" },
+//           yearlyExpensesSum: { $sum: "$expenses.totalExpenses" },
+//         },
 //       },
-//     },
-//   });
-// } catch (error) {
-//   console.error("Error getting yearly stats:", error);
-//   res.status(500).json({
-//     success: false,
-//     message: "Error fetching yearly statistics",
-//     error: error.message,
-//   });
-// }
+//     ]);
 
+//     res.json(result[0]);
+//   } catch (error) {
+//     console.error("Error in getYearlyStats:", error);
+//     res.status(500).json({ message: "Server Error", error: error.message });
+//   }
+// };
 export const getOneTransaction = async (req, res) => {
   const { id } = req.params;
 
@@ -291,39 +347,60 @@ export const getOneTransaction = async (req, res) => {
 export const addTransaction = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { label, amount, categoryId, date, description, type } = req.body;
+    const { name, amount, category, date, type } = req.body;
 
     // Validation
-    if (!label || !date || !categoryId || !type || !amount) {
+    if (!name || !date || !category || !type || !amount) {
       return res.status(400).json({
         message: "All required fields must be provided",
-        required: ["label", "date", "categoryId", "type", "amount"],
+        required: ["name", "date", "category", "type", "amount"],
       });
     }
+    if (amount <= 0) {
+      return res.status(400).json({
+        message: "Amount must be greater than 0",
+      });
+    }
+
+    if (type !== TRANSACTION_TYPES.INCOME && type !== TRANSACTION_TYPES.EXPENSE) {
+      return res.status(400).json({
+        message: "Invalid transaction type",
+      });
+    }
+    if (name.length > 20 || name.length < 1) {
+      return res.status(400).json({
+        message: "Name must be between 1 and 20 characters",
+      });
+    }
+
     // Find user's categories and verify category
     const userCategories = await Category.findOne({ user: userId });
+
     if (!userCategories) {
       return res.status(404).json({ message: "Categories not found" });
     }
 
-    const category = userCategories.categories.id(categoryId);
-    if (!category) {
+    const isCategory = userCategories.categories.id(category);
+
+    if (!isCategory) {
       return res.status(400).json({ message: "Invalid category" });
     }
-
-    if (category.type !== type) {
+    if (isCategory.type !== type) {
       return res.status(400).json({
         message: "Category type doesn't match transaction type",
       });
     }
-    // Create transaction with just the category label
+
+    // Create transaction with just the category name
     const transaction = new Transaction({
-      label,
+      name,
       amount,
       date,
-      description: description || "",
-      type,
-      categoryLabel: category.label,
+      transactionType: type,
+      category: {
+        id: isCategory._id,
+        name: isCategory.name,
+      },
       user: userId,
     });
 
@@ -335,18 +412,17 @@ export const addTransaction = async (req, res) => {
       transaction,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 export const updateTransaction = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { label, amount, date, description, type, categoryId } = req.body;
+    const { _id, name, amount, date, type, category } = req.body;
+    console.log(req.body);
     const userId = req.user._id;
-
     // First find the existing transaction
     const existingTransaction = await Transaction.findOne({
-      _id: id,
+      _id,
       user: userId,
     });
 
@@ -357,13 +433,16 @@ export const updateTransaction = async (req, res) => {
       });
     }
 
-    // If category is being updated, get the new category label
-    let updateData = { label, amount, date, description };
+    // // If category is being updated, get the new category label
+    let updateData = { name, amount, date };
 
-    if (categoryId) {
+    if (category) {
       // Find user's categories and verify new category
       const userCategories = await Category.findOne({ user: userId });
-      const newCategory = userCategories.categories.id(categoryId);
+
+      const newCategory = userCategories.categories.find((cat) => cat.name === category);
+
+      console.log("newCategory", newCategory);
 
       if (!newCategory) {
         return res.status(400).json({
@@ -381,11 +460,11 @@ export const updateTransaction = async (req, res) => {
       }
 
       // Add category label to update data
-      updateData.categoryLabel = newCategory.label;
+      updateData.categoryName = newCategory.name;
     }
 
     // Update transaction
-    const updatedTransaction = await Transaction.findOneAndUpdate({ _id: id, user: userId }, updateData, {
+    const updatedTransaction = await Transaction.findOneAndUpdate({ _id, user: userId }, updateData, {
       new: true,
       runValidators: true,
     });
@@ -432,6 +511,111 @@ export const deleteTransaction = async (req, res) => {
       transactionId: id,
     });
   } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+export const getYearlyStats = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { year } = req.query;
+
+    if (!year) {
+      return res.status(400).json({ message: "Date is required" });
+    }
+
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31`);
+
+    const result = await Transaction.aggregate([
+      {
+        $match: {
+          user: userId,
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $facet: {
+          yearlyTotals: [
+            {
+              $group: {
+                _id: "$transactionType",
+                total: { $sum: "$amount" },
+              },
+            },
+          ],
+          // Calculate monthly breakdowns
+          monthlyStats: [
+            {
+              $group: {
+                _id: {
+                  month: { $month: "$date" },
+                  transactionType: "$transactionType",
+                },
+                total: { $sum: "$amount" },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          yearlyTotals: 1,
+          monthlyStats: 1,
+        },
+      },
+    ]);
+
+    // Process the aggregation results
+    const yearlyTotals = result[0].yearlyTotals.reduce(
+      (acc, curr) => {
+        if (curr._id === "incomes") acc.totalIncomes = curr.total;
+        if (curr._id === "expenses") acc.totalExpenses = curr.total;
+        return acc;
+      },
+      { totalIncomes: 0, totalExpenses: 0 }
+    );
+
+    // Create an array for all 12 months with default values
+    const monthlyStats = Array.from({ length: 12 }, (_, i) => ({
+      month: i + 1,
+      totalIncomes: 0,
+      totalExpenses: 0,
+    }));
+
+    // Fill in the actual values from the aggregation
+    result[0].monthlyStats.forEach((stat) => {
+      const monthIndex = stat._id.month - 1;
+      if (stat._id.transactionType === TRANSACTION_TYPES.INCOME) {
+        monthlyStats[monthIndex].totalIncomes = stat.total;
+      } else if (stat._id.transactionType === TRANSACTION_TYPES.EXPENSE) {
+        monthlyStats[monthIndex].totalExpenses = stat.total;
+      }
+    });
+
+    res.json({
+      yearlyStats: yearlyTotals,
+      monthlyStats,
+    });
+  } catch (error) {
+    console.error("Error in getYearlyStats:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+export const getYear = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { year } = req.query;
+    // Input validation
+    if (!year) {
+      return res.status(400).json({ message: "Date is required" });
+    }
+    const result = await Transaction.find({ user: userId, date: { $gte: `${year}-01-01`, $lte: `${year}-12-31` } });
+    res.json({ result });
+  } catch (error) {
+    console.error("Error in getYearlyTransactions:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };

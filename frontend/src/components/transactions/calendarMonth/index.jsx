@@ -29,7 +29,7 @@ const CalendarMonth = () => {
   };
 
   return (
-    <div className="calendar-container mt-3">
+    <div className="calendar-container">
       <motion.div className="calendar-header">
         <motion.button
           className="nav-button"

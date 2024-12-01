@@ -9,10 +9,10 @@ const TableHeader = ({ total = 0, exportData, openModal, type }) => {
   return (
     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
       <div className="d-flex gap-2">
-        <MyButton bgColor={THEME.orange} onClick={() => openModal()}>
+        <MyButton bgColor={THEME.dark} border={THEME.light} onClick={() => openModal("add", null)}>
           Add {type}
         </MyButton>
-        <MyButton bgColor={THEME.grey} onClick={exportData}>
+        <MyButton bgColor={THEME.dark} onClick={exportData}>
           <FontAwesomeIcon icon={faFileExport} className="me-2" />
           Export
         </MyButton>

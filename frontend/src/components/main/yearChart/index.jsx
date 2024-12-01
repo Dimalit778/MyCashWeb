@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { ALL_MONTHS } from "constants/AllMonts";
+import { ALL_MONTHS } from "constants/AllMonths";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -11,28 +11,32 @@ const formatAmount = (amount) => {
   return `$${amount.toFixed(1)}`;
 };
 
-const YearChart = React.memo(({ monthlyData }) => {
+const YearChart = React.memo(({ monthlyStats }) => {
   const chartData = useMemo(() => {
     return {
       labels: ALL_MONTHS.map((month) => month.short),
       datasets: [
         {
           label: "Monthly Incomes",
-          data: ALL_MONTHS.map((_, index) => monthlyData[index]?.incomes || 0),
+          data: ALL_MONTHS.map((_, index) => monthlyStats[index]?.totalIncomes || 0),
           backgroundColor: "rgba(40, 167, 69, 0.6)",
           borderColor: "rgba(40, 167, 69, 1)",
           borderWidth: 1,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8,
         },
         {
           label: "Monthly Expenses",
-          data: ALL_MONTHS.map((_, index) => monthlyData[index]?.expenses || 0),
+          data: ALL_MONTHS.map((_, index) => monthlyStats[index]?.totalExpenses || 0),
           backgroundColor: "rgba(220, 53, 69, 0.6)",
           borderColor: "rgba(220, 53, 69, 1)",
           borderWidth: 1,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8,
         },
       ],
     };
-  }, [monthlyData]);
+  }, [monthlyStats]);
 
   const options = {
     responsive: true,
@@ -40,9 +44,10 @@ const YearChart = React.memo(({ monthlyData }) => {
     plugins: {
       legend: {
         position: "top",
+
         labels: {
           color: "#fff",
-          padding: 20,
+          padding: 15,
           font: {
             size: 14,
             family: "Monospace",

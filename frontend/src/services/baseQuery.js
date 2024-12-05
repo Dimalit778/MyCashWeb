@@ -14,55 +14,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-// const customBaseQuery = async (args, api, extraOptions) => {
-//   let result = await baseQuery(args, api, extraOptions);
-
-//   if (
-//     result?.error?.status === 401 ||
-//     result?.error?.data?.message === "You are not logged in" ||
-//     result?.error?.data?.error === "Unauthorized: No Token Provided" ||
-//     result?.error?.data?.error === "Unauthorized: Invalid Token"
-//   ) {
-//     // Try to refresh token
-//     const refreshResult = await baseQuery(
-//       {
-//         url: "auth/refresh",
-//         method: "POST",
-//       },
-//       api,
-//       extraOptions
-//     );
-
-//     if (refreshResult.data) {
-//       // Retry the original request
-//       result = await baseQuery(args, api, extraOptions);
-//     } else {
-//       // Redirect to login if refresh fails
-//       if (typeof window !== "undefined") {
-//         const currentPath = window.location.pathname;
-//         if (currentPath !== "/login") {
-//           window.location.href = `/login?returnUrl=${encodeURIComponent(currentPath)}`;
-//         } else {
-//           window.location.href = "/login";
-//         }
-//       }
-//     }
-//   }
-
-//   return result;
-// };
-// const handleAuthFailure = (api) => {
-//   if (typeof window !== "undefined") {
-//     const currentPath = window.location.pathname;
-//     if (currentPath !== "/login") {
-//       const returnUrl = encodeURIComponent(currentPath);
-//       window.location.href = `/login?returnUrl=${returnUrl}`;
-//     } else {
-//       window.location.href = "/login";
-//     }
-//   }
-// };
-
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQuery,

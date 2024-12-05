@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-
 import MainSkeleton from "../../components/main/skeleton";
 import YearCalender from "../../components/main/yearCalendar";
 import YearStats from "../../components/main/yearStats";
 import YearChart from "../../components/main/yearChart";
-
 import { useGetYearlyTransactionsQuery } from "services/api/transactionsApi";
+import LoadingOverlay from "components/LoadingLayout";
+import DataError from "components/DataError";
 
 const Home = () => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
 
-  const { data, isLoading, error } = useGetYearlyTransactionsQuery(
+  const { data, isLoading, isFetching, error } = useGetYearlyTransactionsQuery(
     { year },
     {
       refetchOnMountOrArgChange: true,
@@ -19,19 +19,21 @@ const Home = () => {
       refetchOnFocus: false,
     }
   );
-  console.log(data);
+
   if (error) {
-    console.error("Failed to fetch transactions:", error);
-    return <div>Failed to load data. Please try again later.</div>;
+    console.log(error);
+    return <DataError error={error} />;
   }
 
   if (isLoading) return <MainSkeleton />;
 
   return (
-    <div className="d-flex flex-column gap-4 ">
+    <div className="container-fluid d-flex flex-column gap-3  ">
       <YearCalender year={year} setYear={setYear} />
-      <YearStats yearlyStats={data?.yearlyStats} />
-      <YearChart monthlyStats={data?.monthlyStats} />
+      <LoadingOverlay show={isFetching}>
+        <YearStats yearlyStats={data?.yearlyStats} />
+        <YearChart monthlyStats={data?.monthlyStats} />
+      </LoadingOverlay>
     </div>
   );
 };

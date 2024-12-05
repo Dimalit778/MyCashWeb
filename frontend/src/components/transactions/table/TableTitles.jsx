@@ -16,9 +16,6 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
             onClick={onDelete}
             disabled={selectedItems.length === 0}
             bgColor={selectedItems.length > 0 ? "red" : "transparent"}
-            color="white"
-            className="w-100"
-            style={{ minWidth: "90px" }}
           >
             Delete
             <span className="ms-1">{selectedItems.length > 0 && `(${selectedItems.length})`}</span>
@@ -43,7 +40,7 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
               width: width,
               minWidth: key === "label" ? "150px" : "100px",
               textAlign: align,
-              verticalAlign: "middle", // Center vertically
+              verticalAlign: "middle",
             }}
           >
             <div

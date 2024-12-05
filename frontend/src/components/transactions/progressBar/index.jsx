@@ -1,14 +1,12 @@
-import React, { useMemo } from "react";
-import { Row, Col } from "react-bootstrap";
+import React from "react";
+
 import { AnimatePresence } from "framer-motion";
 import "./progressBar.css";
 import ProgressBarItem from "./ProgressBarItem";
 
 const ProgressBars = ({ data, categories, total }) => {
-  const shouldUseGrid = data.length > 10;
-
-  const processedCategories = useMemo(() => {
-    if (!data?.length || !total) return categories;
+  const processedCategories = () => {
+    if (!total) return []; // Return empty array if total is 0
 
     return data
       .map((category) => ({
@@ -16,41 +14,45 @@ const ProgressBars = ({ data, categories, total }) => {
         percentage: ((category.total / total) * 100).toFixed(1),
       }))
       .sort((a, b) => b.total - a.total);
-  }, [data, total, categories]);
+  };
+
+  const processed = processedCategories();
+  if (!processed.length) {
+    return (
+      <div
+        className=" d-flex align-items-center justify-content-center"
+        style={{
+          minHeight: "20vh",
+          borderRadius: "8px",
+        }}
+      >
+        <h3 className="text-secondary">No Item in Progress bar </h3>
+      </div>
+    );
+  }
 
   return (
-    <div className="progress-container">
+    <div className="progress-container mt-3">
       <AnimatePresence>
-        {shouldUseGrid ? (
-          <Row>
-            {processedCategories.map((item, index) => (
-              <Col xs={12} md={6}>
-                <ProgressBarItem
-                  key={item.category.id}
-                  category={item.category.name}
-                  total={item.total}
-                  percentage={item.percentage}
-                  index={index}
-                />
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <div className="single-column">
-            {processedCategories.map((item, index) => (
-              <ProgressBarItem
-                key={item.category.id}
-                category={item.category.name}
-                total={item.total}
-                percentage={item.percentage}
-                index={index}
-              />
-            ))}
-          </div>
-        )}
+        <div
+          className="d-grid gap-3"
+          style={{
+            gridTemplateColumns: processed?.length > 5 ? "repeat(2, 1fr)" : "1fr",
+          }}
+        >
+          {processed.map((category, index) => (
+            <ProgressBarItem
+              key={index}
+              category={category.category}
+              total={category.total}
+              percentage={category.percentage}
+              index={index}
+            />
+          ))}
+        </div>
       </AnimatePresence>
     </div>
   );
 };
 
-export default React.memo(ProgressBars);
+export default ProgressBars;

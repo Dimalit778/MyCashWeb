@@ -9,14 +9,12 @@ const getUser = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.log("Error in getUser: ", error.message);
     res.status(500).json({ error: error.message });
   }
 };
 
 const updateUser = async (req, res) => {
-  const { name, email, currentPassword, newPassword, bio, link } = req.body;
-  let { profileImg, coverImg } = req.body;
+  const { firstName, lastName, currentPassword, newPassword, profileImg } = req.body;
 
   const userId = req.user._id;
 
@@ -49,20 +47,16 @@ const updateUser = async (req, res) => {
       profileImg = uploadedResponse.secure_url;
     }
 
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.isVerified = isVerified || user.isVerified;
-    user.isAdmin = isAdmin || user.isAdmin;
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
     user.profileImg = profileImg || user.profileImg;
 
     user = await user.save();
 
-    // password should be null in response
     user.password = null;
 
-    return res.status(200).json(user);
+    return res.status(200).json({ user });
   } catch (error) {
-    console.log("Error in updateUser: ", error.message);
     res.status(500).json({ error: error.message });
   }
 };

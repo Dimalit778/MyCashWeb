@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { openTransactionModal } from "services/reducers/uiSlice";
 import { ITEMS_PER_PAGE, TABLE_COLORS } from "config/transactionsConfig";
-import PaginationPages from "../PaginationPages";
+
 import { format } from "date-fns";
 import TableHeader from "./TableHeader";
 import Swal from "sweetalert2";
@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import TableTitles from "./TableTitles";
 import { useDeleteTransactionMutation } from "services/api/transactionsApi";
 import { useParams } from "react-router-dom";
+import PaginationPages from "../pagination";
 
 const TransactionsTable = ({ transactions, total }) => {
   const dispatch = useDispatch();
@@ -142,7 +143,7 @@ const TransactionsTable = ({ transactions, total }) => {
         <div className="table-responsive">
           {!transactions.length ? (
             <div className="d-flex justify-content-center mt-5">
-              <h3 className="text-white">{type} List is empty</h3>
+              <h3 className="text-secondary">{type} List is empty</h3>
             </div>
           ) : (
             <table className="table table-dark table-hover ">
@@ -209,7 +210,7 @@ const TransactionsTable = ({ transactions, total }) => {
           )}
         </div>
 
-        {transactions.length > 1 && (
+        {totalPages.length > 1 && (
           <PaginationPages currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         )}
       </div>

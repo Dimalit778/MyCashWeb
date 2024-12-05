@@ -6,14 +6,15 @@ import { App } from "App";
 import { persistor, store } from "services/store";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { Toaster } from "react-hot-toast";
-import ErrorFallback from "components/ErrorBoundary";
-import { ErrorBoundary } from "react-error-boundary";
+
+import { ErrorBoundary } from "components/ErrorBoundary";
+
 const root = createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ErrorBoundary>
         <App />
         <Toaster
           position="top-right"

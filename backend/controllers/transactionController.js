@@ -577,6 +577,9 @@ export const getYearlyStats = async (req, res) => {
       },
       { totalIncomes: 0, totalExpenses: 0 }
     );
+    // Calculate balance
+    const balance = yearlyTotals.totalIncomes - yearlyTotals.totalExpenses;
+    yearlyTotals.balance = balance < 0 ? -Math.abs(balance) : balance;
 
     // Create an array for all 12 months with default values
     const monthlyStats = Array.from({ length: 12 }, (_, i) => ({

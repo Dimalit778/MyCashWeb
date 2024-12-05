@@ -35,7 +35,7 @@ const MainLayout = () => {
         >
           <LeftSideBar />
         </Col>
-        <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }} className="main-content p-2 ">
+        <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }} className="main-content p-2  ">
           <Outlet />
         </Col>
       </Row>

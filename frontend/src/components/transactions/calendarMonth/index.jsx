@@ -2,29 +2,18 @@ import React, { useState } from "react";
 import { format, addMonths, subMonths, addYears, subYears } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import "./calendarStyle.css";
-
-import { useDispatch, useSelector } from "react-redux";
-import { selectedDateObject, setSelectedDate } from "services/reducers/uiSlice";
 import { monthItemVariants, overlayVariants } from "./animation";
 
-const CalendarMonth = () => {
-  const dispatch = useDispatch();
-  const date = useSelector(selectedDateObject);
+const CalendarMonth = ({ date, setDate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const currentDate = new Date();
 
-  // Handle date changes through Redux
-  const handleDateChange = (newDate) => {
-    dispatch(setSelectedDate(newDate.toISOString().split("T")[0]));
-  };
-
-  const handlePrevMonth = () => handleDateChange(subMonths(date, 1));
-  const handleNextMonth = () => handleDateChange(addMonths(date, 1));
-  const handlePrevYear = () => handleDateChange(subYears(date, 1));
-  const handleNextYear = () => handleDateChange(addYears(date, 1));
+  const handlePrevMonth = () => setDate(subMonths(date, 1));
+  const handleNextMonth = () => setDate(addMonths(date, 1));
+  const handlePrevYear = () => setDate(subYears(date, 1));
+  const handleNextYear = () => setDate(addYears(date, 1));
 
   const handleMonthSelect = (month) => {
-    handleDateChange(new Date(date.getFullYear(), month, 1));
+    setDate(new Date(date.getFullYear(), month, 1));
     setIsExpanded(false);
   };
 
@@ -72,7 +61,7 @@ const CalendarMonth = () => {
             <motion.div className="months-grid">
               {Array.from({ length: 12 }, (_, i) => {
                 const monthDate = new Date(date.getFullYear(), i, 1);
-                const isCurrentMonth = i === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+                const isCurrentMonth = i === date.getMonth();
                 const isSelectedMonth = i === date.getMonth();
 
                 return (

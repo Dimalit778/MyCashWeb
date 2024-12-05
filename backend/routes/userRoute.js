@@ -5,7 +5,7 @@ import { deleteImage, deleteUser, getUser, updateUser, uploadImage } from "../co
 const router = express.Router();
 router
   .get("/profile", getUser)
-  .patch("/profile", updateUser)
+  .patch("/update", updateUser)
   .delete("/profile", deleteUser)
   .post("/profile/image", uploadImage)
   .delete("/profile/image", deleteImage);

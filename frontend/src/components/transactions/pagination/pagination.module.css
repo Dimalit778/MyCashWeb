@@ -1,0 +1,29 @@
+/* PaginationPages.module.css */
+.paginationDark :global(.page-item) :global(.page-link) {
+  background-color: #343a40;
+  border-color: #454d55;
+  color: #fff;
+}
+
+.paginationDark :global(.page-item.active) :global(.page-link) {
+  background: var(--light-grey);
+  border-color: #454d55;
+  color: #fff;
+  font-weight: bold;
+}
+
+.paginationDark :global(.page-item.disabled) :global(.page-link) {
+  background-color: #343a40;
+  border-color: #454d55;
+  color: #6c757d;
+}
+
+.paginationDark :global(.page-link:hover) {
+  background-color: #23272b;
+  border-color: #454d55;
+  color: #fff;
+}
+
+.paginationDark :global(.page-link:focus) {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

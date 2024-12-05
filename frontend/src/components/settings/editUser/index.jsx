@@ -1,138 +1,151 @@
 import MyButton from "components/ui/button";
+import TextInput from "components/ui/textInput";
 import { THEME } from "constants/Theme";
-
-import React, { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Container, Form, Row } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { useUpdateUserMutation } from "services/api/userApi";
+
 import { currentUser } from "services/reducers/userSlice";
 
 export default function EditProfile() {
   const userInfo = useSelector(currentUser);
-
-  const [user, setUser] = useState(userInfo);
-
   const [isEditing, setIsEditing] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const inputStyle = {
-    backgroundColor: "#1e1e1e",
+  const [updateUser] = useUpdateUserMutation();
 
-    border: "1px solid #444",
-    borderRadius: "4px",
-    padding: "6px 10px",
-  };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+  const { control, handleSubmit, reset, watch } = useForm({
+    defaultValues: {
+      firstName: userInfo?.firstName || "",
+      lastName: userInfo?.lastName || "",
+      currentPassword: "",
+      newPassword: "",
+    },
+  });
+
+  useEffect(() => {
+    if (userInfo) {
+      reset({
+        firstName: userInfo?.firstName || "",
+        lastName: userInfo?.lastName || "",
+        currentPassword: "",
+        newPassword: "",
+      });
     }
-    setLoading(true);
-    // Simulating an async operation
-    setTimeout(() => {
-      setLoading(false);
+  }, [userInfo, reset]);
+
+  const currentPassword = watch("currentPassword");
+  const newPassword = watch("newPassword");
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const changedValues = Object.entries(data).reduce((acc, [key, value]) => {
+        if (value !== userInfo[key] && value !== "") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+      if (Object.keys(changedValues).length === 0) return;
+
+      await updateUser(changedValues).unwrap();
       setIsEditing(false);
-      setNewPassword("");
-      setConfirmPassword("");
-      setError("");
-    }, 2000);
+      reset();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container fluid className="p-4 bg-dark border border-1 border-secondary rounded">
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Row className="mb-3 border-bottom border-secondary ">
-          {/* first name */}
           <Col className="mb-3 ">
-            <label htmlFor="firstName" className=" col-form-label">
-              First Name
-            </label>
-            <div className="col-sm-9">
-              <input
-                type="text"
-                style={inputStyle}
-                className="form-control"
-                id="firstName"
-                value={user.firstName}
-                onChange={(e) => setUser((prev) => ({ ...prev, firstName: e.target.value }))}
-                disabled={!isEditing}
-              />
-            </div>
+            <TextInput
+              name="firstName"
+              control={control}
+              label="First Name"
+              disabled={!isEditing}
+              rules={{
+                required: "First Name is required",
+                minLength: {
+                  value: 2,
+                  message: "First Name must be at least 2 characters",
+                },
+              }}
+            />
           </Col>
-          {/* last name */}
           <Col className="mb-3 ">
-            <label htmlFor="lastName" className="col-form-label">
-              Last Name
-            </label>
-            <div className="col-sm-9">
-              <input
-                type="text"
-                style={inputStyle}
-                className="form-control"
-                id="lastName"
-                value={user.lastName}
-                onChange={(e) => setUser((prev) => ({ ...prev, lastName: e.target.value }))}
-                disabled={!isEditing}
-              />
-            </div>
+            <TextInput
+              name="lastName"
+              control={control}
+              label="Last Name"
+              disabled={!isEditing}
+              rules={{
+                required: "Last Name is required",
+                minLength: {
+                  value: 2,
+                  message: "Last Name must be at least 2 characters",
+                },
+              }}
+            />
           </Col>
         </Row>
 
-        <Row className="py-3  border-bottom border-secondary ">
-          <Col md={6}>
-            <label htmlFor="email" className="col-form-label">
-              Email
-            </label>
-            <div className="col-sm-9 ">
-              <input
-                type="email"
-                style={inputStyle}
-                className="form-control "
-                id="email"
-                value={user.email}
-                onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
-                disabled={!isEditing}
-              />
-            </div>
-          </Col>
-        </Row>
         {isEditing && (
           <Row className="py-3 mt-3 gap-3   border-bottom border-secondary  ">
             <Col md={6}>
-              <label htmlFor="newPassword">New Password</label>
-              <input
+              <TextInput
+                name="currentPassword"
+                control={control}
+                label="Current Password"
                 type="password"
-                style={inputStyle}
-                className="form-control mt-1 w-75"
-                id="newPassword"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                rules={{
+                  required: {
+                    value: !!newPassword,
+                    message: "Current password is required ",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                }}
               />
             </Col>
             <Col md={6}>
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
+              <TextInput
+                name="newPassword"
+                control={control}
+                label="New Password"
                 type="password"
-                style={inputStyle}
-                className="form-control mt-1 w-75"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                rules={{
+                  required: {
+                    value: !!currentPassword,
+                    message: "New password is required ",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                }}
               />
             </Col>
           </Row>
         )}
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
+
         <div className="py-3 mx-3 ">
           {isEditing ? (
             <>
-              <MyButton type="button" bgColor="red" onClick={() => setIsEditing(false)}>
+              <MyButton
+                type="button"
+                bgColor="red"
+                onClick={() => {
+                  setIsEditing(false);
+                  reset();
+                }}
+              >
                 Cancel
               </MyButton>
               <MyButton className="ms-3" bgColor={THEME.orange} isLoading={loading} type="submit">
@@ -145,7 +158,7 @@ export default function EditProfile() {
             </MyButton>
           )}
         </div>
-      </form>
+      </Form>
     </Container>
   );
 }

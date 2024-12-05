@@ -12,6 +12,7 @@ const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+
     setCategories: (state, action) => {
       state.categories = action.payload;
     },

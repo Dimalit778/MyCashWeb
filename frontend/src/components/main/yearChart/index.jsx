@@ -91,7 +91,7 @@ const YearChart = React.memo(({ monthlyStats }) => {
   };
 
   return (
-    <div className="text-light border-light shadow-lg p-3 rounded bg-dark" style={{ height: "70vh" }}>
+    <div className="mt-3 text-light border-light shadow-lg p-3  rounded bg-dark " style={{ minHeight: "70vh" }}>
       <Bar options={options} data={chartData} />
     </div>
   );

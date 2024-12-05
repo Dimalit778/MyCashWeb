@@ -30,7 +30,6 @@ const addCategory = async (req, res) => {
 
     // Validate name
     if (!name || name.length < 2 || name.length > 20) {
-      console.log("fail");
       return res.status(400).json({
         message: "Name must be between 2 and 20 characters",
       });

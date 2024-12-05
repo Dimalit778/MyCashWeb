@@ -15,16 +15,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
     updateUser: builder.mutation({
       query: (data) => ({
-        url: `${USER_URL}/updateUser`,
+        url: `${USER_URL}/update`,
         method: "PATCH",
         body: data,
         credentials: "include",
       }),
-      invalidatesTags: ["UserData"],
+      invalidatesTags: ["User"],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUser(data));
+          dispatch(setUser(data.user));
         } catch {
           dispatch(setUser(arg));
           toast.error("Failed to update user");
@@ -47,7 +47,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
         credentials: "include",
       }),
-      invalidatesTags: ["UserData"],
+      invalidatesTags: ["User"],
       async onQueryStarted(arg, { dispatch, getState, queryFulfilled }) {
         const previousImage = getState().root.user.profileImage;
         try {

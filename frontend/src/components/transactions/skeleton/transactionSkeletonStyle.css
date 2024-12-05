@@ -57,44 +57,23 @@
   height: 100%;
 }
 
-/* Pie Chart Skeleton */
-.skeleton-pie-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.skeleton-pie {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-}
-
 .skeleton-legend {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
+  padding-inline: 30px;
   justify-content: center;
+  align-items: center;
 }
 
 .skeleton-legend-item {
   display: flex;
   align-items: center;
+  height: 35px;
   gap: 5px;
-}
-
-.skeleton-legend-color {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-}
-
-.skeleton-legend-text {
-  width: 60px;
-  height: 15px;
-  border-radius: 3px;
+  width: 100%;
+  margin: 10px 0;
 }
 
 /* Table Section */
@@ -176,11 +155,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .skeleton-pie {
-    width: 200px;
-    height: 200px;
-  }
-
   .skeleton-table-head,
   .skeleton-table-row {
     grid-template-columns: 0.5fr 1.5fr 1fr 0.5fr;

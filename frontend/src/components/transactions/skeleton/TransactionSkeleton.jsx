@@ -6,7 +6,7 @@ const TransactionSkeleton = () => {
     <div className="skeleton-container">
       <div className="row g-3">
         {/* First Column - Charts */}
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-lg-8">
           <div className="skeleton-date bg-dark">
             <div className="skeleton-arrow"></div>
             <div className="skeleton-date-text"></div>
@@ -25,16 +25,14 @@ const TransactionSkeleton = () => {
         </div>
 
         {/* Second Column - Pie Chart */}
-        <div className="col-12 col-lg-6 d-flex justify-content-center align-items-start">
-          <div className="skeleton-pie-container">
-            <div className="skeleton-pie"></div>
-            <div className="skeleton-legend">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="skeleton-legend-item">
-                  <div className="skeleton-legend-color"></div>
-                  <div className="skeleton-legend-text"></div>
-                </div>
-              ))}
+        <div className="col-12 col-lg-4 ">
+          <div className="px-4">
+            <div className="skeleton-pie rounded p-1 ">
+              <div className="skeleton-legend">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="skeleton-legend-item"></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

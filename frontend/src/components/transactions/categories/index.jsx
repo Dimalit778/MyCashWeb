@@ -55,14 +55,13 @@ const Categories = ({ categories, max }) => {
   };
 
   return (
-    <div className="my-card bg-dark  ">
+    <div className="my-card bg-dark ">
       <div className="d-flex justify-content-between align-items-center mb-4 ">
-        <div className="my-card-header">{type.charAt(0).toUpperCase() + type.slice(1)} Categories</div>
-        <span className="badge bg-dark px-3 py-2 rounded ">
-          <p className="mb-0 " style={{ fontWeight: "bold" }}>
-            {categories?.length} / {max}
-          </p>
-        </span>
+        <p className="fw-bold fs-5">{type.charAt(0).toUpperCase() + type.slice(1)} Categories</p>
+
+        <p className="px-2 bg-secondary rounded fw-bold fs-6">
+          {categories?.length} / {max}
+        </p>
       </div>
 
       <div className="my-card-body">
@@ -86,7 +85,7 @@ const Categories = ({ categories, max }) => {
           ))}
         </div>
 
-        {categories?.length && (
+        {categories?.length < max && (
           <form
             onSubmit={(e) => {
               e.preventDefault();

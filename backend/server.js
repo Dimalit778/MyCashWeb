@@ -23,15 +23,16 @@ const __dirname = path.resolve();
 // Middleware
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true })); // to parse form data(urlencoded)
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // CORS configuration
 app.use(
   cors({
-    origin: ["http://localhost:3000"], // your frontend URL
-    credentials: true, // this is important for sending cookies
-    optionsSuccessStatus: 200,
+    origin: ["http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -42,7 +43,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", protectRoute, userRoutes);
 app.use("/api/transactions", protectRoute, transactionRoutes);
 app.use("/api/categories", protectRoute, categoryRoutes);
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

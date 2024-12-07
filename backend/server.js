@@ -26,7 +26,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// CORS configuration
+// CORS configurations
 app.use(
   cors({
     origin: ["http://localhost:3000"],

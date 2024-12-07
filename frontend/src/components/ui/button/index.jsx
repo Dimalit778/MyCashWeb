@@ -7,14 +7,13 @@ const MyButton = ({
   disabled,
   onClick,
   bgColor,
-  color,
+  color = "#fff",
   border,
   size = "md",
-
   className = "",
   ...props
 }) => {
-  const sizes = {
+  const sizeStyles = {
     sm: {
       padding: "4px 8px",
       fontSize: "12px",
@@ -31,15 +30,18 @@ const MyButton = ({
       minWidth: "70px",
     },
   };
+
   const buttonStyle = {
     backgroundColor: bgColor,
     color: color,
-    border: "1px solid " + border,
-    ...sizes[size],
+
+    border: border ? `1px solid ${border}` : "none",
+    ...sizeStyles[size],
   };
+
   return (
     <button
-      className={`${styles.customButton}  ${styles[size]} ${className}`}
+      className={`${styles.customButton} ${className}`}
       disabled={disabled || isLoading}
       onClick={onClick}
       style={buttonStyle}

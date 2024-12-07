@@ -5,36 +5,24 @@ const userSchema = mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, "First name is required"],
-      minLength: [2, "First name must be at least 2 characters"],
-      maxLength: [20, "First name cannot exceed 20 characters"],
+      required: true,
       trim: true,
     },
     lastName: {
       type: String,
-      required: [true, "Last name is required"],
-      minLength: [2, "Last name must be at least 2 characters"],
-      maxLength: [20, "Last name cannot exceed 20 characters"],
+      required: true,
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
-      maxLength: [50, "Email cannot exceed 50 characters"],
+      required: true,
       unique: true,
       lowercase: true,
       trim: true,
-      validate: {
-        validator: function (v) {
-          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
-        },
-        message: "Please enter a valid email",
-      },
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minLength: [6, "Password must be at least 6 characters"],
+      required: true,
     },
     profileImage: {
       type: String,

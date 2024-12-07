@@ -3,23 +3,6 @@ import { apiSlice } from "services/baseQuery";
 
 export const transactionsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all transactions (expenses or incomes)
-    getMonthlyTransactions: builder.query({
-      query: ({ type, year }) => ({
-        url: `${TRANSACTION_URL}/monthly?year=${year}`,
-        method: "GET",
-        credentials: "include",
-      }),
-      providesTags: ["Transaction"],
-    }),
-    getMonthlyData: builder.query({
-      query: ({ type, year, month, page = 1, limit = 10, sortBy, sortOrder }) => ({
-        url: `${TRANSACTION_URL}/monthlyData?type=${type}&year=${year}&month=${month}&page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
-        method: "GET",
-      }),
-      providesTags: ["Transaction"],
-    }),
-    // Get Yearly transactions
     getYearlyTransactions: builder.query({
       query: ({ year }) => ({
         url: `${TRANSACTION_URL}/yearly`,
@@ -29,8 +12,13 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Transaction"],
     }),
-
-    // Add transaction (expense or income)
+    getMonthlyTransactions: builder.query({
+      query: ({ type, year, month, page = 1, limit = 10, sortBy, sortOrder }) => ({
+        url: `${TRANSACTION_URL}/monthlyData?type=${type}&year=${year}&month=${month}&page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        method: "GET",
+      }),
+      providesTags: ["Transaction"],
+    }),
     addTransaction: builder.mutation({
       query: (formattedData) => ({
         url: `${TRANSACTION_URL}/add`,
@@ -40,8 +28,6 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Transaction"],
     }),
-
-    // Update transaction (expense or income)
     updateTransaction: builder.mutation({
       query: (data) => ({
         url: `${TRANSACTION_URL}/update`,
@@ -51,8 +37,6 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Transaction"],
     }),
-
-    // Delete transaction (expense or income)
     deleteTransaction: builder.mutation({
       query: ({ id }) => ({
         url: `${TRANSACTION_URL}/delete/${id}`,
@@ -65,9 +49,8 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetMonthlyDataQuery,
-  useGetYearlyTransactionsQuery,
   useGetMonthlyTransactionsQuery,
+  useGetYearlyTransactionsQuery,
   useAddTransactionMutation,
   useUpdateTransactionMutation,
   useDeleteTransactionMutation,

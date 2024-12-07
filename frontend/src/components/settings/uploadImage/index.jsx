@@ -1,22 +1,20 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Image, Transformation } from "cloudinary-react";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { currentUser, setUser } from "services/reducers/userSlice";
-import { useDeleteImageMutation, useUpdateUserMutation, useUploadImageMutation } from "services/api/userApi";
+import { currentUser } from "services/reducers/userSlice";
+import { useUpdateUserMutation } from "services/api/userApi";
 import uploadUserImg from "assets/uploadUserImg.png";
 import MyButton from "components/ui/button";
 import { Col, Container, Row } from "react-bootstrap";
 import { THEME } from "constants/Theme";
+import CloudImage from "components/ui/cloudImage";
+import LoadingOverlay from "components/LoadingLayout";
 
 const UploadImage = () => {
   const [userImage, setUserImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const user = useSelector(currentUser);
-  const dispatch = useDispatch();
 
-  const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation();
-  const [deleteImage, { isLoading: isDeleting }] = useDeleteImageMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const handleFileChange = (e) => {
@@ -32,21 +30,17 @@ const UploadImage = () => {
   const handleDeleteImage = async () => {
     if (!user.profileImage) return toast.error("No image for this user");
     try {
-      await deleteImage({ profileImage: user.profileImage });
-      const res = await updateUser({ profileImage: null }).unwrap();
-      dispatch(setUser({ ...res }));
+      await updateUser({ profileImage: null }).unwrap();
       toast.success("Photo was deleted");
     } catch (error) {
       toast.error(error.message || "Failed to delete photo");
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSave = async () => {
     if (!userImage) return toast.error("Please add an image");
     try {
-      const res = await uploadImage({ userImage }).unwrap();
-      const result = await updateUser({ profileImage: res.public_id }).unwrap();
-      dispatch(setUser({ ...result }));
+      await updateUser({ profileImage: userImage }).unwrap();
       toast.success("Profile updated successfully");
       setImagePreview("");
       setUserImage("");
@@ -55,56 +49,89 @@ const UploadImage = () => {
     }
   };
 
-  const isLoading = isUploading || isDeleting || isUpdating;
-
   return (
-    <Container className="p-3 border border-1 border-secondary rounded bg-dark">
-      <Row className="g-5">
-        <Col md={6}>
-          <div className="d-flex ms-3">
-            {user.profileImage && !imagePreview ? (
-              <Image cloudName="dx6oxmki4" publicId={user.profileImage} className="cloudImage">
-                <Transformation width="200" height="200" gravity="auto" crop="fill" quality="auto" />
-              </Image>
-            ) : imagePreview ? (
-              <img style={{ height: "20vh", width: "20vw" }} src={imagePreview} alt="Preview" />
-            ) : (
-              <img style={{ height: "100px" }} src={uploadUserImg} alt="Upload" />
-            )}
-            <h5 className="ms-5 mt-3">Profile Image</h5>
-          </div>
-        </Col>
+    <LoadingOverlay show={isUpdating}>
+      <Container fluid className="bg-dark border border-1 border-secondary rounded p-3">
+        <Row>
+          <Col xs={12} md={5}>
+            <div className="d-flex flex-column align-items-center gap-3">
+              <div
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  overflow: "hidden",
+                  borderRadius: "10px",
+                  backgroundColor: THEME.dark,
+                }}
+              >
+                {user.profileImage && !imagePreview ? (
+                  <CloudImage publicId={user.profileImage} />
+                ) : imagePreview ? (
+                  <img src={imagePreview} alt="Preview" className=" w-100 h-100 object-fit-fill" />
+                ) : (
+                  <img src={uploadUserImg} alt="Upload" className=" w-100 h-100 object-fit-fill" />
+                )}
+              </div>
 
-        <Col md={6} className="d-flex align-items-center justify-content-lg-end justify-content-center ">
-          <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} />
-          <label htmlFor="fileInput" className="me-4">
-            <MyButton
-              bgColor={THEME.secondary}
-              disabled={isLoading}
-              onClick={() => document.getElementById("fileInput").click()}
-            >
-              Upload Image
-            </MyButton>
-          </label>
-          <MyButton type="button" bgColor={THEME.orange} disabled={isLoading} onClick={handleSubmit}>
-            Save
-          </MyButton>
+              <div className="d-flex gap-3">
+                {imagePreview ? (
+                  <>
+                    <MyButton bgColor={THEME.orange} onClick={handleSave}>
+                      Save
+                    </MyButton>
+                    <MyButton
+                      bgColor="red"
+                      size="sm"
+                      onClick={() => {
+                        setImagePreview(null);
+                      }}
+                    >
+                      Cancel
+                    </MyButton>
+                  </>
+                ) : (
+                  <>
+                    <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} className="d-none" />
 
-          {user?.profileImage && (
-            <div className="mt-3">
-              <MyButton
-                buttonText="Delete Photo"
-                onClick={handleDeleteImage}
-                disabled={isLoading}
-                color="red"
-                size="large"
-              />
+                    <MyButton
+                      type="button"
+                      size="sm"
+                      bgColor={THEME.secondary}
+                      onClick={() => document.getElementById("fileInput").click()}
+                    >
+                      Upload
+                    </MyButton>
+
+                    {user.profileImage && (
+                      <MyButton bgColor="red" size="sm" onClick={handleDeleteImage}>
+                        Delete
+                      </MyButton>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          )}
-        </Col>
-      </Row>
-      {isLoading && <div className="mt-3">Loading...</div>}
-    </Container>
+          </Col>
+
+          <Col xs={12} md={7}>
+            <div className="h-100 p-2 d-flex flex-column justify-content-between align-items-center align-items-md-start  ">
+              <div>
+                <h2 className="text-white h3 mb-2">
+                  {user.firstName} {user.lastName}
+                </h2>
+                <p className="text-light mb-0 opacity-75">{user.email}</p>
+              </div>
+              <div className="pt-4">
+                <div className="d-flex align-items-center gap-2">
+                  <span className="text-light">Subscription:</span>
+                  <span className="badge bg-primary px-3">{user.subscription}</span>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </LoadingOverlay>
   );
 };
 

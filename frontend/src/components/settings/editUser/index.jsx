@@ -61,8 +61,8 @@ export default function EditProfile() {
   return (
     <Container fluid className="p-4 bg-dark border border-1 border-secondary rounded">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row className="mb-3 border-bottom border-secondary ">
-          <Col className="mb-3 ">
+        <Row className="d-flex align-items-center mb-3 border-bottom border-secondary ">
+          <Col md={6} className="mb-3 ">
             <TextInput
               name="firstName"
               control={control}
@@ -77,7 +77,7 @@ export default function EditProfile() {
               }}
             />
           </Col>
-          <Col className="mb-3 ">
+          <Col md={6} className="mb-3 ">
             <TextInput
               name="lastName"
               control={control}
@@ -95,7 +95,7 @@ export default function EditProfile() {
         </Row>
 
         {isEditing && (
-          <Row className="py-3 mt-3 gap-3   border-bottom border-secondary  ">
+          <Row className="d-flex py-3 mt-3   border-bottom border-secondary  ">
             <Col md={6}>
               <TextInput
                 name="currentPassword"

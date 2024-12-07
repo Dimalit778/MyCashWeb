@@ -1,17 +1,14 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-
-import avatarIcon from "assets/avatar.jpg"; // Adjust the path as needed
-
+import avatarIcon from "assets/avatar.jpg";
 import BrandLogo from "components/brandLogo";
 import { useSelector } from "react-redux";
-
 import MyButton from "components/ui/button";
 import { currentUser } from "services/reducers/userSlice";
-
 import { HOME_LINKS } from "constants/HomeLinks";
 import { THEME } from "constants/Theme";
 import { useLogoutMutation } from "services/api/authApi";
+import CloudImage from "components/ui/cloudImage";
 
 const LeftSideBar = () => {
   const { pathname } = useLocation();
@@ -32,15 +29,30 @@ const LeftSideBar = () => {
         <BrandLogo />
       </div>
 
-      <div className="flex p-2 text-center text-light text-decoration-none">
-        <img
-          data-testid="nav-profile-icon"
-          src={avatarIcon}
-          alt="profile"
-          className="rounded-circle me-2"
-          width={80}
-          height={80}
-        />
+      <div className="d-flex flex-column align-items-center justify-content-center text-center p-2">
+        {user?.profileImage ? (
+          <div style={{ width: "90px", height: "90px", overflow: "hidden" }} className="rounded-circle">
+            <CloudImage
+              publicId={user.profileImage}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              alt="profile"
+            />
+          </div>
+        ) : (
+          <img
+            data-testid="nav-profile-icon"
+            src={avatarIcon}
+            alt="profile"
+            className="rounded-circle me-2"
+            width={80}
+            height={80}
+          />
+        )}
+
         <div className="mt-2">
           <h3 className="mb-0">{user.firstName + " " + user.lastName}</h3>
           <small className="">{user.email}</small>

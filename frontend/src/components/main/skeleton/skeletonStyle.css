@@ -164,7 +164,7 @@
 .skeleton-category-button {
   background: linear-gradient(to right, #1e2126 0%, #2a2f37 20%, #2a2f37 40%, #1e2126 60%, #1e2126 100%);
   background-size: 200% 100%;
-  animation: shimmer 25s infinite linear;
+  animation: shimmer 30s infinite linear;
 }
 
 /* Responsive adjustments */

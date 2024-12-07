@@ -4,12 +4,12 @@ const transactionSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Transaction name is required"],
+      required: true,
       trim: true,
     },
     amount: {
       type: Number,
-      required: [true, "Amount is required"],
+      required: true,
     },
 
     date: {

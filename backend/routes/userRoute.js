@@ -1,13 +1,12 @@
 import express from "express";
 
-import { deleteImage, deleteUser, getUser, updateUser, uploadImage } from "../controllers/userController.js";
+import { deleteImage, deleteUser, getUser, updateUser } from "../controllers/userController.js";
 
 const router = express.Router();
 router
-  .get("/profile", getUser)
+  .get("/get", getUser)
   .patch("/update", updateUser)
-  .delete("/profile", deleteUser)
-  .post("/profile/image", uploadImage)
-  .delete("/profile/image", deleteImage);
+  .delete("/delete", deleteUser)
+  .delete("/deleteImage", deleteImage);
 
 export default router;

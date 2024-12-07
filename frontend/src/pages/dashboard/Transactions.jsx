@@ -10,7 +10,7 @@ import Categories from "components/transactions/categories";
 import { useSelector } from "react-redux";
 import { transactionModal } from "services/reducers/uiSlice";
 import { useGetCategoriesQuery } from "services/api/categoriesApi";
-import { useGetMonthlyDataQuery } from "services/api/transactionsApi";
+import { useGetMonthlyTransactionsQuery } from "services/api/transactionsApi";
 import LoadingOverlay from "components/LoadingLayout";
 import TransactionSkeleton from "components/transactions/skeleton/TransactionSkeleton";
 import DataError from "components/DataError";
@@ -25,7 +25,7 @@ const Transaction = () => {
     isLoading,
     isFetching,
     error: monthError,
-  } = useGetMonthlyDataQuery({
+  } = useGetMonthlyTransactionsQuery({
     type,
     year: date.getFullYear(),
     month: date.getMonth() + 1,

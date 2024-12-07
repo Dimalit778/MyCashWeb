@@ -1,6 +1,9 @@
-import cloudinary from "../cloudinary.js";
 import User from "../models/userSchema.js";
-
+import Transaction from "../models/transactionSchema.js";
+import Category from "../models/categorySchema.js";
+import mongoose from "mongoose";
+import handlePasswordUpdate from "../utils/handleUpdatePassword.js";
+import handleProfileImage from "../utils/handleProfileImage.js";
 const getUser = async (req, res) => {
   const userId = req.user._id;
   try {
@@ -14,85 +17,85 @@ const getUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { firstName, lastName, currentPassword, newPassword, profileImg } = req.body;
-
+  const { firstName, lastName, currentPassword, newPassword, profileImage } = req.body;
   const userId = req.user._id;
 
   try {
-    let user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
-      return res.status(400).json({ error: "Please provide both current password and new password" });
+    // First, find and validate the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (currentPassword && newPassword) {
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatch) return res.status(400).json({ error: "Current password is incorrect" });
-      if (newPassword.length < 6) {
-        return res.status(400).json({ error: "Password must be at least 6 characters long" });
-      }
-
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(newPassword, salt);
+    // Handle password updates if provided
+    if (await handlePasswordUpdate(user, currentPassword, newPassword)) {
+      return res.status(400).json({
+        error:
+          "Password validation failed. Please check your current password and ensure new password is at least 6 characters.",
+      });
     }
 
-    if (profileImg) {
-      if (user.profileImg) {
-        // https://res.cloudinary.com/dyfqon1v6/image/upload/v1712997552/zmxorcxexpdbh8r0bkjb.png
-        await cloudinary.uploader.destroy(user.profileImg.split("/").pop().split(".")[0]);
-      }
+    // Handle profile image updates
+    await handleProfileImage(user, profileImage);
 
-      const uploadedResponse = await cloudinary.uploader.upload(profileImg);
-      profileImg = uploadedResponse.secure_url;
-    }
-
+    // Update basic user information
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
-    user.profileImg = profileImg || user.profileImg;
 
-    user = await user.save();
+    // Save updates and return response
+    await user.save();
 
-    user.password = null;
+    // Remove sensitive data before sending response
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
-    return res.status(200).json({ user });
+    return res.status(200).json({ user: userResponse });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error updating user:", error);
+    return res.status(500).json({
+      error: "Failed to update user profile. Please try again.",
+    });
   }
 };
-
 const deleteUser = async (req, res) => {
   const userId = req.user._id;
-  if (!userId) return res.status(404).json({ message: "User not found" });
-  try {
-    const deleteIncomes = await Income.deleteMany({ user: userId });
-    const deleteExpenses = await Expense.deleteMany({ user: userId });
-    const deleteUser = await User.findByIdAndDelete(userId);
-    if (deleteUser.imageUrl) await cloudinary.uploader.destroy(deleteUser.imageUrl);
+  if (!userId) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const session = await mongoose.startSession();
 
-    if (deleteExpenses && deleteIncomes && deleteUser) {
-      res.clearCookie("token");
-      return res.status(200).json("All user data has been deleted");
+  try {
+    session.startTransaction();
+    const deletedTransactions = await Transaction.deleteMany({ user: userId }).session(session);
+    const deletedCategory = await Category.deleteOne({ user: userId }).session(session);
+    const deletedUser = await User.findByIdAndDelete(userId).session(session);
+
+    if (!deletedUser) {
+      throw new Error("User not found");
     }
-  } catch (err) {
-    return res.status(200).json({ message: err.message });
-  }
-};
+    if (deletedUser.imageUrl) {
+      await cloudinary.uploader.destroy(deletedUser.imageUrl);
+    }
+    await session.commitTransaction();
+    res.clearCookie("token");
 
-const uploadImage = async (req, res) => {
-  const { userImage } = req.body;
-
-  try {
-    const result = await cloudinary.uploader.upload(userImage, {
-      folder: "images",
-      resource_type: "auto",
+    return res.status(200).json({
+      success: true,
+      message: "All user data has been deleted successfully",
     });
-
-    return res.status(200).send(result);
   } catch (error) {
-    res.status(200).send({ message: error.message });
+    await session.abortTransaction();
+    console.error("Error deleting user data:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete user data. Please try again.",
+    });
+  } finally {
+    await session.endSession();
   }
 };
+
 const deleteImage = async (req, res) => {
   const { imageUrl } = req.body;
   try {
@@ -104,4 +107,4 @@ const deleteImage = async (req, res) => {
   }
 };
 
-export { updateUser, getUser, deleteUser, uploadImage, deleteImage };
+export { updateUser, getUser, deleteUser, deleteImage };

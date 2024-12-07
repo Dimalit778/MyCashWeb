@@ -49,45 +49,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Auth"],
     }),
-    verifyEmail: builder.mutation({
-      query: (data) => ({
-        url: `${AUTH_URL}/verify-email/${data}`,
-        method: "POST",
-        credentials: "include",
-      }),
-    }),
-    forgotPassword: builder.mutation({
-      query: (data) => ({
-        url: `${AUTH_URL}/forgot-password`,
-        method: "POST",
-        credentials: "include",
-        body: data,
-      }),
-    }),
-    verifyLink: builder.mutation({
-      query: ({ id, token }) => ({
-        url: `${AUTH_URL}/reset-password/${id}/${token}`,
-        method: "GET",
-        credentials: "include",
-      }),
-    }),
-    resetPassword: builder.mutation({
-      query: (data) => ({
-        url: `${AUTH_URL}/reset-password/${data.id}/${data.token}`,
-        method: "POST",
-        credentials: "include",
-        body: data,
-      }),
-    }),
   }),
 });
-export const {
-  useLoginMutation,
-  useLogoutMutation,
-  useGoogleAuthMutation,
-  useSignUpMutation,
-  useVerifyEmailMutation,
-  useForgotPasswordMutation,
-  useVerifyLinkMutation,
-  useResetPasswordMutation,
-} = authApiSlice;
+export const { useLoginMutation, useLogoutMutation, useGoogleAuthMutation, useSignUpMutation } = authApiSlice;

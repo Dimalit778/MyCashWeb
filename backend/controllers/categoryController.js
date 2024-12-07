@@ -1,5 +1,4 @@
 import Category from "../models/categorySchema.js";
-
 import { CATEGORY_LIMITS } from "../config/config.js";
 
 const getCategories = async (req, res) => {
@@ -27,8 +26,6 @@ const getCategories = async (req, res) => {
 const addCategory = async (req, res) => {
   try {
     const { name, type } = req.body;
-
-    // Validate name
     if (!name || name.length < 2 || name.length > 20) {
       return res.status(400).json({
         message: "Name must be between 2 and 20 characters",
@@ -36,8 +33,6 @@ const addCategory = async (req, res) => {
     }
 
     const userCategories = await Category.findOne({ user: req.user._id });
-
-    // Validate unique name
     const isDuplicate = userCategories.categories
       .filter((cat) => cat.type === type)
       .some((cat) => cat.name.toLowerCase() === name.toLowerCase());
@@ -45,8 +40,6 @@ const addCategory = async (req, res) => {
     if (isDuplicate) {
       return res.status(400).json({ message: "Category name must be unique" });
     }
-
-    // Check limit
     const typeCategories = userCategories.categories.filter((cat) => cat.type === type);
     const limit = CATEGORY_LIMITS[req.user.subscription];
 

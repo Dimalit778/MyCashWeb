@@ -2,8 +2,10 @@ import jwt from "jsonwebtoken";
 import User from "../models/userSchema.js";
 
 export const protectRoute = async (req, res, next) => {
+  console.log("protectRoute middleware", req.cookies);
   try {
     const token = req.cookies.token;
+
     if (!token) {
       return res.status(401).json({ error: "Unauthorized: No Token Provided" });
     }

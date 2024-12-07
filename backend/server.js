@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 // CORS configuration
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://mzrc1wcg-3000.euw.devtunnels.ms"], // your frontend URL
+    origin: ["http://localhost:3000"], // your frontend URL
     credentials: true, // this is important for sending cookies
     optionsSuccessStatus: 200,
   })

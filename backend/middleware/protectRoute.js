@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/userSchema.js";
 
 export const protectRoute = async (req, res, next) => {
-  console.log("protectRoute middleware", req.cookies.token);
+  console.log("protectRoute middlewaredd", req.cookies.token);
 
   try {
     const token = req.cookies.token;

@@ -36,7 +36,7 @@ app.use(
   })
 );
 
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 // Routes
 app.use("/api/auth", authRoutes);

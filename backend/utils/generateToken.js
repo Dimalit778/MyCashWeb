@@ -13,6 +13,7 @@ export const generateTokenAndSetCookie = (res, userId) => {
     secure: true,
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
+    domain: "http://localhost:3000",
   });
 
   return token;

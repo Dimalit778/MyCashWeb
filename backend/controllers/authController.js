@@ -1,124 +1,143 @@
-import User from "../models/userSchema.js";
-import bcryptjs from "bcryptjs";
 import mongoose from "mongoose";
-import { generateTokenAndSetCookie } from "../utils/generateToken.js";
+import User from "../models/userSchema.js";
 import Category from "../models/categorySchema.js";
 import { DEFAULT_CATEGORIES } from "../config/config.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 
-const signup = async (req, res) => {
-  const { email, password, firstName, lastName } = req.body;
-
+const generateTokenAndSetCookie = async (userId) => {
   try {
-    if (!email || !password || !firstName || !lastName) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-    }
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide a valid email address",
-      });
-    }
-    const userAlreadyExists = await User.findOne({ email });
-    if (userAlreadyExists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
-    }
-    const hashedPassword = await bcryptjs.hash(password, 10);
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    const user = await User.findById(userId);
 
-    try {
-      const user = new User({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-      });
+    const accessToken = user.generateToken();
+    const refreshToken = user.generateRefreshToken();
 
-      await user.save({ session });
+    user.refreshToken = refreshToken;
 
-      await Category.create(
-        [
-          {
-            user: user._id,
-            categories: DEFAULT_CATEGORIES,
-          },
-        ],
-        { session }
-      );
+    await user.save({ validateBeforeSave: false });
 
-      await session.commitTransaction();
-
-      generateTokenAndSetCookie(res, user._id);
-
-      res.status(201).json({
-        success: true,
-        message: "User created successfully",
-        user: {
-          ...user._doc,
-          password: undefined,
-        },
-      });
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
+    return { accessToken, refreshToken };
   } catch (error) {
-    console.log("error in signup ", error);
-    res.status(500).json({ success: false, message: "Failed to create user" });
+    throw new ApiError(500, "Failed to generate token");
   }
 };
+const signup = asyncHandler(async (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
+  if (!email || !password || !firstName || !lastName) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailRegex.test(email)) {
+    throw new ApiError(400, "Please provide a valid email address");
+  }
+
+  const userAlreadyExists = await User.findOne({ email });
+  if (userAlreadyExists) {
+    throw new ApiError(400, "User already exists");
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ success: false, message: "User not found" });
-    }
-    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    const user = new User({
+      firstName,
+      lastName,
+      email,
+    });
 
-    if (!isPasswordValid) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
-    }
+    await user.save({ session });
 
-    generateTokenAndSetCookie(res, user._id);
+    await Category.create(
+      [
+        {
+          user: user._id,
+          categories: DEFAULT_CATEGORIES,
+        },
+      ],
+      { session }
+    );
 
-    user.lastLogin = new Date();
-    await user.save();
+    await session.commitTransaction();
 
-    res.status(200).json({
+    return res.status(201).json({
       success: true,
-      message: "Logged in successfully",
+      message: "User created successfully",
       user: {
         ...user._doc,
-        password: undefined,
       },
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    await session.abortTransaction();
+    throw new ApiError(500, "Failed to create user", error.stack);
+  } finally {
+    session.endSession();
   }
-};
+});
 
-const logout = async (req, res) => {
+const logout = asyncHandler(async (req, res) => {
   res.clearCookie("token");
-  res.status(200).json({ success: true, message: "Logged out successfully" });
-};
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
 
-const checkAuth = async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select("-password");
-    if (!user) {
-      return res.status(400).json({ success: false, message: "User not found" });
-    }
-
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    console.log("Error in checkAuth ", error);
-    res.status(500).json({ success: false, message: error.message });
+  if (!email || !password) {
+    throw new ApiError(400, "All fields are required");
   }
-};
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid credentials");
+  }
+
+  const { accessToken, refreshToken } = await generateTokenAndSetCookie(user._id);
+
+  const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  };
+
+  return res
+    .status(200)
+    .cookie("token", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+          accessToken,
+          refreshToken,
+        },
+        "User logged in successfully"
+      )
+    );
+});
+
+const checkAuth = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select("-password");
+  if (!user) {
+    throw new ApiError(400, "User not found");
+  }
+
+  return res.status(200).json({
+    success: true,
+    user,
+  });
+});
 
 export { signup, login, logout, checkAuth };

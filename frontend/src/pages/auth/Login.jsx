@@ -28,13 +28,15 @@ const Login = () => {
   };
 
   const handleLogin = async (formData) => {
+    console.log("login");
     try {
       const res = await login(formData).unwrap();
-      if (!res) return toast.error(res.error);
+      console.log("res", res);
+      if (!res.success) return toast.error(res.error);
 
       navigate("/main");
     } catch (err) {
-      toast.error(err.data?.message || err.error);
+      toast.error(err?.message || err.error);
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSquarePlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "components/ui/icon";
 import MyButton from "components/ui/button";
 import "./categoriesStyle.css";
@@ -102,8 +102,8 @@ const Categories = ({ categories, max }) => {
                 onChange={(e) => setNewCategory(e.target.value)}
                 className="form-input w-100    px-3 py-2 rounded"
               />
-              <MyButton variant="primary" type="submit" size="md" isLoading={isAdding || isDeleting}>
-                Add
+              <MyButton type="submit" isLoading={isAdding || isDeleting} size="none">
+                <FontAwesomeIcon icon={faPlus} style={{ fontSize: "1.5rem" }} />
               </MyButton>
             </div>
           </form>

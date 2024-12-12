@@ -6,7 +6,7 @@ const IconButton = ({
   icon,
   color = "white",
   bgColor = "transparent",
-  hoverBgColor, // Add new prop for hover background
+  hoverBgColor,
   border = "none",
   size = "md",
   className = "",
@@ -27,6 +27,9 @@ const IconButton = ({
       width: "40px",
       height: "40px",
       fontSize: "1.25rem",
+    },
+    xl: {
+      fontSize: "2.5rem",
     },
   };
 

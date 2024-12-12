@@ -13,41 +13,28 @@ const MyButton = ({
   className = "",
   ...props
 }) => {
-  const sizeStyles = {
-    sm: {
-      padding: "4px 8px",
-      fontSize: "12px",
-      minWidth: "50px",
-    },
-    md: {
-      padding: "8px 16px",
-      fontSize: "14px",
-      minWidth: "60px",
-    },
-    lg: {
-      padding: "12px 24px",
-      fontSize: "16px",
-      minWidth: "70px",
-    },
-  };
-
   const buttonStyle = {
     backgroundColor: bgColor,
     color: color,
-
     border: border ? `1px solid ${border}` : "none",
-    ...sizeStyles[size],
   };
+
+  const sizeClass = {
+    none: styles.none,
+    sm: styles.small,
+    md: styles.medium,
+    lg: styles.large,
+  }[size];
 
   return (
     <button
-      className={`${styles.customButton} ${className}`}
+      className={`${styles.customButton} ${sizeClass} ${className}`}
       disabled={disabled || isLoading}
       onClick={onClick}
       style={buttonStyle}
       {...props}
     >
-      <span className={`${styles.buttonContent} ${isLoading ? styles.loading : ""}`}>{children}</span>
+      <div className={`${styles.buttonContent} ${isLoading ? styles.loading : ""}`}>{children}</div>
       {isLoading && (
         <div className={styles.spinnerWrapper}>
           <div className={styles.loaderSpinner}></div>

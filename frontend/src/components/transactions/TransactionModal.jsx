@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { closeTransactionModal, selectedDateObject, transactionModal } from "services/reducers/uiSlice";
+import { closeTransactionModal, transactionModal } from "services/reducers/uiSlice";
 import TextInput from "components/ui/textInput";
 import SelectInput from "components/ui/selectInput";
 import MyButton from "components/ui/button";
@@ -12,17 +12,16 @@ import { format } from "date-fns";
 import { useGetCategoriesQuery } from "services/api/categoriesApi";
 import { useAddTransactionMutation, useUpdateTransactionMutation } from "services/api/transactionsApi";
 
-const TransactionModal = ({ type }) => {
+const TransactionModal = ({ type, date }) => {
   const dispatch = useDispatch();
   const { isOpen, editItem } = useSelector(transactionModal);
 
-  const selectedDate = useSelector(selectedDateObject);
   const { data: categoriesData } = useGetCategoriesQuery();
   const [addTransaction, { isLoading: isAdding }] = useAddTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
 
   const categories = useMemo(() => {
-    const userCategories = categoriesData?.categories?.filter((cat) => cat.type === type) || [];
+    const userCategories = categoriesData?.data.categories?.filter((cat) => cat.type === type) || [];
 
     // If editing and category was deleted, add it to options
     if (editItem?.category?.name && !userCategories.find((c) => c._id === editItem.category.id)) {
@@ -41,11 +40,11 @@ const TransactionModal = ({ type }) => {
     () => ({
       name: editItem?.name || "",
       amount: editItem?.amount || "",
-      category: editItem?.category?.id || "", // Use category ID
+      category: editItem?.category?.id || "",
 
-      date: format(editItem?.date ? new Date(editItem.date) : selectedDate, "yyyy-MM-dd"),
+      date: format(editItem?.date ? new Date(editItem.date) : date, "yyyy-MM-dd"),
     }),
-    [editItem, selectedDate]
+    [editItem, date]
   );
 
   const {
@@ -128,7 +127,7 @@ const TransactionModal = ({ type }) => {
                 control={control}
                 label="Amount"
                 type="number"
-                step="0.01"
+                placeholder="0.00"
                 rules={{
                   required: "Amount is required",
                   min: {
@@ -173,10 +172,7 @@ const TransactionModal = ({ type }) => {
           </Row>
 
           <div className="d-flex justify-content-end gap-2">
-            <MyButton type="button" bgColor="secondary" onClick={handleClose} disabled={isSubmitting}>
-              Cancel
-            </MyButton>
-            <MyButton type="submit" bgColor="orange" color="black" disabled={isSubmitting || isAdding || isUpdating}>
+            <MyButton type="submit" disabled={isSubmitting || isAdding || isUpdating}>
               {isSubmitting || isAdding || isUpdating ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" />
@@ -187,6 +183,16 @@ const TransactionModal = ({ type }) => {
               ) : (
                 "Create"
               )}
+            </MyButton>
+            <MyButton
+              type="button"
+              bgColor="gray"
+              color="black"
+              size="sm"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
+              Cancel
             </MyButton>
           </div>
         </Form>

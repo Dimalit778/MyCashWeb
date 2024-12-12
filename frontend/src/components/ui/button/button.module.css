@@ -6,12 +6,55 @@
 
 .customButton {
   letter-spacing: 0.06rem;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.buttonContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 500;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.buttonContent.loading {
+  visibility: hidden;
+}
+.none {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  min-width: 40px;
+}
+.small {
+  padding: 4px 8px;
+  font-size: 12px;
+  min-width: 50px;
+}
+
+.medium {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-width: 60px;
+}
+
+.large {
+  padding: 12px 24px;
+  font-size: 16px;
+  min-width: 70px;
 }
 
 .customButton:hover {
@@ -35,7 +78,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transform: translateX(-100%);
   transition: 0.6s;
 }
@@ -53,19 +95,6 @@
     no-repeat radial-gradient(farthest-side, #ffffff 92%, transparent) bottom;
   background-size: 5px 5px;
   animation: rotate 1s infinite;
-}
-
-.buttonContent {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.5em;
-  font-weight: 300;
-  visibility: visible;
-}
-
-.buttonContent.loading {
-  visibility: hidden;
 }
 
 .spinnerWrapper {

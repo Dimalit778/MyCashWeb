@@ -1,5 +1,7 @@
+import { isPlatformMobile } from "utils/paltformUtils";
 import { apiSlice } from "../baseQuery";
 import { clearUser } from "services/reducers/userSlice";
+import { tokenStorage } from "utils/tokenStorage";
 
 const AUTH_URL = "/api/auth";
 
@@ -12,6 +14,18 @@ export const authApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body: data,
       }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          // For mobile, store tokens
+          if (isPlatformMobile()) {
+            tokenStorage.setTokens(data.data.accessToken, data.data.refreshToken);
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+        }
+      },
       providesTags: ["Auth"],
     }),
     logout: builder.mutation({
@@ -23,9 +37,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-
-          dispatch(clearUser());
-          dispatch(apiSlice.util.resetApiState());
+          if (isPlatformMobile()) {
+            tokenStorage.clearTokens();
+          }
+          // dispatch(clearUser());
+          // dispatch(apiSlice.util.resetApiState());
         } catch (error) {
           console.error("Logout failed:", error);
         }

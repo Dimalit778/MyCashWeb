@@ -79,7 +79,7 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", "refreshToken");
   return res.status(200).json({
     success: true,
     message: "Logged out successfully",
@@ -128,16 +128,4 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-const checkAuth = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId).select("-password");
-  if (!user) {
-    throw new ApiError(400, "User not found");
-  }
-
-  return res.status(200).json({
-    success: true,
-    user,
-  });
-});
-
-export { signup, login, logout, checkAuth };
+export { signup, login, logout };

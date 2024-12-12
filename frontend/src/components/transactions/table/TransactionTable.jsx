@@ -9,18 +9,17 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import TableTitles from "./TableTitles";
 import { useDeleteTransactionMutation } from "services/api/transactionsApi";
-import { useParams } from "react-router-dom";
+
 import PaginationPages from "../pagination";
 
-const TransactionsTable = ({ transactions, total }) => {
+const TransactionsTable = ({ transactions, total, type }) => {
   const dispatch = useDispatch();
-  const { type } = useParams();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
   const [selectedItems, setSelectedItems] = useState([]);
-
   const [deleteTransaction] = useDeleteTransactionMutation();
+
   // Sorting By Date and Amount
   const filteredAndSortedItems = useMemo(() => {
     return [...transactions].sort((a, b) => {
@@ -33,17 +32,20 @@ const TransactionsTable = ({ transactions, total }) => {
       } else if (sortConfig.key === "amount") {
         return sortConfig.direction === "asc" ? aValue - bValue : bValue - aValue;
       }
-      // If the sort key is not "date", "amount", "max_amount", or "min_amount", don't sort
+
       return 0;
     });
   }, [transactions, sortConfig]);
+
   // Items Per Page
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredAndSortedItems, currentPage]);
+
   // Pagination Page Number
   const totalPages = Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE);
+
   // Category Color
   const categoryColorMap = useMemo(() => {
     const colorMap = new Map();
@@ -210,7 +212,7 @@ const TransactionsTable = ({ transactions, total }) => {
           )}
         </div>
 
-        {totalPages.length > 1 && (
+        {totalPages > 1 && (
           <PaginationPages currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         )}
       </div>

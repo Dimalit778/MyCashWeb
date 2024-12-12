@@ -32,7 +32,8 @@ const Transaction = () => {
   });
 
   const { data: userCategories, isLoading: isLoadingCategories, error: categoriesError } = useGetCategoriesQuery();
-  const categories = userCategories?.categories?.filter((category) => category.type === type);
+
+  const categories = userCategories?.data.categories?.filter((category) => category.type === type);
 
   if (isLoading || isLoadingCategories) return <TransactionSkeleton />;
   if (monthError || categoriesError) return <DataError error={monthError || categoriesError} />;
@@ -47,15 +48,15 @@ const Transaction = () => {
           </LoadingOverlay>
         </div>
         <div className="col-12 col-lg-4">
-          <Categories categories={categories} max={userCategories.maxCategories} />
+          <Categories categories={categories} max={userCategories.data.maxCategories} />
         </div>
       </div>
       {date && (
         <LoadingOverlay show={isFetching}>
-          <TransactionsTable transactions={data.transactions} total={data.total} />
+          <TransactionsTable transactions={data.transactions} total={data.total} type={type} />
         </LoadingOverlay>
       )}
-      {modalState.isOpen && <TransactionModal type={type} />}
+      {modalState.isOpen && <TransactionModal type={type} date={date} />}
     </div>
   );
 };

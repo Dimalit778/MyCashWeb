@@ -8,8 +8,8 @@ const CloudImage = ({ publicId }) => {
       cloudName: "dx6oxmki4",
     },
   });
-  console.log(publicId);
-  const myImage = cld.image(publicId);
+
+  const myImage = cld.image(publicId).quality("auto:best").format("auto").delivery("q_auto:best");
 
   return <AdvancedImage cldImg={myImage} plugins={[responsive(), lazyload()]} />;
 };

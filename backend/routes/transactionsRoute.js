@@ -4,20 +4,17 @@ import {
   addTransaction,
   deleteTransaction,
   getMonthlyData,
-  getMonthlyTransactions,
   getOneTransaction,
-  getYear,
-  getYearlyStats,
+  getYearlyData,
   updateTransaction,
 } from "../controllers/transactionController.js";
 
 const router = express.Router();
 
 router
-  .get("/monthly", getMonthlyTransactions)
-  .get("/monthlyData", getMonthlyData)
-  .get("/yearly", getYearlyStats)
-  .get("/all", getYear)
+
+  .get("/monthly", getMonthlyData)
+  .get("/yearly", getYearlyData)
   .get("/getOne/:id", getOneTransaction)
   .post("/add", addTransaction)
   .patch("/update", updateTransaction) // change to req.body

@@ -21,7 +21,7 @@ const Transaction = () => {
   const [date, setDate] = useState(new Date());
 
   const {
-    data,
+    data: monthlyData,
     isLoading,
     isFetching,
     error: monthError,
@@ -44,7 +44,7 @@ const Transaction = () => {
         <div className="col-12 col-lg-8">
           <CalendarMonth date={date} setDate={setDate} />
           <LoadingOverlay show={isFetching}>
-            <ProgressBar data={data.categories} categories={categories} total={data.total} />
+            <ProgressBar data={monthlyData?.data.categories} categories={categories} total={monthlyData?.data.total} />
           </LoadingOverlay>
         </div>
         <div className="col-12 col-lg-4">
@@ -53,7 +53,11 @@ const Transaction = () => {
       </div>
       {date && (
         <LoadingOverlay show={isFetching}>
-          <TransactionsTable transactions={data.transactions} total={data.total} type={type} />
+          <TransactionsTable
+            transactions={monthlyData?.data.transactions}
+            total={monthlyData?.data.transactions}
+            type={type}
+          />
         </LoadingOverlay>
       )}
       {modalState.isOpen && <TransactionModal type={type} date={date} />}

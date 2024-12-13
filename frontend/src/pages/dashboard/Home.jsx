@@ -20,19 +20,17 @@ const Home = () => {
     }
   );
 
-  if (error) {
-    console.log(error);
-    return <DataError error={error} />;
-  }
-
+  if (error) return <DataError error={error} />;
   if (isLoading) return <MainSkeleton />;
+
+  const { monthlyStats, yearlyStats } = data?.data;
 
   return (
     <div className="container-fluid d-flex flex-column gap-3  ">
       <YearCalender year={year} setYear={setYear} />
       <LoadingOverlay show={isFetching}>
-        <YearStats yearlyStats={data?.yearlyStats} />
-        <YearChart monthlyStats={data?.monthlyStats} />
+        <YearStats yearlyStats={yearlyStats} />
+        <YearChart monthlyStats={monthlyStats} />
       </LoadingOverlay>
     </div>
   );

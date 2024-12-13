@@ -31,7 +31,7 @@ const LeftSideBar = () => {
 
       <div className="d-flex flex-column align-items-center justify-content-center text-center p-2">
         {user?.profileImage ? (
-          <div style={{ width: "90px", height: "90px", overflow: "hidden" }} className="rounded-circle">
+          <div style={{ width: "100px", height: "100px", overflow: "hidden" }} className="rounded-circle">
             <CloudImage
               publicId={user.profileImage}
               style={{

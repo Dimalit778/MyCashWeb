@@ -17,7 +17,7 @@ const Landing = () => {
           <Container>
             <Row className="text-center mb-5">
               <Col>
-                <h1 className={`${styles.mainTitle} mb-0`} data-testid="main-title">
+                <h1 className={`${styles.mainTitle} mb-0`} data-test="landing-title">
                   MANAGE YOUR
                 </h1>
                 <h1 className={styles.strokeTitle} data-testid="stroke-title">

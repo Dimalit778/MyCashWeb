@@ -19,7 +19,7 @@ const Login = () => {
       try {
         await googleAuth(user).unwrap();
 
-        navigate("/main");
+        navigate("/home");
       } catch (err) {
         console.log(err);
         toast.error(err?.data?.message || err.error);
@@ -28,15 +28,12 @@ const Login = () => {
   };
 
   const handleLogin = async (formData) => {
-    console.log("login");
     try {
-      const res = await login(formData).unwrap();
-      console.log("res", res);
-      if (!res.success) return toast.error(res.error);
+      await login(formData).unwrap();
 
-      navigate("/main");
+      navigate("/home");
     } catch (err) {
-      toast.error(err?.message || err.error);
+      toast.error(err?.data?.message || "Login failed");
     }
   };
 

@@ -1,6 +1,6 @@
 import { isPlatformMobile } from "utils/paltformUtils";
 import { apiSlice } from "../baseQuery";
-import { clearUser } from "services/reducers/userSlice";
+
 import { tokenStorage } from "utils/tokenStorage";
 
 const AUTH_URL = "/api/auth";
@@ -14,6 +14,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body: data,
       }),
+
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

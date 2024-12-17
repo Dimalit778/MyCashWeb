@@ -3,8 +3,8 @@ import User from "../models/userSchema.js";
 import Category from "../models/categorySchema.js";
 import { DEFAULT_CATEGORIES } from "../config/config.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const generateTokenAndSetCookie = async (userId) => {
   try {

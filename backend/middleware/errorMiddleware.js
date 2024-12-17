@@ -9,13 +9,14 @@ const errorHandler = (err, req, res, next) => {
     const message = error.message || "Something went wrong";
     error = new ApiError(statusCode, message, [], err.stack);
   }
+
   const response = {
     success: false,
     message: error.message,
     statusCode: error.statusCode,
     data: error.data,
     errors: error.errors,
-    ...(process.env.NODE_ENV === "development" ? { stack: error.stack } : {}),
+    // ...(process.env.NODE_ENV === "development" ? { stack: error.stack } : {}),
   };
 
   return res.status(error.statusCode).json(response);

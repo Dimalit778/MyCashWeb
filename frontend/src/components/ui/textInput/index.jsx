@@ -35,7 +35,11 @@ function TextInput({
                   {endAdornment}
                 </div>
               )}
-              {error && <Form.Control.Feedback type="invalid">{error.message}</Form.Control.Feedback>}
+              {error && (
+                <Form.Control.Feedback type="invalid" data-test="error-message">
+                  {error.message}
+                </Form.Control.Feedback>
+              )}
             </>
           )}
         />

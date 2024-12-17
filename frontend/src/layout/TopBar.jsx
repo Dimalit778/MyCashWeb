@@ -24,6 +24,7 @@ const TopBar = ({ className }) => {
     <Navbar
       expand="lg"
       className={`${className}  `}
+      data-testid="top-bar"
       style={{
         background: `linear-gradient(to top, #434343, #000000)`,
         position: "fixed",
@@ -43,10 +44,20 @@ const TopBar = ({ className }) => {
       <Nav className="ms-auto">
         {!user ? (
           <div className="d-flex justify-content-center gap-2">
-            <Nav.Link as={Link} to="/signup" className={`btn-outline-light ${location.pathname === "/signup"}`}>
+            <Nav.Link
+              as={Link}
+              to="/signup"
+              className={`btn-outline-light ${location.pathname === "/signup"}`}
+              data-testid="signup-link"
+            >
               Sign Up
             </Nav.Link>
-            <Nav.Link as={Link} to="/login" className={`btn-outline-light ${location.pathname === "/login"}`}>
+            <Nav.Link
+              as={Link}
+              to="/login"
+              className={`btn-outline-light ${location.pathname === "/login"}`}
+              data-testid="login-link"
+            >
               Login
             </Nav.Link>
           </div>

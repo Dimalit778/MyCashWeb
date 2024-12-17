@@ -27,6 +27,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
         <h1 className="auth-title">LOGIN</h1>
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <TextInput
+            data-test="login-email"
             name="email"
             control={control}
             type="email"
@@ -42,6 +43,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           />
 
           <TextInput
+            data-test="login-password"
             name="password"
             control={control}
             type={showPassword ? "text" : "password"}
@@ -66,22 +68,32 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton type="submit" bgColor={THEME.orange} isLoading={isLoading}>
+            <MyButton data-test="login-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Login
             </MyButton>
-            <MyButton type="button" onClick={signGoogleClick} className="btn btn-outline-light btn-block">
+            <MyButton
+              data-test="login-google"
+              type="button"
+              onClick={signGoogleClick}
+              className="btn btn-outline-light btn-block"
+            >
               <FontAwesomeIcon icon={faGoogle} className="me-2" />
               Sign in with Google
             </MyButton>
           </div>
 
-          <Link to="/forgot-password" className="forgot-password">
+          <Link data-test="forgot-password" to="/forgot-password" className="forgot-password">
             Forgot password?
           </Link>
 
           <div className="auth-prompt">
             <p>Don't have an account?</p>
-            <button type="button" className="btn btn-outline-light btn-sm" onClick={() => navigate("/register")}>
+            <button
+              data-test="goto-register"
+              type="button"
+              className="btn btn-outline-light btn-sm"
+              onClick={() => navigate("/register")}
+            >
               Register
             </button>
           </div>

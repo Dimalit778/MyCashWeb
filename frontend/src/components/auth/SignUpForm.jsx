@@ -53,6 +53,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="d-flex gap-3">
             <TextInput
+              data-test="signup-firstname"
               name="firstName"
               control={control}
               placeholder="First Name"
@@ -66,6 +67,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
               }}
             />
             <TextInput
+              data-test="signup-lastname"
               name="lastName"
               control={control}
               placeholder="Last Name"
@@ -81,6 +83,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           </div>
 
           <TextInput
+            data-test="signup-email"
             name="email"
             control={control}
             type="email"
@@ -90,6 +93,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <TextInput
+            data-test="signup-password"
             name="password"
             control={control}
             type={showPassword ? "text" : "password"}
@@ -114,6 +118,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <TextInput
+            data-test="signup-confirm-password"
             name="confirmPassword"
             control={control}
             type={showConfirmPassword ? "text" : "password"}
@@ -135,10 +140,11 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton type="submit" bgColor={THEME.orange} isLoading={isLoading}>
+            <MyButton data-test="signup-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Sign Up
             </MyButton>
             <button
+              data-test="signup-google"
               type="button"
               onClick={onGoogleClick}
               className="btn btn-outline-light btn-block"
@@ -151,7 +157,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
 
           <div className="auth-prompt">
             <p>Already have an account?</p>
-            <Link to="/login" className="btn btn-outline-light btn-sm">
+            <Link data-test="goto-login" to="/login" className="btn btn-outline-light btn-sm">
               Login
             </Link>
           </div>

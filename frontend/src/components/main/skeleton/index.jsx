@@ -25,7 +25,7 @@ const CategorySkeleton = ({ count = 3 }) => {
 
 const MainSkeleton = () => {
   return (
-    <Container fluid className="skeleton-container">
+    <Container fluid data-cy="year-skeleton" className="skeleton-container">
       {/* Year Selector Skeleton */}
       <div className="d-flex justify-content-center align-items-center mb-4">
         <div className="skeleton-button me-4"></div>

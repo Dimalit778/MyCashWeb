@@ -62,7 +62,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
+      "react-app",
+      "plugin:cypress/recommended"
     ]
   },
   "browserslist": {
@@ -82,7 +83,8 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.8.6",
-    "cypress": "^13.16.1",
+    "cypress": "^13.17.0",
+    "eslint-plugin-cypress": "^4.1.0",
     "jest": "^27.5.1"
   }
 }

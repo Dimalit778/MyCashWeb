@@ -27,10 +27,10 @@ const Home = () => {
 
   return (
     <div className="container-fluid d-flex flex-column gap-3  ">
-      <YearCalender data-testid="year-calendar" year={year} setYear={setYear} />
-      <LoadingOverlay data-testid="loading-overlay" show={isFetching}>
-        <YearStats data-testid="year-stats" yearlyStats={yearlyStats} />
-        <YearChart data-testid="year-chart" monthlyStats={monthlyStats} />
+      <YearCalender year={year} setYear={setYear} />
+      <LoadingOverlay show={isFetching}>
+        <YearStats yearlyStats={yearlyStats} />
+        <YearChart monthlyStats={monthlyStats} />
       </LoadingOverlay>
     </div>
   );

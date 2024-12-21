@@ -89,10 +89,10 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           <div className="auth-prompt">
             <p>Don't have an account?</p>
             <button
-              data-test="goto-register"
+              data-test="goto-signup"
               type="button"
               className="btn btn-outline-light btn-sm"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/signup")}
             >
               Register
             </button>

@@ -1,0 +1,341 @@
+{
+  "success": {
+    "message": "Monthly data retrieved successfully",
+    "statusCode": 200
+  },
+  "data": {
+    "transactions": [
+      {
+        "category": {
+          "id": "674b69fa628f05779d919db7",
+          "name": "test"
+        },
+        "_id": "674b74b56ec4b3aec86beaa3",
+        "name": "dsada",
+        "amount": 3424,
+        "date": "2024-11-30T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-30T20:25:25.549Z",
+        "updatedAt": "2024-11-30T20:25:25.549Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "6749b4745905e639c55327ca",
+        "name": "food",
+        "amount": 1500,
+        "date": "2024-11-29T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:32:52.026Z",
+        "updatedAt": "2024-11-29T12:32:52.026Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "6749b6575905e639c553284d",
+          "name": "sport"
+        },
+        "_id": "6749b6895905e639c5532861",
+        "name": "gym shoes",
+        "amount": 750,
+        "date": "2024-11-29T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:41:45.452Z",
+        "updatedAt": "2024-11-29T12:41:45.452Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50ff",
+          "name": "Other"
+        },
+        "_id": "6749b7595905e639c55328d8",
+        "name": "weekend with friends",
+        "amount": 950,
+        "date": "2024-11-27T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:45:13.051Z",
+        "updatedAt": "2024-11-29T12:45:13.051Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "6749c2c8b8ed9d5085420c1c",
+        "name": "resturant",
+        "amount": 1000,
+        "date": "2024-11-25T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T13:34:00.256Z",
+        "updatedAt": "2024-11-29T13:34:00.256Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "6749c2f7b8ed9d5085420c58",
+        "name": "wedding",
+        "amount": 1500,
+        "date": "2024-11-23T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T13:34:47.407Z",
+        "updatedAt": "2024-11-29T13:34:47.407Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "6749b7205905e639c55328bc",
+        "name": "shorts",
+        "amount": 750,
+        "date": "2024-11-22T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:44:16.209Z",
+        "updatedAt": "2024-11-29T12:44:16.209Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "6749b6955905e639c553286e",
+          "name": "home"
+        },
+        "_id": "6749b6ab5905e639c5532884",
+        "name": "new tv",
+        "amount": 4000,
+        "date": "2024-11-20T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:42:19.100Z",
+        "updatedAt": "2024-11-29T12:42:19.100Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50ff",
+          "name": "Other"
+        },
+        "_id": "6749b9597b63e9af2c3d4157",
+        "name": "car",
+        "amount": 1500,
+        "date": "2024-11-20T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:53:45.534Z",
+        "updatedAt": "2024-11-29T12:53:45.534Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "6749c2aab8ed9d5085420c10",
+        "name": "food",
+        "amount": 690,
+        "date": "2024-11-18T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T13:33:30.074Z",
+        "updatedAt": "2024-11-29T13:33:30.074Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fe",
+          "name": "Bills"
+        },
+        "_id": "6749b6e75905e639c55328a0",
+        "name": "visa",
+        "amount": 6000,
+        "date": "2024-11-15T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:43:19.877Z",
+        "updatedAt": "2024-11-29T12:43:19.877Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fe",
+          "name": "Bills"
+        },
+        "_id": "6749b7005905e639c55328ae",
+        "name": "credit card",
+        "amount": 3650,
+        "date": "2024-11-15T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:43:44.448Z",
+        "updatedAt": "2024-11-29T12:43:44.448Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50ff",
+          "name": "Other"
+        },
+        "_id": "6749b6365905e639c5532835",
+        "name": "bike",
+        "amount": 3200,
+        "date": "2024-11-13T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:40:22.050Z",
+        "updatedAt": "2024-11-29T12:40:22.050Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "6749b6955905e639c553286e",
+          "name": "home"
+        },
+        "_id": "6749b6cd5905e639c5532892",
+        "name": "table fix",
+        "amount": 1200,
+        "date": "2024-11-13T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:42:53.620Z",
+        "updatedAt": "2024-11-29T12:42:53.620Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50ff",
+          "name": "Other"
+        },
+        "_id": "6749b7325905e639c55328ca",
+        "name": "party",
+        "amount": 560,
+        "date": "2024-11-13T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:44:34.137Z",
+        "updatedAt": "2024-11-29T12:44:34.137Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "674dc2960ff82e9c753a1ac9",
+        "name": "test",
+        "amount": 1000,
+        "date": "2024-11-11T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-12-02T14:22:14.358Z",
+        "updatedAt": "2024-12-02T14:22:14.358Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "674dc5ff0ff82e9c753a1c01",
+          "name": "aaaa"
+        },
+        "_id": "674dc6110ff82e9c753a1c15",
+        "name": "aaa",
+        "amount": 500,
+        "date": "2024-11-11T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-12-02T14:37:05.108Z",
+        "updatedAt": "2024-12-02T14:37:05.108Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50ff",
+          "name": "Other"
+        },
+        "_id": "6749b64b5905e639c5532841",
+        "name": "gym",
+        "amount": 350,
+        "date": "2024-11-10T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-11-29T12:40:43.074Z",
+        "updatedAt": "2024-11-29T12:40:43.074Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fd",
+          "name": "Shopping"
+        },
+        "_id": "675aba5af79b543ba82b53bb",
+        "name": "ggg",
+        "amount": 5000,
+        "date": "2024-11-08T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-12-12T10:26:34.770Z",
+        "updatedAt": "2024-12-12T10:26:34.770Z",
+        "__v": 0
+      },
+      {
+        "category": {
+          "id": "673f318a98bad2eb89be50fe",
+          "name": "Bills"
+        },
+        "_id": "675aba3df79b543ba82b539b",
+        "name": "dsad",
+        "amount": 5000,
+        "date": "2024-11-04T00:00:00.000Z",
+        "transactionType": "expenses",
+        "user": "673f318a98bad2eb89be50f8",
+        "createdAt": "2024-12-12T10:26:05.740Z",
+        "updatedAt": "2024-12-12T10:26:05.740Z",
+        "__v": 0
+      }
+    ],
+    "total": 42524,
+    "categories": [
+      {
+        "total": 14650,
+        "category": "Bills"
+      },
+      {
+        "total": 3424,
+        "category": "test"
+      },
+      {
+        "total": 11440,
+        "category": "Shopping"
+      },
+      {
+        "total": 6560,
+        "category": "Other"
+      },
+      {
+        "total": 500,
+        "category": "aaaa"
+      },
+      {
+        "total": 750,
+        "category": "sport"
+      },
+      {
+        "total": 5200,
+        "category": "home"
+      }
+    ]
+  }
+}

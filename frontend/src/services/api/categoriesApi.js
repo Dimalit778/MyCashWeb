@@ -1,5 +1,5 @@
-import { CATEGORY_URL } from "config/api";
-import { apiSlice } from "services/baseQuery";
+import { CATEGORY_URL } from "config/api.js";
+import { apiSlice } from "services/baseQuery.js";
 
 export const categoriesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

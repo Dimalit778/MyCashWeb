@@ -37,7 +37,8 @@ const Transaction = () => {
 
   if (isLoading || isLoadingCategories) return <TransactionSkeleton />;
   if (monthError || categoriesError) return <DataError error={monthError || categoriesError} />;
-
+  console.log(monthlyData?.data);
+  console.log(categories);
   return (
     <div className="container-fluid ">
       <div className="row mt-2 gx-5" style={{ minHeight: "45vh" }}>

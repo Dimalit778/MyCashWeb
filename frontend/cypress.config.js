@@ -1,18 +1,19 @@
 const { defineConfig } = require("cypress");
-
 module.exports = defineConfig({
+  retries: {
+    runMode: 2,
+  },
   env: {
-    BASE_URL: "http://localhost:3000",
-    API_URL: "http://localhost:5000",
+    apiUrl: process.env.REACT_APP_API_URL,
+    mobileViewportWidthBreakpoint: 414,
+    test_email: process.env.REACT_APP_TEST_EMAIL,
+    test_password: process.env.REACT_APP_TEST_PASSWORD,
   },
   e2e: {
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
-    // Configure viewport sizes
-    viewportWidth: 1200,
-    viewportHeight: 800,
-    // Handle React routing
+    baseUrl: process.env.REACT_APP_BASE_URL,
+    viewportHeight: 1000,
+    viewportWidth: 1280,
     experimentalSessionAndOrigin: true,
+    setupNodeEvents(on, config) {},
   },
 });

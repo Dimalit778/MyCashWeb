@@ -24,10 +24,12 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
   return (
     <div className="auth-container">
       <div className="auth-form-wrapper">
-        <h1 className="auth-title">LOGIN</h1>
+        <h1 data-cy="login-title" className="auth-title">
+          LOGIN
+        </h1>
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <TextInput
-            data-test="login-email"
+            data-cy="login-email"
             name="email"
             control={control}
             type="email"
@@ -43,7 +45,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           />
 
           <TextInput
-            data-test="login-password"
+            data-cy="login-password"
             name="password"
             control={control}
             type={showPassword ? "text" : "password"}
@@ -68,11 +70,11 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton data-test="login-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
+            <MyButton data-cy="login-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Login
             </MyButton>
             <MyButton
-              data-test="login-google"
+              data-cy="login-google"
               type="button"
               onClick={signGoogleClick}
               className="btn btn-outline-light btn-block"
@@ -82,14 +84,14 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
             </MyButton>
           </div>
 
-          <Link data-test="forgot-password" to="/forgot-password" className="forgot-password">
-            Forgot password?
+          <Link data-cy="forgot-password" to="/forgot-password" className="forgot-password">
+            Forgot Password?
           </Link>
 
           <div className="auth-prompt">
             <p>Don't have an account?</p>
             <button
-              data-test="goto-signup"
+              data-cy="goto-signup"
               type="button"
               className="btn btn-outline-light btn-sm"
               onClick={() => navigate("/signup")}

@@ -24,7 +24,6 @@ const TopBar = ({ className }) => {
     <Navbar
       expand="lg"
       className={`${className}  `}
-      data-testid="top-bar"
       style={{
         background: `linear-gradient(to top, #434343, #000000)`,
         position: "fixed",
@@ -38,7 +37,7 @@ const TopBar = ({ className }) => {
         paddingRight: "10px",
       }}
     >
-      <Navbar.Brand as={Link} to="/">
+      <Navbar.Brand data-cy="landing-link" as={Link} to="/">
         <BrandLogo className="me-2" />
       </Navbar.Brand>
       <Nav className="ms-auto">
@@ -48,7 +47,7 @@ const TopBar = ({ className }) => {
               as={Link}
               to="/signup"
               className={`btn-outline-light ${location.pathname === "/signup"}`}
-              data-testid="signup-link"
+              data-cy="signup-link"
             >
               Sign Up
             </Nav.Link>
@@ -56,7 +55,7 @@ const TopBar = ({ className }) => {
               as={Link}
               to="/login"
               className={`btn-outline-light ${location.pathname === "/login"}`}
-              data-testid="login-link"
+              data-cy="login-link"
             >
               Login
             </Nav.Link>
@@ -65,7 +64,7 @@ const TopBar = ({ className }) => {
           <div className="d-flex align-items-center">
             <div className="me-4">
               <Button variant="link" className="text-light p-0" onClick={logoutHandler}>
-                <img data-testid="nav-profile-icon" src={logoutIcon} alt="logout" width="24" height="24" />
+                <img data-cy="nav-profile-icon" src={logoutIcon} alt="logout" width="24" height="24" />
               </Button>
             </div>
             <div className="text-light">

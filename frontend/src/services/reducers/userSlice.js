@@ -26,9 +26,7 @@ const userSlice = createSlice({
       .addMatcher(authApiSlice.endpoints.googleAuth.matchFulfilled, (state, { payload }) => {
         state.user = payload.data.user;
       })
-      .addMatcher(authApiSlice.endpoints.signUp.matchFulfilled, (state, { payload }) => {
-        state.user = payload.data.user;
-      })
+
       .addMatcher(authApiSlice.endpoints.logout.matchFulfilled, (state) => {
         return initialState;
       });

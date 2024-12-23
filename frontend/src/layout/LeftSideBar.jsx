@@ -24,7 +24,11 @@ const LeftSideBar = () => {
   };
 
   return (
-    <div className="d-flex flex-column p-2 " style={{ height: "100vh", backgroundColor: "black" }}>
+    <div
+      data-cy="left-sidebar"
+      className="d-flex flex-column p-2 "
+      style={{ height: "100vh", backgroundColor: "black" }}
+    >
       <div className="mb-3">
         <BrandLogo />
       </div>

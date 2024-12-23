@@ -4,7 +4,7 @@ import React from "react";
 import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 
-const BottomBar = ({ className }) => {
+const BottomNav = ({ className }) => {
   const { pathname } = useLocation();
 
   const handleNavClick = () => {
@@ -13,6 +13,7 @@ const BottomBar = ({ className }) => {
 
   return (
     <Nav
+      data-cy="bottom-nav"
       className={`${className} d-flex flex-nowrap border-top   `}
       style={{
         position: "fixed",
@@ -30,7 +31,7 @@ const BottomBar = ({ className }) => {
         const isActive = pathname === link.route;
 
         return (
-          <Nav.Item key={`bottombar-${link.label}`} className="flex-grow-1 text-center">
+          <Nav.Item key={`bottomNav-${link.label}`} className="flex-grow-1 text-center">
             <Nav.Link
               as={Link}
               to={link.route}
@@ -47,4 +48,4 @@ const BottomBar = ({ className }) => {
   );
 };
 
-export default BottomBar;
+export default BottomNav;

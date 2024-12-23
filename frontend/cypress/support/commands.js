@@ -1,26 +1,7 @@
-Cypress.Commands.add("loginTest", () => {
-  // Intercept login request
-  cy.intercept("POST", "/api/auth/login").as("loginRequest");
-
-  // Fill in login form
-  cy.get('[data-test="login-email"]').type(Cypress.env("TEST_EMAIL"));
-  cy.get('[data-test="login-password"]').type(Cypress.env("TEST_PASSWORD"));
-  cy.get('[data-test="login-submit"]').click();
-
-  // Wait for and verify response
-  cy.wait("@loginRequest").then((interception) => {
-    expect(interception.response.statusCode).to.eq(200);
-    if (interception.response.body.token) {
-      window.localStorage.setItem("token", interception.response.body.token);
-    }
-  });
-
-  // Verify redirect
-  cy.url().should("not.include", "/login");
-});
-
 // Login Session
-Cypress.Commands.add("login", (email, password) => {
+Cypress.Commands.add("loginUser", () => {
+  const email = Cypress.env("TEST_EMAIL");
+  const password = Cypress.env("TEST_PASSWORD");
   cy.session([email, password], () => {
     // Make login request
     cy.request({
@@ -49,4 +30,22 @@ Cypress.Commands.add("login", (email, password) => {
 });
 Cypress.Commands.add("getDataCy", (dataTestSelector) => {
   return cy.get(`[data-cy="${dataTestSelector}"]`);
+});
+// Helper command for viewport testing
+Cypress.Commands.add("testViewport", (testCallback) => {
+  // Desktop viewport
+  cy.viewport(Cypress.config("viewportWidth"), Cypress.config("viewportHeight"));
+  testCallback("desktop");
+
+  // Mobile viewport
+  cy.viewport(Cypress.env("mobileViewportWidthBreakpoint"), 667);
+  testCallback("mobile");
+});
+// API intercept setup
+Cypress.Commands.add("setupApiMonitors", () => {
+  // Monitor yearly transactions requests
+  cy.intercept("GET", `${Cypress.env("API_URL")}/transactions/yearly/*`).as("yearlyData");
+
+  // Monitor monthly transactions requests
+  cy.intercept("GET", `${Cypress.env("API_URL")}/transactions/monthly/*`).as("monthlyData");
 });

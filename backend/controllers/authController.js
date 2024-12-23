@@ -47,6 +47,7 @@ const signup = asyncHandler(async (req, res) => {
       firstName,
       lastName,
       email,
+      password,
     });
 
     await user.save({ session });
@@ -63,13 +64,17 @@ const signup = asyncHandler(async (req, res) => {
 
     await session.commitTransaction();
 
-    return res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      user: {
-        ...user._doc,
-      },
-    });
+    return res.status(201).json(
+      new ApiResponse(
+        200,
+        {
+          user: {
+            ...user._doc,
+          },
+        },
+        "User created successfully"
+      )
+    );
   } catch (error) {
     await session.abortTransaction();
     throw new ApiError(500, "Failed to create user", error.stack);
@@ -79,7 +84,7 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  res.clearCookie("token", "refreshToken");
+  res.clearCookie("token").clearCookie("refreshToken");
   return res.status(200).json({
     success: true,
     message: "Logged out successfully",

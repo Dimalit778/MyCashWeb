@@ -17,15 +17,15 @@ const Landing = () => {
           <Container>
             <Row className="text-center mb-5">
               <Col>
-                <h1 className={`${styles.mainTitle} mb-0`} data-test="landing-title">
+                <h1 data-cy="landing-title" className={`${styles.mainTitle} mb-0`}>
                   MANAGE YOUR
                 </h1>
-                <h1 className={styles.strokeTitle} data-testid="stroke-title">
+                <h1 className={styles.strokeTitle} data-cy="stroke-title">
                   MONEY
                 </h1>
-                <div className={styles.animationWrapper} data-testid="animation-wrapper">
+                <div className={styles.animationWrapper} data-cy="animation-wrapper">
                   <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
-                    <LandingAnimation data-testid="welcome-animation" />
+                    <LandingAnimation data-cy="welcome-animation" />
                   </motion.div>
                 </div>
               </Col>
@@ -37,19 +37,19 @@ const Landing = () => {
           <Container>
             <Row className="align-items-center">
               <Col lg={6} className="mb-4 mb-lg-0">
-                <div className={styles.imageContainer} data-testid="about-image-container">
-                  <img src={groupImg} alt="Team" className={styles.aboutImage} data-testid="team-image" />
+                <div className={styles.imageContainer} data-cy="about-image-container">
+                  <img src={groupImg} alt="Team" className={styles.aboutImage} data-cy="team-image" />
                 </div>
               </Col>
               <Col lg={6}>
-                <div className={styles.aboutContent} data-testid="about-content">
-                  <h2 className={styles.sectionTitle} data-testid="about-title">
+                <div className={styles.aboutContent} data-cy="about-content">
+                  <h2 className={styles.sectionTitle} data-cy="about-title">
                     About Us
                   </h2>
-                  <p className={styles.aboutText} data-testid="about-text-1">
+                  <p className={styles.aboutText} data-cy="about-text-1">
                     CashFlow is a financial planning firm based in Jerusalem...
                   </p>
-                  <p className={styles.aboutText} data-testid="about-text-2">
+                  <p className={styles.aboutText} data-cy="about-text-2">
                     CashFlow is a financial planning firm based in Jerusalem, providing comprehensive financial planning
                     services to individuals and businesses. Our team of experts is dedicated to helping our clients
                     achieve their financial goals by providing them with personalized and customized solutions.

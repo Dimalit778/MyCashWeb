@@ -29,6 +29,15 @@ export const authApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["Auth"],
     }),
+    signUp: builder.mutation({
+      query: (data) => ({
+        url: `${AUTH_URL}/signup`,
+        method: "POST",
+        credentials: "include",
+        body: data,
+      }),
+      providesTags: ["Auth"],
+    }),
     logout: builder.mutation({
       query: () => ({
         url: `${AUTH_URL}/logout`,
@@ -41,8 +50,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
           if (isPlatformMobile()) {
             tokenStorage.clearTokens();
           }
-          // dispatch(clearUser());
-          // dispatch(apiSlice.util.resetApiState());
         } catch (error) {
           console.error("Logout failed:", error);
         }
@@ -51,15 +58,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
     googleAuth: builder.mutation({
       query: (data) => ({
         url: `${AUTH_URL}/googleAuth`,
-        method: "POST",
-        credentials: "include",
-        body: data,
-      }),
-      providesTags: ["Auth"],
-    }),
-    signUp: builder.mutation({
-      query: (data) => ({
-        url: `${AUTH_URL}/signup`,
         method: "POST",
         credentials: "include",
         body: data,

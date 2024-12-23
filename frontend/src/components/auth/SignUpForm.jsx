@@ -49,11 +49,13 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
   return (
     <div className="auth-container ">
       <div className="auth-form-wrapper">
-        <h1 className="auth-title">SIGN UP</h1>
+        <h1 data-cy="signup-title" className="auth-title">
+          SIGN UP
+        </h1>
         <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="d-flex gap-3">
             <TextInput
-              data-test="signup-firstname"
+              data-cy="signup-firstName"
               name="firstName"
               control={control}
               placeholder="First Name"
@@ -67,7 +69,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
               }}
             />
             <TextInput
-              data-test="signup-lastname"
+              data-cy="signup-lastName"
               name="lastName"
               control={control}
               placeholder="Last Name"
@@ -83,7 +85,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           </div>
 
           <TextInput
-            data-test="signup-email"
+            data-cy="signup-email"
             name="email"
             control={control}
             type="email"
@@ -93,7 +95,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <TextInput
-            data-test="signup-password"
+            data-cy="signup-password"
             name="password"
             control={control}
             type={showPassword ? "text" : "password"}
@@ -118,7 +120,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <TextInput
-            data-test="signup-confirm-password"
+            data-cy="signup-confirm-password"
             name="confirmPassword"
             control={control}
             type={showConfirmPassword ? "text" : "password"}
@@ -140,11 +142,11 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
           />
 
           <div className="d-grid gap-2">
-            <MyButton data-test="signup-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
+            <MyButton data-cy="signup-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Sign Up
             </MyButton>
             <button
-              data-test="signup-google"
+              data-cy="signup-google"
               type="button"
               onClick={onGoogleClick}
               className="btn btn-outline-light btn-block"
@@ -157,7 +159,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
 
           <div className="auth-prompt">
             <p>Already have an account?</p>
-            <Link data-test="goto-login" to="/login" className="btn btn-outline-light btn-sm">
+            <Link data-cy="goto-login" to="/login" className="btn btn-outline-light btn-sm">
               Login
             </Link>
           </div>

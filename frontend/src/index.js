@@ -27,7 +27,3 @@ root.render(
     </PersistGate>
   </Provider>
 );
-// expose store during tests
-if (window.Cypress) {
-  window.store = store;
-}

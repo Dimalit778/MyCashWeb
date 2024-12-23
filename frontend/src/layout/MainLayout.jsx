@@ -1,12 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-
 import { Col, Row } from "react-bootstrap";
-
 import LeftSideBar from "layout/LeftSideBar";
-import BottomBar from "layout/BottomBar";
+
 import TopBar from "layout/TopBar";
 import { useSelector } from "react-redux";
 import { currentUser } from "services/reducers/userSlice";
+import BottomNav from "layout/BottomNav";
 
 const MainLayout = () => {
   const user = useSelector(currentUser);
@@ -39,7 +38,7 @@ const MainLayout = () => {
           <Outlet />
         </Col>
       </Row>
-      <BottomBar className="d-md-none" />
+      <BottomNav className="d-md-none" />
     </div>
   );
 };

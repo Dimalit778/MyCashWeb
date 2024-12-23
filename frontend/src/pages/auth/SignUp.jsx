@@ -3,19 +3,18 @@ import { toast } from "react-hot-toast";
 
 import SignUpForm from "components/auth/SignUpForm";
 import { useSignUpMutation } from "services/api/authApi";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [signUp, { isLoading }] = useSignUpMutation();
 
   const handleSignUp = async (formData) => {
     try {
       const res = await signUp(formData).unwrap();
-      if (!res) {
-        toast.error("Registration failed");
-        return;
-      }
 
-      toast.success("Registration successful!");
+      toast.success(res?.success.message || "User created successfully!");
+      navigate("/login");
     } catch (err) {
       toast.error(err?.data?.message || "Registration failed");
     }

@@ -74,6 +74,7 @@ const TransactionsTable = ({ transactions, total, type }) => {
 
   const handleOpenModal = useCallback(
     (action, item = null) => {
+      console.log(action, item);
       if (action === "add") {
         dispatch(openTransactionModal({ type: "add", isOpen: true }));
       } else if (action === "edit" && item) {

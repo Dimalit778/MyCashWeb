@@ -5,7 +5,7 @@ import React from "react";
 
 const YearCalender = ({ year, setYear }) => {
   return (
-    <div className="d-flex pt-2 justify-content-center align-items-center ">
+    <div data-cy="year-calender" className="d-flex pt-2 justify-content-center align-items-center ">
       <IconButton
         data-cy="year-prev-btn"
         icon={<FontAwesomeIcon icon={faAngleLeft} />}

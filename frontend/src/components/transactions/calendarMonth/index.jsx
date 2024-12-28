@@ -32,6 +32,7 @@ const CalendarMonth = ({ date, setDate }) => {
         <motion.h2
           onClick={() => setIsExpanded(!isExpanded)}
           className="calendar-title"
+          dataCy="month-calendar-title"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

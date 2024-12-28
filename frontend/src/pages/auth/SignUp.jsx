@@ -13,7 +13,7 @@ const SignUp = () => {
     try {
       const res = await signUp(formData).unwrap();
 
-      toast.success(res?.success.message || "User created successfully!");
+      toast.success(res.success?.message);
       navigate("/login");
     } catch (err) {
       toast.error(err?.data?.message || "Registration failed");

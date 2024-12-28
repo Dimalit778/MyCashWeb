@@ -19,7 +19,7 @@ describe("MyCash App", () => {
   describe("Home Page", () => {
     beforeEach(() => {
       cy.visit("/");
-      // Intercept yearly data request
+
       cy.intercept("GET", "/api/transactions/yearly/*", {
         fixture: "yearlyStats.json",
       }).as("yearlyData");

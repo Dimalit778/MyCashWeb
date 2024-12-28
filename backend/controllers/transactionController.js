@@ -69,7 +69,7 @@ export const getYearlyData = asyncHandler(async (req, res) => {
   );
   // Calculate balance
   const balance = yearlyTotals.totalIncomes - yearlyTotals.totalExpenses;
-  yearlyTotals.balance = balance < 0 ? -Math.abs(balance) : balance;
+  yearlyTotals.totalBalance = balance < 0 ? -Math.abs(balance) : balance;
 
   // Create an array for all 12 months with default values
   const monthlyStats = Array.from({ length: 12 }, (_, i) => ({
@@ -87,9 +87,9 @@ export const getYearlyData = asyncHandler(async (req, res) => {
       monthlyStats[monthIndex].totalExpenses = stat.total;
     }
   });
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { yearlyStats: yearlyTotals, monthlyStats }, "Yearly data retrieved successfully"));
+  return res.json(
+    new ApiResponse(200, { yearlyStats: yearlyTotals, monthlyStats }, "Yearly data retrieved successfully")
+  );
 });
 
 export const getMonthlyData = asyncHandler(async (req, res) => {

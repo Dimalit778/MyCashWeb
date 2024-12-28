@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MainSkeleton from "../../components/main/skeleton";
+
 import YearCalender from "../../components/main/yearCalendar";
 import YearStats from "../../components/main/yearStats";
 import YearChart from "../../components/main/yearChart";
@@ -21,18 +21,18 @@ const Home = () => {
   );
 
   if (error) return <DataError error={error} />;
-  if (isLoading) return <MainSkeleton />;
 
-  const { monthlyStats, yearlyStats } = data?.data;
+  const { monthlyStats = [], yearlyStats = [] } = data?.data || {};
 
   return (
-    <div className="container-fluid d-flex flex-column gap-3  ">
-      <YearCalender year={year} setYear={setYear} />
-      <LoadingOverlay show={isFetching}>
+    <LoadingOverlay dataCy="loading" show={isLoading || isFetching}>
+      <div className="container-fluid d-flex flex-column gap-3  ">
+        <YearCalender year={year} setYear={setYear} />
+
         <YearStats yearlyStats={yearlyStats} />
         <YearChart monthlyStats={monthlyStats} />
-      </LoadingOverlay>
-    </div>
+      </div>
+    </LoadingOverlay>
   );
 };
 export default Home;

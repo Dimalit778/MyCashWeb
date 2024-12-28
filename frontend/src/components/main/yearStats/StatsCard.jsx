@@ -8,9 +8,9 @@ const StatsCard = ({ dataCy, title, amount, isBalance = false, isPositive = fals
       ? "rgb(40, 167, 69)" // Green for positive
       : "rgb(220, 53, 69)" // Red for negative
     : THEME.secondary;
+
   return (
     <div
-      data-cy={dataCy}
       className="rounded-3 shadow-md text-center p-2"
       style={{
         background: THEME.card,
@@ -19,8 +19,12 @@ const StatsCard = ({ dataCy, title, amount, isBalance = false, isPositive = fals
       }}
     >
       <div className="d-flex flex-column">
-        <h3 className="text-uppercase text-dark">{title}</h3>
+        <h3 data-cy={`${dataCy}-title`} className="text-uppercase text-dark">
+          {title}
+        </h3>
         <h5
+          data-cy={`${dataCy}-amount`}
+          data-amount={amount}
           className="mb-0"
           style={{
             color: textColor,

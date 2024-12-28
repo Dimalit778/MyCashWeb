@@ -22,8 +22,8 @@ const Transaction = () => {
 
   const {
     data: monthlyData,
-    isLoading,
-    isFetching,
+    isLoading: loadingData,
+    isFetching: fetchingData,
     error: monthError,
   } = useGetMonthlyTransactionsQuery({
     type,
@@ -31,38 +31,41 @@ const Transaction = () => {
     month: date.getMonth() + 1,
   });
 
-  const { data: userCategories, isLoading: isLoadingCategories, error: categoriesError } = useGetCategoriesQuery();
+  const {
+    data: userCategories,
+    isFetching: fetchingCategories,
+    isLoading: loadingCategories,
+    error: categoriesError,
+  } = useGetCategoriesQuery();
 
   const categories = userCategories?.data.categories?.filter((category) => category.type === type);
 
-  if (isLoading || isLoadingCategories) return <TransactionSkeleton />;
+  if (loadingData || loadingCategories) return <TransactionSkeleton />;
   if (monthError || categoriesError) return <DataError error={monthError || categoriesError} />;
-  console.log(monthlyData?.data);
-  console.log(categories);
+
   return (
-    <div className="container-fluid ">
-      <div className="row mt-2 gx-5" style={{ minHeight: "45vh" }}>
-        <div className="col-12 col-lg-8">
-          <CalendarMonth date={date} setDate={setDate} />
-          <LoadingOverlay show={isFetching}>
+    <LoadingOverlay dataCy="loading" show={fetchingData || fetchingCategories}>
+      <div className="container-fluid ">
+        <div className="row mt-2 gx-5" style={{ minHeight: "45vh" }}>
+          <div className="col-12 col-lg-8">
+            <CalendarMonth date={date} setDate={setDate} />
+
             <ProgressBar data={monthlyData?.data.categories} categories={categories} total={monthlyData?.data.total} />
-          </LoadingOverlay>
+          </div>
+          <div className="col-12 col-lg-4">
+            <Categories categories={categories} max={userCategories.data.maxCategories} />
+          </div>
         </div>
-        <div className="col-12 col-lg-4">
-          <Categories categories={categories} max={userCategories.data.maxCategories} />
-        </div>
+
+        <TransactionsTable
+          transactions={monthlyData?.data.transactions}
+          total={monthlyData?.data.transactions}
+          type={type}
+        />
+
+        {modalState.isOpen && <TransactionModal type={type} date={date} />}
       </div>
-      {date && (
-        <LoadingOverlay show={isFetching}>
-          <TransactionsTable
-            transactions={monthlyData?.data.transactions}
-            total={monthlyData?.data.transactions}
-            type={type}
-          />
-        </LoadingOverlay>
-      )}
-      {modalState.isOpen && <TransactionModal type={type} date={date} />}
-    </div>
+    </LoadingOverlay>
   );
 };
 

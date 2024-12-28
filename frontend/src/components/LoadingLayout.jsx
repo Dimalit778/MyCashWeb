@@ -1,16 +1,18 @@
-const LoadingOverlay = ({ show, children, "data-cy": dataCy }) => (
-  <div className="position-relative" data-cy={dataCy}>
-    {show && (
-      <div
-        data-cy="loading-container"
-        className="position-absolute w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center"
-        style={{ zIndex: 1 }}
-      >
-        <div data-cy="spinner" className="spinner-border text-primary" />
-      </div>
-    )}
-    {children}
-  </div>
-);
+const LoadingOverlay = ({ show, children, dataCy }) => {
+  return (
+    <div className="position-relative">
+      {show && (
+        <div
+          data-cy={`${dataCy}-overlay`}
+          className="position-absolute w-100 h-100 bg-black bg-opacity-50 d-flex justify-content-center align-items-center"
+          style={{ zIndex: 1 }}
+        >
+          <div data-cy="spinner" className="spinner-border text-light " style={{ width: "4rem", height: "4rem" }} />
+        </div>
+      )}
+      {children}
+    </div>
+  );
+};
 
 export default LoadingOverlay;

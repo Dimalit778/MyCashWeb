@@ -19,6 +19,7 @@ const YearChart = React.memo(({ monthlyStats }) => {
         {
           label: "Monthly Incomes",
           data: ALL_MONTHS.map((_, index) => monthlyStats[index]?.totalIncomes || 0),
+
           backgroundColor: "rgba(40, 167, 69, 0.6)",
           borderColor: "rgba(40, 167, 69, 1)",
           borderWidth: 1,
@@ -28,6 +29,7 @@ const YearChart = React.memo(({ monthlyStats }) => {
         {
           label: "Monthly Expenses",
           data: ALL_MONTHS.map((_, index) => monthlyStats[index]?.totalExpenses || 0),
+
           backgroundColor: "rgba(220, 53, 69, 0.6)",
           borderColor: "rgba(220, 53, 69, 1)",
           borderWidth: 1,
@@ -91,7 +93,11 @@ const YearChart = React.memo(({ monthlyStats }) => {
   };
 
   return (
-    <div className="mt-3 text-light border-light shadow-lg p-3  rounded bg-dark " style={{ minHeight: "70vh" }}>
+    <div
+      data-cy="year-chart"
+      className="mt-3 text-light border-light shadow-lg p-3  rounded bg-dark "
+      style={{ minHeight: "70vh" }}
+    >
       <Bar options={options} data={chartData} />
     </div>
   );

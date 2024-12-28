@@ -5,10 +5,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "layout/MainLayout";
 import PublicLayout from "layout/PublicLayout";
 
-// Components for immediate loading
-import MainSkeleton from "components/main/skeleton";
-import FinanceSkeleton from "components/transactions/skeleton/TransactionSkeleton";
-
 // Pages
 import Landing from "pages/Landing";
 import SignUp from "pages/auth/SignUp";
@@ -22,7 +18,7 @@ const Transactions = lazy(() => import("pages/dashboard/Transactions"));
 
 export const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Landing />} />
@@ -34,7 +30,7 @@ export const App = () => {
           <Route
             path="home"
             element={
-              <Suspense fallback={<MainSkeleton />}>
+              <Suspense>
                 <Home />
               </Suspense>
             }
@@ -42,7 +38,7 @@ export const App = () => {
           <Route
             path="transactions/:type"
             element={
-              <Suspense fallback={<FinanceSkeleton />}>
+              <Suspense>
                 <Transactions />
               </Suspense>
             }

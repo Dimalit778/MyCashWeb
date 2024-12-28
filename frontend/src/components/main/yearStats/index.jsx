@@ -7,19 +7,19 @@ const YearStats = ({ yearlyStats }) => {
     {
       title: "Expenses",
       amount: yearlyStats.totalExpenses,
-      dataCy: "stats-expenses",
+      dataCy: "expenses",
     },
     {
       title: "Balance",
-      amount: yearlyStats.balance,
+      amount: yearlyStats.totalBalance,
       isBalance: true,
-      isPositive: yearlyStats.balance >= 0,
-      dataCy: "stats-balance",
+      isPositive: yearlyStats.totalBalance >= 0,
+      dataCy: "balance",
     },
     {
       title: "Incomes",
       amount: yearlyStats.totalIncomes,
-      dataCy: "stats-incomes",
+      dataCy: "incomes",
     },
   ];
 

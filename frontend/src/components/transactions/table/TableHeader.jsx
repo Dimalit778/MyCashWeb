@@ -8,12 +8,12 @@ import CountUp from "react-countup";
 const TableHeader = ({ total = 0, exportData, openModal, type }) => {
   return (
     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-      <div className="d-flex gap-2">
-        <MyButton bgColor={THEME.dark} border={THEME.light} onClick={() => openModal("add", null)}>
+      <div className=" d-flex justify-content-center align-items-center gap-3 ">
+        <MyButton bgColor={THEME.dark} border={THEME.light} size="md" onClick={() => openModal("add", null)}>
           Add {type}
         </MyButton>
-        <MyButton bgColor={THEME.dark} onClick={exportData}>
-          <FontAwesomeIcon icon={faFileExport} className="me-2" />
+        <MyButton bgColor={THEME.dark} onClick={() => exportData()} size="sm">
+          <FontAwesomeIcon icon={faFileExport} />
           Export
         </MyButton>
       </div>

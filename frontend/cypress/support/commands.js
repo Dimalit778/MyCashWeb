@@ -10,6 +10,7 @@ Cypress.Commands.add("loginUser", () => {
       body: { email, password },
     }).then((response) => {
       expect(response.status).to.eq(200);
+      cy.log("Login response:", response.body);
 
       const { accessToken, user } = response.body.data;
       cy.setCookie("token", accessToken);
@@ -40,6 +41,25 @@ Cypress.Commands.add("testViewport", (testCallback) => {
   // Mobile viewport
   cy.viewport(Cypress.env("mobileViewportWidthBreakpoint"), 667);
   testCallback("mobile");
+});
+// Api Requests
+Cypress.Commands.add("fetchYearlyData", (year) => {
+  cy.request({
+    method: "GET",
+    url: "localhost:5000/api/transactions/yearly",
+    qs: { year },
+  })
+    .its("body")
+    .as("yearlyData");
+});
+Cypress.Commands.add("fetchMonthData", (year) => {
+  cy.request({
+    method: "GET",
+    url: "localhost:5000/api/transactions/monthly",
+    qs: { year, type, month },
+  })
+    .its("body")
+    .as("yearlyData");
 });
 // API intercept setup
 Cypress.Commands.add("setupApiMonitors", () => {

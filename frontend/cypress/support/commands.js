@@ -52,20 +52,29 @@ Cypress.Commands.add("fetchYearlyData", (year) => {
     .its("body")
     .as("yearlyData");
 });
-Cypress.Commands.add("fetchMonthData", (year) => {
+Cypress.Commands.add("fetchMonthData", ({ type, year, month }) => {
   cy.request({
     method: "GET",
     url: "localhost:5000/api/transactions/monthly",
-    qs: { year, type, month },
+    qs: {
+      type,
+      year,
+      month,
+    },
+    credentials: "include",
   })
     .its("body")
-    .as("yearlyData");
+    .as("monthlyData");
 });
 // API intercept setup
 Cypress.Commands.add("setupApiMonitors", () => {
-  // Monitor yearly transactions requests
-  cy.intercept("GET", `${Cypress.env("API_URL")}/transactions/yearly/*`).as("yearlyData");
+  cy.intercept({
+    method: "GET",
+    url: "**/api/transactions/monthly*",
+  }).as("monthlyData");
 
-  // Monitor monthly transactions requests
-  cy.intercept("GET", `${Cypress.env("API_URL")}/transactions/monthly/*`).as("monthlyData");
+  cy.intercept({
+    method: "GET",
+    url: "**/api/transactions/yearly*",
+  }).as("yearlyData");
 });

@@ -13,8 +13,8 @@ export const transactionsApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Transaction"],
     }),
     getMonthlyTransactions: builder.query({
-      query: ({ type, year, month, page = 1, limit = 10, sortBy, sortOrder }) => ({
-        url: `${TRANSACTION_URL}/monthly?type=${type}&year=${year}&month=${month}&page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+      query: ({ type, year, month }) => ({
+        url: `${TRANSACTION_URL}/monthly?type=${type}&year=${year}&month=${month}`,
         method: "GET",
         credentials: "include",
       }),

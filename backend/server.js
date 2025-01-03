@@ -11,6 +11,7 @@ import userRoutes from "./routes/userRoute.js";
 import transactionRoutes from "./routes/transactionsRoute.js";
 import categoryRoutes from "./routes/categoryRoute.js";
 import appCheckRoute from "./routes/appCheckRoute.js";
+import seedDb from "./routes/seedDbRoute.js";
 // Middleware
 import { protectRoute } from "./middleware/protectRoute.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
@@ -43,6 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", protectRoute, userRoutes);
 app.use("/api/transactions", protectRoute, transactionRoutes);
 app.use("/api/categories", protectRoute, categoryRoutes);
+app.use("/api/seed", seedDb);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");

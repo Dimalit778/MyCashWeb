@@ -18,11 +18,19 @@ describe("Home Page", () => {
     });
   };
 
+  before(() => {
+    cy.task("db:clear");
+    cy.task("db:seed");
+  });
+
   beforeEach(() => {
     cy.loginUser();
     cy.visit("/home");
   });
 
+  after(() => {
+    cy.task("db:clear");
+  });
   it("Current year and get data", () => {
     cy.getDataCy("year-display").should("have.text", currentYear.toString());
     cy.fetchYearlyData(currentYear).then((data) => checkYearlyStats(data));

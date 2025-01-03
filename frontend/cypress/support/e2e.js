@@ -14,7 +14,21 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+// cypress/support/e2e.js
+// before(() => {
+//   cy.task("db:clear").then(() => {
+//     cy.log("Database cleared");
+//     cy.task("db:seed");
+//     cy.log("db seeded");
+//   });
+// });
+
+// after(() => {
+//   cy.task("db:clear").then(() => {
+//     cy.log("Database cleared");
+//   });
+// });

@@ -44,7 +44,7 @@ const Transaction = () => {
   if (monthError || categoriesError) return <DataError error={monthError || categoriesError} />;
 
   return (
-    <LoadingOverlay dataCy="loading" show={fetchingData || fetchingCategories}>
+    <LoadingOverlay data-cy="loading" show={fetchingData || fetchingCategories}>
       <div className="container-fluid ">
         <div className="row mt-2 gx-5" style={{ minHeight: "45vh" }}>
           <div className="col-12 col-lg-8">

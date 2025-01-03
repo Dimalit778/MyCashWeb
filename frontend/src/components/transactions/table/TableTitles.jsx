@@ -2,7 +2,7 @@ import { faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import MyButton from "components/ui/button";
-const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
+const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }) => {
   const headers = [
     { key: "label", label: "Name", sortable: false, width: "30%", align: "left" },
     { key: "amount", label: "Amount", sortable: true, width: "20%", align: "center" },
@@ -29,7 +29,7 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
   ];
 
   return (
-    <thead className="table-header-grey">
+    <thead data-cy="table-titles" className="table-header-grey">
       <tr>
         {headers.map(({ key, label, sortable = true, width, align }) => (
           <th

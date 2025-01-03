@@ -149,16 +149,21 @@ const TransactionsTable = ({ transactions, total, type }) => {
               <h3 className="text-secondary">{type} List is empty</h3>
             </div>
           ) : (
-            <table className="table table-dark table-hover ">
+            <table data-cy="transactions-table" className="table table-dark table-hover ">
               <TableTitles
                 selectedItems={selectedItems}
                 onDelete={handleDeleteItems}
                 handleSort={handleSort}
                 sortConfig={sortConfig}
               />
-              <tbody>
-                {currentItems.map((item, index) => (
-                  <tr key={item._id} onClick={() => handleOpenModal("edit", item)} className="align-middle text-center">
+              <tbody data-cy="transactions-body">
+                {currentItems.map((item) => (
+                  <tr
+                    data-cy="transactions-row"
+                    key={item._id}
+                    onClick={() => handleOpenModal("edit", item)}
+                    className="align-middle text-center"
+                  >
                     <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{item.name}</td>
 
                     <td style={{ minWidth: "100px" }}>${item.amount.toLocaleString()}</td>

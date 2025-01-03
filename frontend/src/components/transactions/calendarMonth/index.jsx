@@ -18,9 +18,10 @@ const CalendarMonth = ({ date, setDate }) => {
   };
 
   return (
-    <div className="calendar-container">
+    <div data-cy="calendar-container" className="calendar-container">
       <motion.div className="calendar-header">
         <motion.button
+          data-cy="calendar-prev-button"
           className="nav-button"
           onClick={() => (!isExpanded ? handlePrevMonth() : handlePrevYear())}
           whileHover={{ scale: 1.1 }}
@@ -30,9 +31,9 @@ const CalendarMonth = ({ date, setDate }) => {
         </motion.button>
 
         <motion.h2
+          data-cy="calendar-title"
           onClick={() => setIsExpanded(!isExpanded)}
           className="calendar-title"
-          dataCy="month-calendar-title"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -40,6 +41,7 @@ const CalendarMonth = ({ date, setDate }) => {
         </motion.h2>
 
         <motion.button
+          data-cy="calendar-next-button"
           className="nav-button"
           onClick={() => (!isExpanded ? handleNextMonth() : handleNextYear())}
           whileHover={{ scale: 1.1 }}
@@ -53,13 +55,14 @@ const CalendarMonth = ({ date, setDate }) => {
       <AnimatePresence>
         {isExpanded && (
           <motion.div
+            data-cy="months-overlay"
             className="months-overlay"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
             exit="hidden"
           >
-            <motion.div className="months-grid">
+            <motion.div data-cy="months-grid" className="months-grid">
               {Array.from({ length: 12 }, (_, i) => {
                 const monthDate = new Date(date.getFullYear(), i, 1);
                 const isCurrentMonth = i === date.getMonth();
@@ -67,6 +70,10 @@ const CalendarMonth = ({ date, setDate }) => {
 
                 return (
                   <motion.button
+                    data-cy={`month-button-${format(monthDate, "MMM").toLowerCase()}`}
+                    data-month={i}
+                    data-current={isCurrentMonth}
+                    data-selected={isSelectedMonth}
                     key={i}
                     variants={monthItemVariants}
                     whileHover={{ scale: 1.1 }}

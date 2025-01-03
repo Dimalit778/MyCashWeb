@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import "./progressBar.css";
 import ProgressBarItem from "./ProgressBarItem";
 
-const ProgressBars = ({ data, categories, total }) => {
+const ProgressBars = ({ data, total }) => {
   const processedCategories = () => {
     if (!total) return []; // Return empty array if total is 0
 
@@ -20,6 +20,7 @@ const ProgressBars = ({ data, categories, total }) => {
   if (!processed.length) {
     return (
       <div
+        data-cy="progress-no-item"
         className=" d-flex align-items-center justify-content-center"
         style={{
           minHeight: "20vh",
@@ -32,7 +33,7 @@ const ProgressBars = ({ data, categories, total }) => {
   }
 
   return (
-    <div className="progress-container mt-3">
+    <div data-cy="progress-container" className="progress-container mt-3">
       <AnimatePresence>
         <div
           className="d-grid gap-3"

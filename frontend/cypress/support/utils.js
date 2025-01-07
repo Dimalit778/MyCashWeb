@@ -34,3 +34,14 @@ export const verifyTableData = (transactions) => {
     });
   });
 };
+export const checkMonthTitle = (interception) => {
+  const url = new URL(interception.request.url);
+  const params = new URLSearchParams(url.search);
+  const month = parseInt(params.get("month"));
+  const year = parseInt(params.get("year"));
+
+  const date = new Date(year, month - 1);
+  const expectedTitle = format(date, "MMMM yyyy");
+
+  cy.getDataCy("calendar-title").should("have.text", expectedTitle);
+};

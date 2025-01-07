@@ -70,7 +70,8 @@ const CalendarMonth = ({ date, setDate }) => {
 
                 return (
                   <motion.button
-                    data-cy={`month-button-${format(monthDate, "MMM").toLowerCase()}`}
+                    // data-cy={`month-button-${format(monthDate, "MMM").toLowerCase()}`}
+                    data-cy="expanded-month-button"
                     data-month={i}
                     data-current={isCurrentMonth}
                     data-selected={isSelectedMonth}

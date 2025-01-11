@@ -37,7 +37,7 @@ const Transaction = () => {
     isLoading: loadingCategories,
     error: categoriesError,
   } = useGetCategoriesQuery();
-
+  console.log(userCategories);
   const categories = userCategories?.data.categories?.filter((category) => category.type === type);
 
   if (loadingData || loadingCategories) return <TransactionSkeleton />;

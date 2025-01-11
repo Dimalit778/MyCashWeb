@@ -78,3 +78,9 @@ Cypress.Commands.add("setupApiMonitors", () => {
     url: "**/api/transactions/yearly*",
   }).as("yearlyData");
 });
+Cypress.Commands.add("getCategoryInterceptor", () => {
+  cy.intercept({
+    method: "GET",
+    url: "**/api/categories/get",
+  }).as("categories");
+});

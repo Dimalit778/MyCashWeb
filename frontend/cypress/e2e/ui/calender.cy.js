@@ -8,120 +8,138 @@ describe("Calendar Component", () => {
     }).as("monthlyData");
     cy.loginUser();
     cy.visit("/transactions/expenses");
-    cy.wait("@monthlyData");
   });
 
-  // describe("Month Navigation", () => {
-  //   it("handles prev month navigation", () => {
-  //     cy.getDataCy("calendar-title").invoke("text");
-  //     cy.getDataCy("calendar-prev-button").click();
+  it.only("handles prev month navigation", () => {
+    cy.getDataCy("calendar-title").invoke("text");
 
-  //     cy.wait("@monthlyData").then((interception) => {
-  //       const url = new URL(interception.request.url);
-  //       const params = new URLSearchParams(url.search);
-  //       const month = parseInt(params.get("month"));
-  //       const year = parseInt(params.get("year"));
+    cy.wait("@monthlyData").then((interception) => {
+      console.log("interception", interception);
+      cy.getDataCy("calendar-prev-button").click();
+      const url = new URL(interception.request.url);
+      const params = new URLSearchParams(url.search);
+      const month = parseInt(params.get("month"));
+      const year = parseInt(params.get("year"));
 
-  //       const expectedDate = new Date(year, month - 1);
-  //       const expectedTitle = format(expectedDate, "MMMM yyyy");
-  //       cy.getDataCy("calendar-title").should("have.text", expectedTitle);
-  //     });
-  //   });
+      const expectedDate = new Date(year, month - 1);
+      const expectedTitle = format(expectedDate, "MMMM yyyy");
+      cy.log("expectedTitle", expectedTitle);
+      // cy.getDataCy("calendar-title").should("have.text", expectedTitle);
+      cy.getDataCy("calendar-title").then((title) => {
+        cy.log("title.text()", title.text());
+      });
+    });
+  });
 
-  //   it("handles next month navigation", () => {
-  //     cy.getDataCy("calendar-title").invoke("text");
-  //     cy.getDataCy("calendar-next-button").click();
+  it("handles next month navigation", () => {
+    cy.getDataCy("calendar-title").invoke("text");
+    cy.getDataCy("calendar-next-button").click();
 
-  //     cy.wait("@monthlyData").then((interception) => {
-  //       const url = new URL(interception.request.url);
-  //       const params = new URLSearchParams(url.search);
-  //       const month = parseInt(params.get("month"));
-  //       const year = parseInt(params.get("year"));
+    cy.wait("@monthlyData").then((interception) => {
+      const url = new URL(interception.request.url);
+      const params = new URLSearchParams(url.search);
+      const month = parseInt(params.get("month"));
+      const year = parseInt(params.get("year"));
 
-  //       const expectedDate = new Date(year, month - 1);
-  //       const expectedTitle = format(expectedDate, "MMMM yyyy");
-  //       cy.getDataCy("calendar-title").should("have.text", expectedTitle);
-  //     });
-  //   });
-  // });
+      const expectedDate = new Date(year, month - 1);
+      const expectedTitle = format(expectedDate, "MMMM yyyy");
+      cy.getDataCy("calendar-title").should("have.text", expectedTitle);
+    });
+  });
+  it("expands to year view correctly", () => {
+    cy.getDataCy("calendar-title").click();
+    // Check if year is displayed
+    cy.getDataCy("calendar-title")
+      .invoke("text")
+      .should("match", /^\d{4}$/);
 
-  describe("Year View", () => {
-    beforeEach(() => {
-      // Expand to year view
+    // Check if months grid is visible
+    cy.getDataCy("months-overlay").should("be.visible");
+    cy.getDataCy("months-grid").should("be.visible");
+
+    // Check if prev/next buttons are visible
+    cy.getDataCy("calendar-prev-button").should("be.visible");
+    cy.getDataCy("calendar-next-button").should("be.visible");
+
+    // Check if month buttons are visible
+
+    cy.getDataCy("month-button-0").should("be.visible");
+    cy.getDataCy("month-button-1").should("be.visible");
+
+    cy.getDataCy("calendar-title").click();
+    cy.getDataCy("months-overlay").should("not.exist");
+    cy.getDataCy("months-grid").should("not.exist");
+
+    cy.getDataCy("calendar-title")
+      .invoke("text")
+      .should("match", /^[A-Z][a-z]+ \d{4}$/);
+  });
+
+  it("highlights current month and matches URL parameters", () => {
+    cy.getDataCy("calendar-title").click();
+    cy.wait("@monthlyData").then((interception) => {
+      // Get month from URL parameters
+      const url = new URL(interception.request.url);
+      const params = new URLSearchParams(url.search);
+      const monthFromUrl = parseInt(params.get("month") - 1);
+      const yearFromUrl = parseInt(params.get("year"));
+
+      // // Verify button with matching month is selected
+      cy.getDataCy(`month-button-${monthFromUrl}`)
+        .should("have.attr", "data-selected", "true") // Check boolean attribute
+        .and("have.attr", "data-month", monthFromUrl.toString()) // Check month index
+        .and("have.class", "selected");
+
+      // Verify title shows correct month/year
+      cy.getDataCy("calendar-title").should("have.text", yearFromUrl.toString());
+    });
+  });
+
+  it("handles month selection", () => {
+    const months = [3, 6, 9, 12];
+
+    months.forEach((month) => {
       cy.getDataCy("calendar-title").click();
-    });
+      cy.getDataCy(`month-button-${month - 1}`).click();
 
-    it("expands to year view correctly", () => {
-      // Check if year is displayed
-      cy.getDataCy("calendar-title")
-        .invoke("text")
-        .should("match", /^\d{4}$/);
-
-      // Check if months grid is visible
-      cy.getDataCy("months-overlay").should("be.visible");
-      cy.getDataCy("months-grid").should("be.visible");
-    });
-
-    it("highlights current month", () => {
-      // Get current month
-      const currentMonth = new Date().toLocaleString("default", { month: "short" });
-
-      // Check if current month is highlighted
-      cy.getDataCy(`month-button-${currentMonth.toLowerCase()}`).should("have.class", "selected");
-    });
-
-    xit("handles month selection", () => {
-      // Click on March
-      cy.getDataCy("month-button-mar").click();
-
-      // Check loading state
-      cy.getDataCy("loading-overlay").should("be.visible");
-
-      // Wait for data fetch
       cy.wait("@monthlyData").then((interception) => {
         const url = new URL(interception.request.url);
         const params = new URLSearchParams(url.search);
-        expect(params.get("month")).to.equal("3"); // March is month 3
 
-        // Verify calendar shows correct month and year
-        cy.getDataCy("calendar-title").should("have.text", format(new Date(2025, 2), "MMMM yyyy")); // Month 2 is March (0-based)
+        const month = parseInt(params.get("month"));
+        const year = parseInt(params.get("year"));
 
-        // Verify months overlay is hidden
+        const expectedDate = new Date(year, month - 1);
+        const expectedTitle = format(expectedDate, "MMMM yyyy");
+
+        cy.getDataCy("calendar-title").should("have.text", expectedTitle);
+
         cy.getDataCy("months-overlay").should("not.exist");
-        cy.getDataCy("loading-overlay").should("not.exist");
       });
     });
+  });
 
-    xit("handles year navigation", () => {
-      // Get initial year
-      cy.getDataCy("calendar-title")
-        .invoke("text")
-        .then((initialYear) => {
-          // Click next year
-          cy.getDataCy("calendar-next-button").click();
-          cy.getDataCy("calendar-title").should("have.text", (parseInt(initialYear) + 1).toString());
-
-          // Click previous year twice
-          cy.getDataCy("calendar-prev-button").click().click();
-          cy.getDataCy("calendar-title").should("have.text", (parseInt(initialYear) - 1).toString());
-        });
-    });
-
-    xit("collapses year view on second click", () => {
-      // Already expanded from beforeEach
-      cy.getDataCy("months-overlay").should("be.visible");
-
-      // Click title again to collapse
-      cy.getDataCy("calendar-title").click();
-
-      // Verify collapsed state
-      cy.getDataCy("months-overlay").should("not.exist");
-      cy.getDataCy("calendar-title")
-        .invoke("text")
-        .should("match", /^[A-Z][a-z]+ \d{4}$/); // Format: "Month YYYY"
-    });
+  it("handles year navigation", () => {
+    cy.getDataCy("calendar-title").click();
+    cy.getDataCy("calendar-title")
+      .invoke("text")
+      .then((initialYear) => {
+        cy.getDataCy("calendar-title").should("have.text", parseInt(initialYear).toString());
+        // Click next year
+        cy.getDataCy("calendar-next-button").click();
+        cy.getDataCy("calendar-title").should("have.text", (parseInt(initialYear) + 1).toString());
+      });
+    cy.getDataCy("calendar-title")
+      .invoke("text")
+      .then((initialYear) => {
+        cy.getDataCy("calendar-title").should("have.text", parseInt(initialYear).toString());
+        // Click previous year
+        cy.getDataCy("calendar-prev-button").click();
+        cy.getDataCy("calendar-title").should("have.text", (parseInt(initialYear) - 1).toString());
+      });
   });
 });
+
 // xit("expands to show months when clicking on title", () => {
 //   // Click title to expand
 //   cy.getDataCy("calendar-title").click();

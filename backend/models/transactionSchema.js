@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 import { TRANSACTION_TYPES } from "../config/config.js";
 const transactionSchema = mongoose.Schema(
   {
-    name: {
+    description: {
       type: String,
       required: true,
-      trim: true,
     },
     amount: {
       type: Number,
@@ -26,8 +25,8 @@ const transactionSchema = mongoose.Schema(
     },
 
     category: {
-      id: { type: mongoose.Schema.Types.ObjectId },
-      name: { type: String, required: true },
+      type: String,
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

@@ -4,70 +4,101 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 const getCategories = asyncHandler(async (req, res) => {
-  const userCategories = await Category.findOne({ user: req.user._id });
-
-  if (!userCategories) {
-    throw new ApiError(404, "Categories not found");
-  }
-
-  const categories = userCategories.categories;
+  const type = req.query.type;
+  const userId = req.user._id;
   const maxCategories = CATEGORY_LIMITS[req.user.subscription];
 
-  return res.status(200).json(new ApiResponse(200, { categories, maxCategories }));
+  // Get all categories of specified type for the user
+  const categories = await Category.find({
+    user: userId,
+    type: type,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(200, {
+      categories,
+      maxCategories,
+    })
+  );
 });
-
 const addCategory = asyncHandler(async (req, res) => {
-  const { name, type } = req.body;
+  const { categoryName: name, type } = req.body;
+  const userId = req.user._id;
 
+  // Validate name
   if (!name || name.length < 2 || name.length > 20) {
     throw new ApiError(400, "Name must be between 2 and 20 characters");
   }
 
-  const userCategories = await Category.findOne({ user: req.user._id });
+  // Check for category limit
+  const existingCategories = await Category.countDocuments({
+    user: userId,
+    type: type,
+  });
 
-  const isDuplicate = userCategories.categories
-    .filter((cat) => cat.type === type)
-    .some((cat) => cat.name.toLowerCase() === name.toLowerCase());
-
-  if (isDuplicate) {
-    throw new ApiError(400, "Category name must be unique");
-  }
-
-  const typeCategories = userCategories.categories.filter((cat) => cat.type === type);
   const limit = CATEGORY_LIMITS[req.user.subscription];
-
-  if (typeCategories.length >= limit) {
+  if (existingCategories >= limit) {
     throw new ApiError(400, `Cannot add more than ${limit} categories`);
   }
 
-  userCategories.categories.push({ name, type });
-  await userCategories.save();
+  // Check for duplicates
+  const isDuplicate = await Category.findOne({
+    user: userId,
+    type: type,
+    name: { $regex: new RegExp(`^${name}$`, "i") }, // Case insensitive check
+  });
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { categories: userCategories.categories }, "Category added successfully"));
+  if (isDuplicate) {
+    throw new ApiError(400, "Category name must be unique for this type");
+  }
+
+  // Create new category
+  const newCategory = await Category.create({
+    name,
+    type,
+    user: userId,
+  });
+
+  // Get all user categories to return
+  const userCategories = await Category.find({ user: userId });
+
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        category: newCategory,
+        categories: userCategories,
+      },
+      "Category added successfully"
+    )
+  );
 });
-
 const deleteCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const userCategories = await Category.findOne({ user: req.user._id });
+  const userId = req.user._id;
 
-  const category = userCategories.categories.id(id);
+  // Find the category
+  const category = await Category.findOne({
+    _id: id,
+    user: userId,
+  });
 
   if (!category) {
     throw new ApiError(404, "Category not found");
   }
 
-  if (category.isDefault) {
-    throw new ApiError(400, "Cannot delete default category");
-  }
+  // Optional: Update related transactions to null or another category
+  // await Transaction.updateMany(
+  //   { category: id },
+  //   { category: null }
+  // );
 
-  userCategories.categories.pull(id);
-  await userCategories.save();
+  // Delete the category
+  await Category.deleteOne({ _id: id, user: userId });
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { categories: userCategories.categories }, "Category deleted successfully"));
+  // Get updated categories list
+  const categories = await Category.find({ user: userId });
+
+  return res.status(200).json(new ApiResponse(200, { categories }, "Category deleted successfully"));
 });
-
 export { getCategories, addCategory, deleteCategory };

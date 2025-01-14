@@ -10,27 +10,19 @@ const categorySchema = new mongoose.Schema(
       required: true,
     },
 
-    categories: [
-      {
-        name: {
-          type: String,
-          required: [true, "Category name is required"],
-          trim: true,
-        },
-        type: {
-          type: String,
-          enum: {
-            values: Object.values(TRANSACTION_TYPES),
-            message: "{VALUE} is not a valid type",
-          },
-          required: true,
-        },
-        isDefault: {
-          type: Boolean,
-          default: false,
-        },
+    name: {
+      type: String,
+      required: [true, "Category name is required"],
+      trim: true,
+    },
+    type: {
+      type: String,
+      enum: {
+        values: Object.values(TRANSACTION_TYPES),
+        message: "{VALUE} is not a valid type",
       },
-    ],
+      required: true,
+    },
   },
   {
     timestamps: true,

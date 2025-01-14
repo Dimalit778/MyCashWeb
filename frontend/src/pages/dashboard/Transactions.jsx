@@ -36,9 +36,9 @@ const Transaction = () => {
     isFetching: fetchingCategories,
     isLoading: loadingCategories,
     error: categoriesError,
-  } = useGetCategoriesQuery();
-  console.log(userCategories);
-  const categories = userCategories?.data.categories?.filter((category) => category.type === type);
+  } = useGetCategoriesQuery({
+    type,
+  });
 
   if (loadingData || loadingCategories) return <TransactionSkeleton />;
   if (monthError || categoriesError) return <DataError error={monthError || categoriesError} />;
@@ -50,20 +50,16 @@ const Transaction = () => {
           <div className="col-12 col-lg-8">
             <CalendarMonth date={date} setDate={setDate} />
 
-            <ProgressBar data={monthlyData?.data.categories} categories={categories} total={monthlyData?.data.total} />
+            <ProgressBar data={monthlyData?.data} />
           </div>
           <div className="col-12 col-lg-4">
-            <Categories categories={categories} max={userCategories.data.maxCategories} />
+            <Categories categories={userCategories?.data.categories} max={userCategories?.data.maxCategories} />
           </div>
         </div>
 
-        <TransactionsTable
-          transactions={monthlyData?.data.transactions}
-          total={monthlyData?.data.transactions}
-          type={type}
-        />
+        <TransactionsTable monthData={monthlyData?.data} type={type} />
 
-        {modalState.isOpen && <TransactionModal type={type} date={date} />}
+        {modalState.isOpen && <TransactionModal type={type} date={date} categories={userCategories?.data.categories} />}
       </div>
     </LoadingOverlay>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "components/ui/icon";
@@ -9,43 +9,22 @@ import { useAddCategoryMutation, useDeleteCategoryMutation } from "services/api/
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-import TextInput from "components/ui/textInput";
-import { useForm } from "react-hook-form";
 
 const Categories = ({ categories, max }) => {
   const { type } = useParams();
 
   const [addCategory, { isLoading: isAdding }] = useAddCategoryMutation();
   const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
+  const [categoryName, setCategoryName] = useState("");
 
-  const { control, handleSubmit, setError, reset } = useForm({
-    defaultValues: {
-      category: "",
-    },
-    mode: "onBlur",
-    shouldUnregister: true,
-  });
-
-  const onSubmit = async (data) => {
-    const name = data.category?.trim();
-
-    if (!name) {
-      setError("category", {
-        type: "required",
-        message: "Enter category name",
-      });
-      return;
-    }
-
+  const handleSubmit = async (categoryName) => {
+    if (!categoryName) return toast.error("Category name is required");
     try {
-      await addCategory({ name, type }).unwrap();
+      await addCategory({ categoryName, type }).unwrap();
+      setCategoryName("");
       toast.success("Category added successfully");
-      reset();
     } catch (error) {
-      setError("category", {
-        type: "server",
-        message: error.data?.message || "Failed to add category",
-      });
+      toast.error(error.data.message);
     }
   };
 
@@ -98,35 +77,40 @@ const Categories = ({ categories, max }) => {
           {categories?.map((category) => (
             <div data-cy="category-item" key={category._id} className="my-card-item">
               <span data-cy="category-name">{category.name}</span>
-              <IconButton
-                data-cy="delete-category-btn"
-                onClick={() => handleDelete(category._id)}
-                icon={<FontAwesomeIcon icon={faXmark} />}
-                color="red"
-                size="lg"
-                hoverBgColor="rgba(60, 60, 60, 0.8)"
-              />
+              {!category.isDefault && (
+                <IconButton
+                  data-cy="delete-category-btn"
+                  onClick={() => handleDelete(category._id)}
+                  icon={<FontAwesomeIcon icon={faXmark} />}
+                  color="red"
+                  size="lg"
+                  hoverBgColor="rgba(60, 60, 60, 0.8)"
+                />
+              )}
             </div>
           ))}
         </div>
 
         {categories?.length < max && (
-          <form data-cy="add-category-form" onSubmit={handleSubmit(onSubmit)} className="mt-3">
+          <form
+            data-cy="add-category-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(categoryName);
+            }}
+            className="mt-3"
+          >
             <div className="mb-3 border-bottom border-3 border-secondary"></div>
-            <div className="d-flex gap-2 ">
-              <div className="flex-grow-1">
-                <TextInput
-                  data-cy="category-input"
-                  name="category"
-                  control={control}
-                  type="text"
-                  placeholder="Enter category name..."
-                  className="form-control"
-                />
-              </div>
-
-              <MyButton data-cy="submit-category" type="submit" isLoading={isAdding || isDeleting} size="md">
-                <FontAwesomeIcon icon={faPlus} />
+            <div className="d-flex  gap-2">
+              <input
+                type="text"
+                placeholder={`Add new category ...`}
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                className="form-input w-100   px-3 py-2 rounded"
+              />
+              <MyButton type="submit" isLoading={isAdding || isDeleting} size="none">
+                <FontAwesomeIcon icon={faPlus} style={{ fontSize: "1.5rem" }} />
               </MyButton>
             </div>
           </form>

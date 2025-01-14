@@ -4,8 +4,8 @@ import { apiSlice } from "services/baseQuery.js";
 export const categoriesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: (type) => ({
-        url: `${CATEGORY_URL}/get`,
+      query: ({ type }) => ({
+        url: `${CATEGORY_URL}/get?type=${type}`,
         credentials: "include",
         method: "GET",
       }),

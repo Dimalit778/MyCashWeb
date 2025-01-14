@@ -12,8 +12,9 @@ import { useDeleteTransactionMutation } from "services/api/transactionsApi";
 
 import PaginationPages from "../pagination";
 
-const TransactionsTable = ({ transactions, total, type }) => {
+const TransactionsTable = ({ monthData, type }) => {
   const dispatch = useDispatch();
+  const { transactions, total } = monthData;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
@@ -42,24 +43,16 @@ const TransactionsTable = ({ transactions, total, type }) => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredAndSortedItems, currentPage]);
+  const categoryColors = transactions.reduce((acc, item) => {
+    const categoryName = item.category; // directly use category since it's a string
+    if (categoryName && !acc[categoryName]) {
+      acc[categoryName] = TABLE_COLORS[Object.keys(acc).length % TABLE_COLORS.length];
+    }
+    return acc;
+  }, {});
 
   // Pagination Page Number
   const totalPages = Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE);
-
-  // Category Color
-  const categoryColorMap = useMemo(() => {
-    const colorMap = new Map();
-    let colorIndex = 0;
-
-    currentItems.forEach((item) => {
-      if (!colorMap.has(item.category.name)) {
-        colorMap.set(item.category.name, TABLE_COLORS[colorIndex % TABLE_COLORS.length]);
-        colorIndex++;
-      }
-    });
-
-    return colorMap;
-  }, [currentItems]);
 
   const handleSort = (key) => {
     setSortConfig((prev) => ({
@@ -74,7 +67,6 @@ const TransactionsTable = ({ transactions, total, type }) => {
 
   const handleOpenModal = useCallback(
     (action, item = null) => {
-      console.log(action, item);
       if (action === "add") {
         dispatch(openTransactionModal({ type: "add", isOpen: true }));
       } else if (action === "edit" && item) {
@@ -164,13 +156,13 @@ const TransactionsTable = ({ transactions, total, type }) => {
                     onClick={() => handleOpenModal("edit", item)}
                     className="align-middle text-center"
                   >
-                    <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{item.name}</td>
+                    <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{item.description}</td>
 
                     <td style={{ minWidth: "100px" }}>${item.amount.toLocaleString()}</td>
                     <td style={{ minWidth: "120px" }}>
                       <div className="d-flex justify-content-center">
                         <span
-                          className={`badge bg-${categoryColorMap.get(item.category.name)}`}
+                          className={`badge bg-${categoryColors[item.category] || "secondary"}`}
                           style={{
                             padding: "0.5rem 1rem",
                             fontSize: "0.85rem",
@@ -184,7 +176,7 @@ const TransactionsTable = ({ transactions, total, type }) => {
                             textOverflow: "ellipsis",
                           }}
                         >
-                          {item.category.name}
+                          {item.category}
                         </span>
                       </div>
                     </td>

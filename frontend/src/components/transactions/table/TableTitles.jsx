@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MyButton from "components/ui/button";
 const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }) => {
   const headers = [
-    { key: "label", label: "Name", sortable: false, width: "30%", align: "left" },
+    { key: "label", label: "Description", sortable: false, width: "30%", align: "left" },
     { key: "amount", label: "Amount", sortable: true, width: "20%", align: "center" },
     { key: "category", label: "Category", sortable: false, width: "20%", align: "center" },
     { key: "date", label: "Date", sortable: true, width: "20%", align: "center" },

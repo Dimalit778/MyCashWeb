@@ -91,7 +91,6 @@ export const getYearlyData = asyncHandler(async (req, res) => {
     new ApiResponse(200, { yearlyStats: yearlyTotals, monthlyStats }, "Yearly data retrieved successfully")
   );
 });
-
 export const getMonthlyData = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { year, month, type } = req.query;
@@ -100,81 +99,35 @@ export const getMonthlyData = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Year, month, and type parameters are required");
   }
 
+  const dateStart = new Date(`${year}-${month}-01`);
+  const dateEnd = new Date(`${year}-${month}-31`);
+
+  // Get transactions with populated category
   const transactions = await Transaction.find({
     user: userId,
     transactionType: type,
     date: {
-      $gte: new Date(`${year}-${month}-01`),
-      $lte: new Date(`${year}-${month}-31`),
+      $gte: dateStart,
+      $lte: dateEnd,
     },
-  });
+  })
+    .populate("category", "description type") // Get category details
+    .lean();
 
-  const total = await Transaction.countDocuments({
-    user: userId,
-    transactionType: type,
-    date: {
-      $gte: new Date(`${year}-${month}-01`),
-      $lte: new Date(`${year}-${month}-31`),
-    },
-  });
+  const total = transactions.reduce((sum, t) => sum + t.amount, 0);
 
-  const totalAmountData = await Transaction.aggregate([
-    {
-      $match: {
-        user: userId,
-        transactionType: type,
-        date: {
-          $gte: new Date(`${year}-${month}-01`),
-          $lte: new Date(`${year}-${month}-31`),
-        },
-      },
-    },
-    {
-      $group: {
-        _id: null,
-        totalAmount: { $sum: "$amount" },
-      },
-    },
-  ]);
-  const totalAmount = totalAmountData.length > 0 ? totalAmountData[0].totalAmount : 0;
-
-  const categoriesData = await Transaction.aggregate([
-    {
-      $match: {
-        user: userId,
-        transactionType: type,
-        date: {
-          $gte: new Date(`${year}-${month}-01`),
-          $lte: new Date(`${year}-${month}-31`),
-        },
-      },
-    },
-    {
-      $group: {
-        _id: "$category.name",
-        total: { $sum: "$amount" },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        category: "$_id",
-        total: 1,
-      },
-    },
-  ]);
   return res.status(200).json(
     new ApiResponse(
       200,
       {
         transactions,
-        total: totalAmount,
-        categories: categoriesData,
+        total,
       },
       "Monthly data retrieved successfully"
     )
   );
 });
+
 export const getOneTransaction = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const userId = req.user._id;
@@ -191,9 +144,16 @@ export const getOneTransaction = asyncHandler(async (req, res) => {
 
 export const addTransaction = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { name, amount, category, date, type } = req.body;
-  if (!name || !date || !category || !type || !amount) {
-    throw new ApiError(400, "All required fields must be provided", ["name", "date", "category", "type", "amount"]);
+  const { description, amount, category, date, type } = req.body;
+
+  if (!description || !date || !category || !type || !amount) {
+    throw new ApiError(400, "All required fields must be provided", [
+      "description",
+      "date",
+      "category",
+      "type",
+      "amount",
+    ]);
   }
 
   if (amount <= 0) {
@@ -204,34 +164,17 @@ export const addTransaction = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid transaction type");
   }
 
-  if (name.length > 20 || name.length < 1) {
-    throw new ApiError(400, "Name must be between 1 and 20 characters");
+  if (description.length > 20 || description.length < 1) {
+    throw new ApiError(400, "Description must be between 1 and 20 characters");
   }
 
-  // Find user's categories and verify category
-  const userCategories = await Category.findOne({ user: userId });
-  if (!userCategories) {
-    throw new ApiError(404, "Categories not found");
-  }
-  const isCategory = userCategories.categories.id(category);
-
-  if (!isCategory) {
-    return res.status(400).json({ message: "Invalid category" });
-  }
-  if (!isCategory || isCategory.type !== type) {
-    throw new ApiError(400, "Invalid category");
-  }
-
-  // Create transaction with just the category name
+  // Create transaction with just the category description
   const transaction = new Transaction({
-    name,
+    description,
     amount,
     date,
     transactionType: type,
-    category: {
-      id: isCategory._id,
-      name: isCategory.name,
-    },
+    category,
     user: userId,
   });
 
@@ -241,7 +184,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
 });
 
 export const updateTransaction = asyncHandler(async (req, res) => {
-  const { _id, name, amount, date, type, category } = req.body;
+  const { _id, description, amount, date, type, category } = req.body;
   const userId = req.user._id;
 
   const existingTransaction = await Transaction.findOne({
@@ -253,11 +196,11 @@ export const updateTransaction = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Transaction not found");
   }
 
-  let updateData = { name, amount, date };
+  let updateData = { description, amount, date };
 
   if (category) {
     const userCategories = await Category.findOne({ user: userId });
-    const newCategory = userCategories.categories.find((cat) => cat.name === category);
+    const newCategory = userCategories.categories.find((cat) => cat.description === category);
 
     if (!newCategory) {
       throw new ApiError(400, "Invalid category");
@@ -267,7 +210,7 @@ export const updateTransaction = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Category type doesn't match transaction type");
     }
 
-    updateData.categoryName = newCategory.name;
+    updateData.categoryDescription = newCategory.description;
   }
 
   // Update transaction

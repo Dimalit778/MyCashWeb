@@ -9,38 +9,22 @@ import SelectInput from "components/ui/selectInput";
 import MyButton from "components/ui/button";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
-import { useGetCategoriesQuery } from "services/api/categoriesApi";
+
 import { useAddTransactionMutation, useUpdateTransactionMutation } from "services/api/transactionsApi";
 
-const TransactionModal = ({ type, date }) => {
+const TransactionModal = ({ type, date, categories }) => {
   const dispatch = useDispatch();
   const { isOpen, editItem } = useSelector(transactionModal);
 
-  const { data: categoriesData } = useGetCategoriesQuery();
   const [addTransaction, { isLoading: isAdding }] = useAddTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
-
-  const categories = useMemo(() => {
-    const userCategories = categoriesData?.data.categories?.filter((cat) => cat.type === type) || [];
-
-    // If editing and category was deleted, add it to options
-    if (editItem?.category?.name && !userCategories.find((c) => c._id === editItem.category.id)) {
-      userCategories.push({
-        _id: editItem.category.id,
-        name: editItem.category.name,
-        type,
-        isDeleted: true,
-      });
-    }
-
-    return userCategories;
-  }, [categoriesData, type, editItem]);
+  console.log("categories", categories);
 
   const defaultValues = useMemo(
     () => ({
-      name: editItem?.name || "",
+      description: editItem?.description || "",
       amount: editItem?.amount || "",
-      category: editItem?.category?.id || "",
+      category: editItem?.category?.name || "",
 
       date: format(editItem?.date ? new Date(editItem.date) : date, "yyyy-MM-dd"),
     }),
@@ -72,11 +56,11 @@ const TransactionModal = ({ type, date }) => {
         ...data,
         amount: Number(data.amount),
         type,
-        // Use new category if changed, otherwise keep original
+
         category: data.category || editItem?.category,
         date: new Date(data.date),
       };
-      console.log(formattedData);
+
       if (editItem) {
         await updateTransaction({
           ...formattedData,
@@ -109,14 +93,15 @@ const TransactionModal = ({ type, date }) => {
           <Row className="mb-3">
             <Col md={6}>
               <TextInput
-                name="name"
+                name="description"
                 control={control}
-                label="Name"
+                label="Description"
+                placeholder="Enter description"
                 rules={{
-                  required: "Name is required",
+                  required: "Description is required",
                   minLength: {
                     value: 2,
-                    message: "Name must be at least 2 characters",
+                    message: "Description must be at least 2 characters",
                   },
                 }}
               />
@@ -164,7 +149,7 @@ const TransactionModal = ({ type, date }) => {
                 label="Category"
                 options={categories}
                 renderOption={(option) => ({
-                  value: option._id,
+                  value: option.name,
                   label: `${option.name}${option.isDeleted ? " (deleted)" : ""}`,
                 })}
               />

@@ -39,9 +39,6 @@ const signup = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User already exists");
   }
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     const user = new User({
       firstName,
@@ -50,19 +47,7 @@ const signup = asyncHandler(async (req, res) => {
       password,
     });
 
-    await user.save({ session });
-
-    await Category.create(
-      [
-        {
-          user: user._id,
-          categories: DEFAULT_CATEGORIES,
-        },
-      ],
-      { session }
-    );
-
-    await session.commitTransaction();
+    await user.save();
 
     return res.status(201).json(
       new ApiResponse(
@@ -76,10 +61,7 @@ const signup = asyncHandler(async (req, res) => {
       )
     );
   } catch (error) {
-    await session.abortTransaction();
     throw new ApiError(500, "Failed to create user", error.stack);
-  } finally {
-    session.endSession();
   }
 });
 

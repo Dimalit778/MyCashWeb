@@ -52,94 +52,96 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
         <h1 data-cy="signup-title" className="auth-title">
           SIGN UP
         </h1>
-        <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
-          <div className="d-flex gap-3">
+        <form className="auth-form " onSubmit={handleSubmit(onSubmit)}>
+          <div className="d-flex flex-column gap-3 mb-3 ">
+            <div className="d-flex gap-3">
+              <TextInput
+                data-cy="signup-firstName"
+                name="firstName"
+                control={control}
+                placeholder="First Name"
+                className="form-control"
+                rules={{
+                  required: "First name is required",
+                  minLength: {
+                    value: 2,
+                    message: "First name must be at least 2 characters",
+                  },
+                }}
+              />
+              <TextInput
+                data-cy="signup-lastName"
+                name="lastName"
+                control={control}
+                placeholder="Last Name"
+                className="form-control"
+                rules={{
+                  required: "Last name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Last name must be at least 2 characters",
+                  },
+                }}
+              />
+            </div>
+
             <TextInput
-              data-cy="signup-firstName"
-              name="firstName"
+              data-cy="signup-email"
+              name="email"
               control={control}
-              placeholder="First Name"
+              type="email"
+              placeholder="Email"
               className="form-control"
-              rules={{
-                required: "First name is required",
-                minLength: {
-                  value: 2,
-                  message: "First name must be at least 2 characters",
-                },
-              }}
+              rules={emailValidation}
             />
+
             <TextInput
-              data-cy="signup-lastName"
-              name="lastName"
+              data-cy="signup-password"
+              name="password"
               control={control}
-              placeholder="Last Name"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               className="form-control"
+              autoComplete="none"
               rules={{
-                required: "Last name is required",
+                required: "Password is required",
                 minLength: {
-                  value: 2,
-                  message: "Last name must be at least 2 characters",
+                  value: 6,
+                  message: "Password must be at least 6 characters",
                 },
               }}
+              endAdornment={
+                <IconButton
+                  icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
+                  onClick={() => setShowPassword(!showPassword)}
+                  color="white"
+                  border="none"
+                />
+              }
+            />
+
+            <TextInput
+              data-cy="signup-confirm-password"
+              name="confirmPassword"
+              control={control}
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              className="form-control"
+              autoComplete="none"
+              rules={{
+                required: "Please confirm your password",
+                validate: (value) => value === password || "Passwords do not match",
+              }}
+              endAdornment={
+                <IconButton
+                  icon={<FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  color="white"
+                  border="none"
+                />
+              }
             />
           </div>
-
-          <TextInput
-            data-cy="signup-email"
-            name="email"
-            control={control}
-            type="email"
-            placeholder="Email"
-            className="form-control"
-            rules={emailValidation}
-          />
-
-          <TextInput
-            data-cy="signup-password"
-            name="password"
-            control={control}
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            className="form-control"
-            autoComplete="none"
-            rules={{
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            }}
-            endAdornment={
-              <IconButton
-                icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
-                onClick={() => setShowPassword(!showPassword)}
-                color="white"
-                border="none"
-              />
-            }
-          />
-
-          <TextInput
-            data-cy="signup-confirm-password"
-            name="confirmPassword"
-            control={control}
-            type={showConfirmPassword ? "text" : "password"}
-            placeholder="Confirm Password"
-            className="form-control"
-            autoComplete="none"
-            rules={{
-              required: "Please confirm your password",
-              validate: (value) => value === password || "Passwords do not match",
-            }}
-            endAdornment={
-              <IconButton
-                icon={<FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />}
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                color="white"
-                border="none"
-              />
-            }
-          />
 
           <div className="d-grid gap-2">
             <MyButton data-cy="signup-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>

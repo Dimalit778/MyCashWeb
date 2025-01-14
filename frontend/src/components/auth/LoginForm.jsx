@@ -27,48 +27,49 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
         <h1 data-cy="login-title" className="auth-title">
           LOGIN
         </h1>
-        <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
-            data-cy="login-email"
-            name="email"
-            control={control}
-            type="email"
-            placeholder="Email"
-            className="form-control"
-            rules={{
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            }}
-          />
+        <form className="auth-form " onSubmit={handleSubmit(onSubmit)}>
+          <div className="d-flex flex-column gap-3 mb-3 ">
+            <TextInput
+              data-cy="login-email"
+              name="email"
+              control={control}
+              type="email"
+              placeholder="Email"
+              className="form-control"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+            />
 
-          <TextInput
-            data-cy="login-password"
-            name="password"
-            control={control}
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            className="form-control"
-            autoComplete="none"
-            rules={{
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            }}
-            endAdornment={
-              <IconButton
-                icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
-                onClick={() => setShowPassword(!showPassword)}
-                color="white"
-                border="none"
-              />
-            }
-          />
-
+            <TextInput
+              data-cy="login-password"
+              name="password"
+              control={control}
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="form-control"
+              autoComplete="none"
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              }}
+              endAdornment={
+                <IconButton
+                  icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
+                  onClick={() => setShowPassword(!showPassword)}
+                  color="white"
+                  border="none"
+                />
+              }
+            />
+          </div>
           <div className="d-grid gap-2">
             <MyButton data-cy="login-submit" type="submit" bgColor={THEME.orange} isLoading={isLoading}>
               Login

@@ -10,7 +10,7 @@ describe("Calendar Component", () => {
     cy.visit("/transactions/expenses");
   });
 
-  it.only("handles prev month navigation", () => {
+  it("handles prev month navigation", () => {
     cy.getDataCy("calendar-title").invoke("text");
 
     cy.wait("@monthlyData").then((interception) => {

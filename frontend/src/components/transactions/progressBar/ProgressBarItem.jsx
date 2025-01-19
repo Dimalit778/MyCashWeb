@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import { ProgressBar } from "react-bootstrap";
 import CountUp from "react-countup";
 
-const ProgressBarItem = ({ category, total, percentage, index }) => {
-  const colors = ["primary", "secondary", "success", "danger", "warning", "info", "light", "dark"];
-
+const ProgressBarItem = ({ category, total, color, percentage, index }) => {
   return (
     <motion.div
       data-cy="progress-bar-item"
@@ -15,7 +13,7 @@ const ProgressBarItem = ({ category, total, percentage, index }) => {
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
       <div className="position-relative ">
-        <ProgressBar now={percentage} className="custom-progress bg-dark" variant={colors[index % colors.length]} />
+        <ProgressBar now={percentage} className="custom-progress bg-dark" variant={color} />
         <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center ">
           <div className="d-flex justify-content-between align-items-center w-100 text-style p-2">
             <span data-cy="progress-bar-title" className="text-capitalize fw-bold">

@@ -16,7 +16,7 @@ function TextInput({
   return (
     <Form.Group>
       {label && <Form.Label>{label}</Form.Label>}
-      <div className="position-relative">
+      <div className="position-relative mb-3">
         <Controller
           name={name}
           control={control}
@@ -36,7 +36,7 @@ function TextInput({
                 </div>
               )}
               {error && (
-                <Form.Control.Feedback type="invalid" tooltip data-test="error-message">
+                <Form.Control.Feedback type="invalid-feedback" tooltip data-test="error-message" className="small">
                   {error.message}
                 </Form.Control.Feedback>
               )}

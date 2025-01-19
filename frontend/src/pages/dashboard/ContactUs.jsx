@@ -1,20 +1,25 @@
 import BrandLogo from "components/brandLogo";
-import { INPUT_STYLE } from "constants/InputStyles";
+import TextInput from "components/ui/textInput";
+
 import { THEME } from "constants/Theme";
 
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 
 const ContactUs = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-    // Your email sending logic here
-  };
+  const onSubmit = handleSubmit((data) => {
+    console.log("Form Data:", data);
+    console.log("Form Errors:", errors);
+  });
 
+  console.log("Form Errors:", errors);
   return (
     <Container fluid className="p-4  ">
       <Row>
@@ -37,42 +42,47 @@ const ContactUs = () => {
         </Col>
       </Row>
       <Row className="mt-5 justify-content-center  ">
-        <Form onSubmit={sendEmail} className="col-md-8 p-4 ">
-          <Form.Group className="mb-3 ">
-            <Form.Control
+        <Form data-cy="contact-form" onSubmit={onSubmit} className=" col-md-8 p-4 ">
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              name="fullname"
               type="text"
-              placeholder="Name.."
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              style={INPUT_STYLE}
-              className="form-control"
+              {...register("fullname")}
+              className={`form-control ${errors.fullname ? "is-invalid" : ""}`}
             />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Control
+            <div className="invalid-feedback">{errors.fullname?.message}</div>
+          </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              name="email"
+              type="text"
+              {...register("email")}
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
+            />
+            <div className="invalid-feedback">{errors.email?.message}</div>
+          </div>
+          {/* <div className="mb-3">
+            <TextInput
+              data-cy="login-email"
+              name="email"
+              control={control}
               type="email"
-              placeholder="Email.."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={INPUT_STYLE}
+              placeholder="Email"
               className="form-control"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
             />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Control
-              as="textarea"
-              rows={6}
-              placeholder="Message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-              style={INPUT_STYLE}
-              className="form-control"
-            />
-          </Form.Group>
+          </div> */}
+
           <Button
+            data-cy="contact-submit-button"
             variant="dark"
             type="submit"
             style={{

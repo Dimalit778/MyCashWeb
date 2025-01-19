@@ -9,6 +9,7 @@ import { useAddCategoryMutation, useDeleteCategoryMutation } from "services/api/
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { THEME } from "constants/Theme";
 
 const Categories = ({ categories, max }) => {
   const { type } = useParams();
@@ -109,7 +110,13 @@ const Categories = ({ categories, max }) => {
                 onChange={(e) => setCategoryName(e.target.value)}
                 className="form-input w-100   px-3 py-2 rounded"
               />
-              <MyButton type="submit" isLoading={isAdding || isDeleting} size="none">
+              <MyButton
+                type="submit"
+                bgColor={THEME.dark}
+                border={THEME.light}
+                isLoading={isAdding || isDeleting}
+                size="none"
+              >
                 <FontAwesomeIcon icon={faPlus} style={{ fontSize: "1.5rem" }} />
               </MyButton>
             </div>

@@ -18,13 +18,11 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }
             bgColor={selectedItems.length > 0 ? "red" : "transparent"}
           >
             Delete
-            <span className="ms-1">{selectedItems.length > 0 && `(${selectedItems.length})`}</span>
+            <span className="">{selectedItems.length > 0 && `(${selectedItems.length})`}</span>
           </MyButton>
         </div>
       ),
       sortable: false,
-      width: "10%",
-      align: "center",
     },
   ];
 
@@ -38,7 +36,7 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }
             style={{
               cursor: sortable ? "pointer" : "default",
               width: width,
-              minWidth: key === "label" ? "150px" : "100px",
+
               textAlign: align,
               verticalAlign: "middle",
             }}

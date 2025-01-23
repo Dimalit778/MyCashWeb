@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import Capitalize from "utils/Capitalize";
 
 const TableItem = ({ item, selectedItems, toggleSelection, categoryColors, handleOpenModal }) => {
   return (
@@ -8,7 +9,7 @@ const TableItem = ({ item, selectedItems, toggleSelection, categoryColors, handl
       onClick={() => handleOpenModal("edit", item)}
       className="align-middle text-center"
     >
-      <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{item.description}</td>
+      <td style={{ width: "20%", minWidth: "120px", textAlign: "left" }}>{Capitalize(item.description)}</td>
 
       <td style={{ minWidth: "100px" }}>${item.amount.toLocaleString()}</td>
       <td style={{ minWidth: "120px" }}>

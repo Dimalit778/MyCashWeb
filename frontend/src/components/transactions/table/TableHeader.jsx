@@ -4,15 +4,22 @@ import MyButton from "components/ui/button";
 import { THEME } from "constants/Theme";
 import React from "react";
 import CountUp from "react-countup";
+import Capitalize from "utils/Capitalize";
 
 const TableHeader = ({ total = 0, exportData, openModal, type }) => {
   return (
     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
       <div className=" d-flex justify-content-center align-items-center gap-3 ">
-        <MyButton bgColor={THEME.dark} border={THEME.light} size="md" onClick={() => openModal("add", null)}>
-          Add {type}
+        <MyButton
+          bgColor={THEME.dark}
+          color={THEME.light}
+          border={THEME.light}
+          size="md"
+          onClick={() => openModal("add", null)}
+        >
+          New {Capitalize(type.slice(0, -1))}
         </MyButton>
-        <MyButton bgColor={THEME.dark} onClick={() => exportData()} size="sm">
+        <MyButton bgColor={THEME.dark} color={THEME.light} border={THEME.light} onClick={() => exportData()} size="sm">
           <FontAwesomeIcon icon={faFileExport} />
           Export
         </MyButton>

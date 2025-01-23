@@ -20,16 +20,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
         credentials: "include",
       }),
+
       invalidatesTags: ["User"],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setUser(data.user));
-        } catch {
-          dispatch(setUser(arg));
-          toast.error("Failed to update user");
-        }
-      },
     }),
 
     deleteUser: builder.mutation({

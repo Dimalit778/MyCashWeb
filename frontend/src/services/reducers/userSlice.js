@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { authApiSlice } from "services/api/authApi";
+import { userApiSlice } from "services/api/userApi";
 
 const initialState = {
   user: null,
@@ -24,6 +25,9 @@ const userSlice = createSlice({
         state.user = payload.data.user;
       })
       .addMatcher(authApiSlice.endpoints.googleAuth.matchFulfilled, (state, { payload }) => {
+        state.user = payload.data.user;
+      })
+      .addMatcher(userApiSlice.endpoints.updateUser.matchFulfilled, (state, { payload }) => {
         state.user = payload.data.user;
       })
 

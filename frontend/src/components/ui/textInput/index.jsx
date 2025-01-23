@@ -11,11 +11,12 @@ function TextInput({
   rules,
   className = "bg-secondary text-black border-dark",
   endAdornment,
+  "data-cy": dataCy,
   ...rest
 }) {
   return (
-    <Form.Group>
-      {label && <Form.Label>{label}</Form.Label>}
+    <Form.Group data-cy={dataCy}>
+      {label && <Form.Label className="text-white mb-1  fw-bold ">{label}</Form.Label>}
       <div className="position-relative mb-3">
         <Controller
           name={name}
@@ -31,12 +32,17 @@ function TextInput({
                 {...rest}
               />
               {endAdornment && (
-                <div className="position-absolute" style={{ right: 10, top: 5 }}>
+                <div className="position-absolute" style={{ right: 10, top: 4 }}>
                   {endAdornment}
                 </div>
               )}
               {error && (
-                <Form.Control.Feedback type="invalid-feedback" tooltip data-test="error-message" className="small">
+                <Form.Control.Feedback
+                  type="invalid-feedback"
+                  tooltip
+                  data-test="error-message"
+                  className="small text-danger"
+                >
                   {error.message}
                 </Form.Control.Feedback>
               )}

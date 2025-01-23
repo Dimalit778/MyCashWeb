@@ -3,97 +3,114 @@ import TextInput from "components/ui/textInput";
 
 import { THEME } from "constants/Theme";
 
-import React, { useState } from "react";
+import React from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const ContactUs = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+    mode: "onChange",
+  });
   const onSubmit = handleSubmit((data) => {
-    console.log("Form Data:", data);
-    console.log("Form Errors:", errors);
+    if (data) {
+      toast.success("Message sent successfully");
+      reset();
+    }
   });
 
-  console.log("Form Errors:", errors);
   return (
-    <Container fluid className="p-4  ">
+    <Container fluid>
       <Row>
-        <Col md={5} className="ps-5 ">
-          <h1 className="display-4 mb-4" style={{ color: THEME.orange }}>
-            Contact Me
-          </h1>
-          <h2 className="h3 mb-4 text-secondary">Get in touch</h2>
-          <p>Email: Mycash@outlook.com</p>
-          <p>Phone: +972 052-6731280</p>
-        </Col>
-        <Col md={7} className="d-flex flex-column   ">
-          <div className="p-2 border border-1 border-secondary rounded opacity-75 bg-dark">
-            <BrandLogo />
-            <p className="mt-4 ">
-              Our support team can help you with every question you have. You can contact us and our team will response
-              you within 24 hours.
-            </p>
+        <div className="text-center p-5 ">
+          <BrandLogo size="lg" />
+          <div data-cy="contact-title" className="mt-4">
+            <h2 className="fs-4 text-white-50 mb-3">Our support team can help you with every question you have.</h2>
+            <p className="fs-5 text-white-50 mb-0">You can contact us and our team will respond within 24 hours.</p>
           </div>
-        </Col>
+        </div>
       </Row>
-      <Row className="mt-5 justify-content-center  ">
-        <Form data-cy="contact-form" onSubmit={onSubmit} className=" col-md-8 p-4 ">
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              name="fullname"
-              type="text"
-              {...register("fullname")}
-              className={`form-control ${errors.fullname ? "is-invalid" : ""}`}
-            />
-            <div className="invalid-feedback">{errors.fullname?.message}</div>
+      <Row className="mt-4 d-flex  ">
+        <Col lg={4} className=" text-center mb-4 ">
+          <div data-cy="contact-info" className="d-flex flex-column align-items-center">
+            <h1 className="display-4 mb-4" style={{ color: THEME.orange }}>
+              Contact Us
+            </h1>
+            <div className="d-inline-block text-start">
+              <p className="mb-2">Email: Mycash@outlook.com</p>
+              <p className="mb-2">Phone: +972 052-6731280</p>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              name="email"
-              type="text"
-              {...register("email")}
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            />
-            <div className="invalid-feedback">{errors.email?.message}</div>
-          </div>
-          {/* <div className="mb-3">
-            <TextInput
-              data-cy="login-email"
-              name="email"
-              control={control}
-              type="email"
-              placeholder="Email"
-              className="form-control"
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              }}
-            />
-          </div> */}
-
-          <Button
-            data-cy="contact-submit-button"
-            variant="dark"
-            type="submit"
-            style={{
-              border: "1px solid #444",
-              borderRadius: "4px",
-              padding: "10px 20px",
-            }}
+        </Col>
+        <Col lg={8}>
+          <Form
+            data-cy="contact-form"
+            onSubmit={onSubmit}
+            className="p-4 bg border border-1 border-secondary rounded   "
           >
-            Send
-          </Button>
-        </Form>
+            <Row className="d-flex">
+              <Col lg={6}>
+                <TextInput
+                  data-cy="contact-name"
+                  label="Name"
+                  name="name"
+                  placeholder="Enter your name"
+                  control={control}
+                  rules={{ required: "Name is required" }}
+                  className="form-control"
+                />
+              </Col>
+              <Col lg={6}>
+                <TextInput
+                  data-cy="contact-email"
+                  label="Email"
+                  name="email"
+                  placeholder="Enter your email address"
+                  control={control}
+                  rules={{
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  }}
+                  className="form-control"
+                />
+              </Col>
+              <Col lg={12}>
+                <TextInput
+                  data-cy="contact-message"
+                  label="Message"
+                  name="message"
+                  placeholder="Write your message..."
+                  as="textarea"
+                  rows={3}
+                  control={control}
+                  rules={{ required: "Message is required" }}
+                  className="form-control"
+                />
+              </Col>
+            </Row>
+
+            <Button
+              data-cy="contact-submit-button"
+              variant="dark"
+              type="submit"
+              style={{
+                border: "1px solid #444",
+                borderRadius: "4px",
+                padding: "10px 20px",
+              }}
+            >
+              Send
+            </Button>
+          </Form>
+        </Col>
       </Row>
     </Container>
   );

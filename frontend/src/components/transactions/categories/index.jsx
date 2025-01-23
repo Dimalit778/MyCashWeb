@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { THEME } from "constants/Theme";
+import Capitalize from "utils/Capitalize";
 
 const Categories = ({ categories, max }) => {
   const { type } = useParams();
@@ -59,7 +60,7 @@ const Categories = ({ categories, max }) => {
     <div className="my-card bg-dark ">
       <div className="d-flex justify-content-between align-items-center mb-4 ">
         <p data-cy="categories-title" className="fw-bold fs-5">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Categories
+          {Capitalize(type)} Categories
         </p>
 
         <p data-cy="categories-max" className="px-2 bg-secondary rounded fw-bold fs-6">

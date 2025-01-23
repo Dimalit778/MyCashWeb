@@ -18,7 +18,6 @@ const TransactionModal = ({ type, date, categories }) => {
 
   const [addTransaction, { isLoading: isAdding }] = useAddTransactionMutation();
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateTransactionMutation();
-  console.log("categories", categories);
 
   const defaultValues = useMemo(
     () => ({

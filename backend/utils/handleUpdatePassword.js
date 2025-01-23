@@ -8,9 +8,12 @@ async function handlePasswordUpdate(user, currentPassword, newPassword) {
   if (!currentPassword && !newPassword) {
     return false;
   }
-
+  console.log("user", user);
+  console.log("currentPassword", currentPassword);
+  console.log("newPassword", newPassword);
   // Validate current password
   const isMatch = await bcrypt.compare(currentPassword, user.password);
+  console.log("isMatch", isMatch);
   if (!isMatch) {
     throw new Error("Current password is incorrect");
   }

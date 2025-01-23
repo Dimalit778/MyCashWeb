@@ -44,7 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", protectRoute, userRoutes);
 app.use("/api/transactions", protectRoute, transactionRoutes);
 app.use("/api/categories", protectRoute, categoryRoutes);
-app.use("/api/seed", seedDb);
+app.use("/api/seed", protectRoute, seedDb);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");

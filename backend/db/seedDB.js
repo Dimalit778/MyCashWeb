@@ -1,7 +1,7 @@
 export const testUser = {
   firstName: "cy-user",
   lastName: "cy-Test",
-  email: "cyuser@example.com",
+  email: "cy@example.com",
   password: "144695",
   profileImage: null,
   subscription: "free",
@@ -66,7 +66,7 @@ export const testTransactions = [
     amount: 450,
     date: new Date("2025-01-03"),
     transactionType: "expenses",
-    category: { id: null, name: "Shopping" },
+    category: "Shopping",
     user: "USER_ID_WILL_BE_SET",
   },
   {

@@ -51,48 +51,46 @@ const UploadImage = () => {
 
   return (
     <LoadingOverlay show={isUpdating}>
-      <Container fluid className="bg-dark border border-1 border-secondary rounded p-3">
-        <Row>
-          <Col xs={12} md={5}>
-            <div className="d-flex flex-column align-items-center gap-3">
+      <Container fluid data-cy="upload-image" className="bg-dark border border-1 border-secondary rounded p-3">
+        <Row className="gy-4">
+          {/* Profile Image Column */}
+          <Col xs={12} md={6}>
+            <div className="d-flex flex-column align-items-center">
+              {/* Image Container */}
               <div
+                className="position-relative mb-3"
                 style={{
                   width: "200px",
                   height: "200px",
-                  overflow: "hidden",
-                  borderRadius: "10px",
-                  backgroundColor: THEME.dark,
+                  maxWidth: "100%",
+                  aspectRatio: "1/1",
                 }}
               >
-                {user.profileImage && !imagePreview ? (
-                  <CloudImage publicId={user.profileImage} />
-                ) : imagePreview ? (
-                  <img src={imagePreview} alt="Preview" className=" w-100 h-100 object-fit-fill" />
-                ) : (
-                  <img src={uploadUserImg} alt="Upload" className=" w-100 h-100 object-fit-fill" />
-                )}
+                <div className="w-100 h-100 overflow-hidden rounded" style={{ backgroundColor: THEME.dark }}>
+                  {user.profileImage && !imagePreview ? (
+                    <CloudImage publicId={user.profileImage} />
+                  ) : imagePreview ? (
+                    <img src={imagePreview} alt="Preview" className="w-100 h-100 object-fit-cover" />
+                  ) : (
+                    <img src={uploadUserImg} alt="Upload" className="w-100 h-100 object-fit-cover" />
+                  )}
+                </div>
               </div>
 
+              {/* Buttons */}
               <div className="d-flex gap-3">
                 {imagePreview ? (
                   <>
                     <MyButton bgColor={THEME.orange} onClick={handleSave}>
                       Save
                     </MyButton>
-                    <MyButton
-                      bgColor="red"
-                      size="sm"
-                      onClick={() => {
-                        setImagePreview(null);
-                      }}
-                    >
+                    <MyButton bgColor="red" size="sm" onClick={() => setImagePreview(null)}>
                       Cancel
                     </MyButton>
                   </>
                 ) : (
                   <>
                     <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} className="d-none" />
-
                     <MyButton
                       type="button"
                       size="sm"
@@ -101,7 +99,6 @@ const UploadImage = () => {
                     >
                       Upload
                     </MyButton>
-
                     {user.profileImage && (
                       <MyButton bgColor="red" size="sm" onClick={handleDeleteImage}>
                         Delete
@@ -113,19 +110,18 @@ const UploadImage = () => {
             </div>
           </Col>
 
-          <Col xs={12} md={7}>
-            <div className="h-100 p-2 d-flex flex-column justify-content-between align-items-center align-items-md-start  ">
-              <div>
+          {/* User Info Column */}
+          <Col xs={12} md={6}>
+            <div className="h-100 d-flex flex-column justify-content-between">
+              <div className="text-center text-md-start">
                 <h2 className="text-white h3 mb-2">
                   {user.firstName} {user.lastName}
                 </h2>
-                <p className="text-light mb-0 opacity-75">{user.email}</p>
+                <p className="text-light mb-3 opacity-75">{user.email}</p>
               </div>
-              <div className="pt-4">
-                <div className="d-flex align-items-center gap-2">
-                  <span className="text-light">Subscription:</span>
-                  <span className="badge bg-primary px-3">{user.subscription}</span>
-                </div>
+              <div className="d-flex justify-content-center justify-content-md-start align-items-center gap-2">
+                <span className="text-light">Subscription:</span>
+                <span className="badge bg-primary px-3">{user.subscription}</span>
               </div>
             </div>
           </Col>

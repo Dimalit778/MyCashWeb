@@ -7,7 +7,7 @@ const MyButton = ({
   disabled,
   onClick,
   bgColor,
-  color = "#fff",
+  color,
   border,
   size = "md",
   className = "",
@@ -15,7 +15,7 @@ const MyButton = ({
 }) => {
   const buttonStyle = {
     backgroundColor: bgColor,
-    color: color,
+    color,
     border: border ? `1px solid ${border}` : "none",
   };
 

@@ -4,6 +4,7 @@ import { THEME } from "constants/Theme";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useUpdateUserMutation } from "services/api/userApi";
 
@@ -11,136 +12,139 @@ import { currentUser } from "services/reducers/userSlice";
 
 export default function EditProfile() {
   const userInfo = useSelector(currentUser);
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [updateUser] = useUpdateUserMutation();
 
-  const { control, handleSubmit, reset, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    trigger,
+    formState: { isDirty },
+  } = useForm({
     defaultValues: {
       firstName: userInfo?.firstName || "",
       lastName: userInfo?.lastName || "",
       currentPassword: "",
       newPassword: "",
     },
+    mode: "all",
   });
 
-  useEffect(() => {
-    if (userInfo) {
-      reset({
-        firstName: userInfo?.firstName || "",
-        lastName: userInfo?.lastName || "",
-        currentPassword: "",
-        newPassword: "",
-      });
-    }
-  }, [userInfo, reset]);
+  const [currentPassword, newPassword] = watch(["currentPassword", "newPassword"]);
 
-  const currentPassword = watch("currentPassword");
-  const newPassword = watch("newPassword");
+  useEffect(() => {
+    if (newPassword) trigger("currentPassword");
+  }, [newPassword, trigger]);
+
+  useEffect(() => {
+    reset({
+      firstName: userInfo?.firstName || "",
+      lastName: userInfo?.lastName || "",
+      currentPassword: "",
+      newPassword: "",
+    });
+  }, [userInfo, reset, isEditing]);
+
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
-      const changedValues = Object.entries(data).reduce((acc, [key, value]) => {
-        if (value !== userInfo[key] && value !== "") {
-          acc[key] = value;
-        }
-        return acc;
-      }, {});
-      if (Object.keys(changedValues).length === 0) return;
+      await updateUser({
+        firstName: data.firstName?.trim(),
+        lastName: data.lastName?.trim(),
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      }).unwrap();
 
-      await updateUser(changedValues).unwrap();
+      toast.success("Profile updated successfully!");
       setIsEditing(false);
-      reset();
     } catch (error) {
-      console.error("Error updating profile:", error);
-    } finally {
-      setLoading(false);
+      toast.error(error.data.message);
     }
   };
 
-  return (
-    <Container fluid className="p-4 bg-dark border border-1 border-secondary rounded">
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row className="d-flex align-items-center mb-3 border-bottom border-secondary ">
-          <Col md={6} className="mb-3 ">
+  const renderFormFields = () => (
+    <>
+      <Row data-cy="edit-profile-form" className="d-flex align-items-center mb-3 border-bottom border-secondary">
+        {["firstName", "lastName"].map((field) => (
+          <Col key={field} md={6} className="mb-3">
             <TextInput
-              name="firstName"
+              data-cy={`${field}-input`}
+              name={field}
               control={control}
-              label="First Name"
+              label={field === "firstName" ? "First Name" : "Last Name"}
               disabled={!isEditing}
               rules={{
-                required: "First Name is required",
-                minLength: {
-                  value: 2,
-                  message: "First Name must be at least 2 characters",
+                pattern: {
+                  value: /^[A-Za-z\s]+$/,
+                  message: `${field === "firstName" ? "First" : "Last"} Name can only contain letters`,
                 },
               }}
             />
           </Col>
-          <Col md={6} className="mb-3 ">
+        ))}
+      </Row>
+
+      {isEditing && (
+        <Row data-cy="edit-password-form" className="d-flex py-3 mt-3 border-bottom border-secondary">
+          <Col md={6}>
             <TextInput
-              name="lastName"
+              data-cy="current-password-input"
+              name="currentPassword"
               control={control}
-              label="Last Name"
-              disabled={!isEditing}
+              label="Current Password"
+              type="password"
               rules={{
-                required: "Last Name is required",
-                minLength: {
-                  value: 2,
-                  message: "Last Name must be at least 2 characters",
+                required: {
+                  value: newPassword,
+                  message: "Please enter current password",
                 },
+              }}
+            />
+          </Col>
+          <Col md={6}>
+            <TextInput
+              data-cy="new-password-input"
+              name="newPassword"
+              control={control}
+              label="New Password"
+              type="password"
+              rules={{
+                required: {
+                  value: currentPassword,
+                  message: "Please enter New password",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                validate: (value) =>
+                  !value ||
+                  !currentPassword ||
+                  value !== currentPassword ||
+                  "New password must be different from current password",
               }}
             />
           </Col>
         </Row>
+      )}
+    </>
+  );
 
-        {isEditing && (
-          <Row className="d-flex py-3 mt-3   border-bottom border-secondary  ">
-            <Col md={6}>
-              <TextInput
-                name="currentPassword"
-                control={control}
-                label="Current Password"
-                type="password"
-                rules={{
-                  required: {
-                    value: !!newPassword,
-                    message: "Current password is required ",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                }}
-              />
-            </Col>
-            <Col md={6}>
-              <TextInput
-                name="newPassword"
-                control={control}
-                label="New Password"
-                type="password"
-                rules={{
-                  required: {
-                    value: !!currentPassword,
-                    message: "New password is required ",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                }}
-              />
-            </Col>
-          </Row>
-        )}
+  return (
+    <Container fluid data-cy="edit-profile" className="p-4 bg-dark border border-1 border-secondary rounded">
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        {renderFormFields()}
 
-        <div className="py-3 mx-3 ">
+        <div className="py-3 mx-3 d-flex justify-content-end gap-3">
           {isEditing ? (
             <>
               <MyButton
+                data-cy="profile-cancel-btn"
                 type="button"
-                bgColor="red"
+                bgColor={THEME.dark}
+                color={THEME.light}
+                border={THEME.light}
                 onClick={() => {
                   setIsEditing(false);
                   reset();
@@ -148,12 +152,27 @@ export default function EditProfile() {
               >
                 Cancel
               </MyButton>
-              <MyButton className="ms-3" bgColor={THEME.orange} isLoading={loading} type="submit">
+              <MyButton
+                data-cy="profile-save-btn"
+                type="submit"
+                bgColor={THEME.dark}
+                color={THEME.light}
+                border={THEME.light}
+                isLoading={isLoading}
+                disabled={!isDirty || isLoading}
+              >
                 Save Changes
               </MyButton>
             </>
           ) : (
-            <MyButton type="button" onClick={() => setIsEditing(true)} bgColor={THEME.orange}>
+            <MyButton
+              data-cy="profile-edit-btn"
+              type="button"
+              bgColor={THEME.dark}
+              color={THEME.light}
+              border={THEME.light}
+              onClick={() => setIsEditing(true)}
+            >
               Edit Profile
             </MyButton>
           )}

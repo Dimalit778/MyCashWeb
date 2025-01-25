@@ -1,5 +1,6 @@
 import MyButton from "components/ui/button";
 import TextInput from "components/ui/textInput";
+
 import { THEME } from "constants/Theme";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
@@ -20,7 +21,7 @@ export default function EditProfile() {
     handleSubmit,
     reset,
     watch,
-    trigger,
+
     formState: { isDirty },
   } = useForm({
     defaultValues: {
@@ -33,10 +34,6 @@ export default function EditProfile() {
   });
 
   const [currentPassword, newPassword] = watch(["currentPassword", "newPassword"]);
-
-  useEffect(() => {
-    if (newPassword) trigger("currentPassword");
-  }, [newPassword, trigger]);
 
   useEffect(() => {
     reset({
@@ -65,24 +62,46 @@ export default function EditProfile() {
 
   const renderFormFields = () => (
     <>
-      <Row data-cy="edit-profile-form" className="d-flex align-items-center mb-3 border-bottom border-secondary">
-        {["firstName", "lastName"].map((field) => (
-          <Col key={field} md={6} className="mb-3">
-            <TextInput
-              data-cy={`${field}-input`}
-              name={field}
-              control={control}
-              label={field === "firstName" ? "First Name" : "Last Name"}
-              disabled={!isEditing}
-              rules={{
-                pattern: {
-                  value: /^[A-Za-z\s]+$/,
-                  message: `${field === "firstName" ? "First" : "Last"} Name can only contain letters`,
-                },
-              }}
-            />
-          </Col>
-        ))}
+      <Row className="d-flex border-bottom border-secondary">
+        <Col md={6}>
+          <TextInput
+            data-cy="first-name-input"
+            name="firstName"
+            control={control}
+            label="First Name"
+            disabled={!isEditing}
+            rules={{
+              required: {
+                value: true,
+                message: "First Name is required",
+              },
+              pattern: {
+                value: /^[A-Za-z\s]+$/,
+                message: "First Name can only contain letters",
+              },
+            }}
+          />
+        </Col>
+        <Col md={6}>
+          <TextInput
+            data-cy="last-name-input"
+            name="lastName"
+            type="text"
+            control={control}
+            label="Last Name"
+            disabled={!isEditing}
+            rules={{
+              required: {
+                value: true,
+                message: "Last Name is required",
+              },
+              pattern: {
+                value: /^[A-Za-z\s]+$/,
+                message: "last Name can only contain letters",
+              },
+            }}
+          />
+        </Col>
       </Row>
 
       {isEditing && (

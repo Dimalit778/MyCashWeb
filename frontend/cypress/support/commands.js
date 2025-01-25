@@ -84,6 +84,12 @@ Cypress.Commands.add("getCategoryInterceptor", () => {
     url: "**/api/categories/get",
   }).as("categories");
 });
+Cypress.Commands.add("updateUser", () => {
+  cy.intercept({
+    method: "POST",
+    url: "**/api/users/update",
+  }).as("UpdateUser");
+});
 // Test Responsive Layout
 Cypress.Commands.add("testResponsiveLayout", () => {
   // Test desktop layout

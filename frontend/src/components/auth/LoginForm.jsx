@@ -33,7 +33,6 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
               data-cy="login-email"
               name="email"
               control={control}
-              type="email"
               placeholder="Email"
               className="form-control"
               rules={{

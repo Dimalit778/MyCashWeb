@@ -40,7 +40,7 @@ function TextInput({
                 <Form.Control.Feedback
                   type="invalid-feedback"
                   tooltip
-                  data-test="error-message"
+                  data-cy="error-message"
                   className="small text-danger"
                 >
                   {error.message}

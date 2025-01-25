@@ -18,18 +18,19 @@ describe("login page", () => {
 
   it("should show validation errors in login form", () => {
     cy.getDataCy("login-submit").click();
+
     cy.contains("Email is required").should("be.visible");
     cy.contains("Password is required").should("be.visible");
 
-    cy.getDataCy("login-email").type("invalid-email");
+    cy.getDataCy("login-email").find("input").type("invalid-email");
     cy.getDataCy("login-submit").click();
-    cy.contains("Invalid email address").should("be.visible");
+    cy.getDataCy("error-message").should("contain", "Invalid email address");
 
     // Test password length validation
-    cy.getDataCy("login-email").clear();
-    cy.getDataCy("login-password").type("12345");
+    cy.getDataCy("login-email").find("input").clear();
+    cy.getDataCy("login-password").find("input").type("12345");
     cy.getDataCy("login-submit").click();
-    cy.contains("Password must be at least 6 characters").should("be.visible");
+    cy.getDataCy("error-message").should("contain", "Password must be at least 6 characters");
   });
   it("should handle successful login", () => {
     cy.loginUser();
@@ -59,13 +60,13 @@ describe("signup page", () => {
     cy.contains("Email is required").should("be.visible");
     cy.contains("Password is required").should("be.visible");
 
-    cy.getDataCy("signup-email").type("invalid-email");
+    cy.getDataCy("signup-email").find("input").type("invalid-email");
     cy.getDataCy("signup-submit").click();
     cy.contains("Invalid email address").should("be.visible");
 
     // Test password length validation
-    cy.getDataCy("signup-email").clear();
-    cy.getDataCy("signup-password").type("12345");
+    cy.getDataCy("signup-email").find("input").clear();
+    cy.getDataCy("signup-password").find("input").type("12345");
     cy.getDataCy("signup-submit").click();
     cy.contains("Password must be at least 6 characters").should("be.visible");
   });

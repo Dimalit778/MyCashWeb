@@ -30,6 +30,9 @@ const userSlice = createSlice({
       .addMatcher(userApiSlice.endpoints.updateUser.matchFulfilled, (state, { payload }) => {
         state.user = payload.data.user;
       })
+      .addMatcher(userApiSlice.endpoints.imageActions.matchFulfilled, (state, { payload }) => {
+        state.user = payload.data.user;
+      })
 
       .addMatcher(authApiSlice.endpoints.logout.matchFulfilled, (state) => {
         return initialState;

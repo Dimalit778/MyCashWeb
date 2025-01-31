@@ -1,7 +1,6 @@
 import { USER_URL } from "config/api";
-import toast from "react-hot-toast";
+
 import { apiSlice } from "services/baseQuery";
-import { setUser } from "services/reducers/userSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -32,41 +31,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    uploadImage: builder.mutation({
+    imageActions: builder.mutation({
       query: (data) => ({
-        url: `${USER_URL}/uploadImage`,
-        method: "POST",
+        url: `${USER_URL}/imageActions`,
+        method: "PATCH",
         body: data,
         credentials: "include",
-      }),
-      invalidatesTags: ["User"],
-      async onQueryStarted(arg, { dispatch, getState, queryFulfilled }) {
-        const previousImage = getState().root.user.profileImage;
-        try {
-          const { data: imageUrl } = await queryFulfilled;
-          dispatch(setUser({ ...getState().root.user, profileImage: imageUrl }));
-        } catch (error) {
-          dispatch(setUser({ ...getState().root.user, profileImage: previousImage }));
-          toast.error("Failed to upload image");
-        }
-      },
-    }),
-    deleteImage: builder.mutation({
-      query: (data) => ({
-        url: `${USER_URL}/deleteImage`,
-        credentials: "include",
-        method: "POST",
-        body: data,
       }),
       invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const {
-  useUpdateUserMutation,
-  useUploadImageMutation,
-  useDeleteImageMutation,
-  useDeleteUserMutation,
-  useGetUserQuery,
-} = userApiSlice;
+export const { useUpdateUserMutation, useImageActionsMutation, useDeleteUserMutation, useGetUserQuery } = userApiSlice;

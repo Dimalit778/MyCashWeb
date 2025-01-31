@@ -21,7 +21,7 @@ describe("Settings Page", () => {
 
     it.only("should handle image upload flow", () => {
       // Test file upload
-      cy.get('input[type="file"]').selectFile("cypress/fixtures/test-image.jpg", { force: true });
+      cy.get('input[type="file"]').selectFile("cypress/fixtures/profileImage.jpg", { force: true });
 
       // Check preview state
       cy.get('img[alt="Preview"]').should("be.visible");

@@ -2,7 +2,7 @@ import User from "../models/userSchema.js";
 import Transaction from "../models/transactionSchema.js";
 import Category from "../models/categorySchema.js";
 import mongoose from "mongoose";
-import handlePasswordUpdate from "../utils/handleUpdatePassword.js";
+
 import handleProfileImage from "../utils/handleProfileImage.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -27,7 +27,7 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, currentPassword, newPassword, profileImage } = req.body;
+  const { firstName, lastName, currentPassword, newPassword } = req.body;
   const userId = req.user._id;
 
   const user = await User.findById(userId);
@@ -56,10 +56,7 @@ const updateUser = asyncHandler(async (req, res) => {
     }
     user.lastName = lastName.trim();
   }
-  if (profileImage) {
-    const imageUrl = await handleProfileImage(profileImage);
-    user.imageUrl = imageUrl;
-  }
+
   await user.save();
 
   return res.status(200).json(
@@ -107,17 +104,27 @@ const deleteUser = asyncHandler(async (req, res) => {
     await session.endSession();
   }
 });
+const imageActions = asyncHandler(async (req, res) => {
+  const { image } = req.body;
+  const user = await User.findById(req.user?._id);
 
-const deleteImage = asyncHandler(async (req, res) => {
-  const { imageUrl } = req.body;
-
-  const deletedImage = await cloudinary.uploader.destroy(imageUrl);
-
-  if (!deletedImage) {
-    throw new ApiError(404, "Image not found");
+  if (!user) {
+    throw new ApiError(404, "User not found");
   }
 
-  return res.status(200).json(new ApiResponse(200, null, "Image deleted successfully"));
+  await handleProfileImage(user, image);
+
+  await user.save();
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        user,
+      },
+      "Image updated successfully"
+    )
+  );
 });
 
-export { updateUser, getUser, deleteUser, deleteImage };
+export { updateUser, getUser, deleteUser, imageActions };

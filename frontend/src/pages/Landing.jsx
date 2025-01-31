@@ -23,6 +23,7 @@ const Landing = () => {
                 <h1 className={styles.strokeTitle} data-cy="stroke-title">
                   MONEY
                 </h1>
+
                 <div className={styles.animationWrapper} data-cy="animation-wrapper">
                   <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
                     <LandingAnimation data-cy="welcome-animation" />

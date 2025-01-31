@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { currentUser } from "services/reducers/userSlice";
-import { useUpdateUserMutation } from "services/api/userApi";
+import { useImageActionsMutation } from "services/api/userApi";
 import uploadUserImg from "assets/uploadUserImg.png";
 import MyButton from "components/ui/button";
 import { Col, Container, Row } from "react-bootstrap";
@@ -14,8 +14,9 @@ const UploadImage = () => {
   const [userImage, setUserImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const user = useSelector(currentUser);
+  console.log(user);
 
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [imageActions, { isLoading: isUpdating }] = useImageActionsMutation();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -28,9 +29,9 @@ const UploadImage = () => {
   };
 
   const handleDeleteImage = async () => {
-    if (!user.profileImage) return toast.error("No image for this user");
+    if (!user.imageUrl) return toast.error("No image for this user");
     try {
-      await updateUser({ profileImage: null }).unwrap();
+      await imageActions({ image: null }).unwrap();
       toast.success("Photo was deleted");
     } catch (error) {
       toast.error(error.message || "Failed to delete photo");
@@ -40,7 +41,7 @@ const UploadImage = () => {
   const handleSave = async () => {
     if (!userImage) return toast.error("Please add an image");
     try {
-      await updateUser({ profileImage: userImage }).unwrap();
+      await imageActions({ image: userImage }).unwrap();
       toast.success("Profile updated successfully");
       setImagePreview("");
       setUserImage("");
@@ -67,8 +68,8 @@ const UploadImage = () => {
                 }}
               >
                 <div className="w-100 h-100 overflow-hidden rounded" style={{ backgroundColor: THEME.dark }}>
-                  {user.profileImage && !imagePreview ? (
-                    <CloudImage publicId={user.profileImage} />
+                  {user.imageUrl && !imagePreview ? (
+                    <CloudImage publicId={user.imageUrl} />
                   ) : imagePreview ? (
                     <img src={imagePreview} alt="Preview" className="w-100 h-100 object-fit-cover" />
                   ) : (
@@ -99,7 +100,7 @@ const UploadImage = () => {
                     >
                       Upload
                     </MyButton>
-                    {user.profileImage && (
+                    {user.imageUrl && (
                       <MyButton bgColor="red" size="sm" onClick={handleDeleteImage}>
                         Delete
                       </MyButton>

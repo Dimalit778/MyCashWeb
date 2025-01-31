@@ -30,11 +30,12 @@
 
 .strokeTitle {
   font-size: 5rem;
-  font-weight: 800;
+  font-weight: 700;
+  font-family: var(--libre-fonts);
   color: transparent;
-  -webkit-text-stroke: 2px white;
+  -webkit-text-stroke: 1px white;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0em;
   margin-bottom: 2rem;
   animation: fadeInUp 1s ease;
 }

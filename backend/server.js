@@ -10,7 +10,6 @@ import authRoutes from "./routes/authRoute.js";
 import userRoutes from "./routes/userRoute.js";
 import transactionRoutes from "./routes/transactionsRoute.js";
 import categoryRoutes from "./routes/categoryRoute.js";
-import appCheckRoute from "./routes/appCheckRoute.js";
 import seedDb from "./routes/seedDbRoute.js";
 // Middleware
 import { protectRoute } from "./middleware/protectRoute.js";
@@ -39,7 +38,7 @@ app.use(
 );
 
 // Routes
-app.use("/api/v1/healthCheck", appCheckRoute);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", protectRoute, userRoutes);
 app.use("/api/transactions", protectRoute, transactionRoutes);

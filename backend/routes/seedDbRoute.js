@@ -1,8 +1,7 @@
 import express from "express";
-import User from "../models/userSchema.js";
+
 import Category from "../models/categorySchema.js";
 import Transaction from "../models/transactionSchema.js";
-import { testCategories, testTransactions, testUser } from "../db/seedDB.js";
 
 const router = express.Router();
 

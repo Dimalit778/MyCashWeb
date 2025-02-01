@@ -106,6 +106,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 const imageActions = asyncHandler(async (req, res) => {
   const { image } = req.body;
+
   const user = await User.findById(req.user?._id);
 
   if (!user) {

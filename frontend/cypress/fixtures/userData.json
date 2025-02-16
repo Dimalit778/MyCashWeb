@@ -1,0 +1,16 @@
+{
+  "validUser": {
+    "email": "test@example.com",
+    "password": "password123",
+    "firstName": "Test",
+    "lastName": "User"
+  },
+  "invalidEmails": ["invalid", "invalid@", "invalid@gmail", "@gmail.com", "invalid@.com"],
+  "errorMessages": {
+    "invalidCredentials": "Invalid email or password",
+    "serverError": "Internal server error",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password must be at least 6 characters",
+    "invalidEmail": "Invalid email address"
+  }
+}

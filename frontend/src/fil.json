@@ -1,0 +1,7 @@
+{
+  "theme": "Bubbles",
+  "controlStyles[0].target": "Rectangle#BackgroundStroke",
+  "controlStyles[0].styles[0]": "Fill=Transparent",
+  "resourceVariables[0].variableKey": "",
+  "resourceVariables[0].value": ""
+}

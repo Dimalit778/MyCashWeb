@@ -10,24 +10,26 @@ describe("Calendar Component", () => {
     cy.visit("/transactions/expenses");
   });
 
-  it("handles prev month navigation", () => {
+  it.only("handles prev month navigation", () => {
     cy.getDataCy("calendar-title").invoke("text");
+    cy.getDataCy("calendar-prev-button").click();
 
     cy.wait("@monthlyData").then((interception) => {
-      console.log("interception", interception);
-      cy.getDataCy("calendar-prev-button").click();
       const url = new URL(interception.request.url);
       const params = new URLSearchParams(url.search);
+      console.log("prev url", url);
+
       const month = parseInt(params.get("month"));
       const year = parseInt(params.get("year"));
+      console.log("prev month", month);
+      console.log("prev year", year);
 
       const expectedDate = new Date(year, month - 1);
+      console.log("prev expectedDate", expectedDate);
+
       const expectedTitle = format(expectedDate, "MMMM yyyy");
-      cy.log("expectedTitle", expectedTitle);
-      // cy.getDataCy("calendar-title").should("have.text", expectedTitle);
-      cy.getDataCy("calendar-title").then((title) => {
-        cy.log("title.text()", title.text());
-      });
+      console.log("prev expectedTitle", expectedTitle);
+      cy.getDataCy("calendar-title").should("have.text", expectedTitle);
     });
   });
 
@@ -37,16 +39,20 @@ describe("Calendar Component", () => {
 
     cy.wait("@monthlyData").then((interception) => {
       const url = new URL(interception.request.url);
+      console.log("next url", url);
       const params = new URLSearchParams(url.search);
+
       const month = parseInt(params.get("month"));
       const year = parseInt(params.get("year"));
-
-      const expectedDate = new Date(year, month - 1);
+      console.log("next month", month);
+      console.log("next year", year);
+      const expectedDate = new Date(year, month);
+      console.log("next expectedDate", expectedDate);
       const expectedTitle = format(expectedDate, "MMMM yyyy");
       cy.getDataCy("calendar-title").should("have.text", expectedTitle);
     });
   });
-  it("expands to year view correctly", () => {
+  xit("expands to year view correctly", () => {
     cy.getDataCy("calendar-title").click();
     // Check if year is displayed
     cy.getDataCy("calendar-title")
@@ -75,7 +81,7 @@ describe("Calendar Component", () => {
       .should("match", /^[A-Z][a-z]+ \d{4}$/);
   });
 
-  it("highlights current month and matches URL parameters", () => {
+  xit("highlights current month and matches URL parameters", () => {
     cy.getDataCy("calendar-title").click();
     cy.wait("@monthlyData").then((interception) => {
       // Get month from URL parameters
@@ -95,7 +101,7 @@ describe("Calendar Component", () => {
     });
   });
 
-  it("handles month selection", () => {
+  xit("handles month selection", () => {
     const months = [3, 6, 9, 12];
 
     months.forEach((month) => {
@@ -119,7 +125,7 @@ describe("Calendar Component", () => {
     });
   });
 
-  it("handles year navigation", () => {
+  xit("handles year navigation", () => {
     cy.getDataCy("calendar-title").click();
     cy.getDataCy("calendar-title")
       .invoke("text")

@@ -1,0 +1,21 @@
+{
+  "data": {
+    "yearlyStats": {
+      "totalExpenses": 6000.0,
+      "totalIncomes": 9000.0,
+      "totalBalance": 3000.0
+    },
+    "monthlyStats": [
+      {
+        "month": 0,
+        "totalExpenses": 500,
+        "totalIncomes": 800
+      },
+      {
+        "month": 1,
+        "totalExpenses": 550,
+        "totalIncomes": 900
+      }
+    ]
+  }
+}

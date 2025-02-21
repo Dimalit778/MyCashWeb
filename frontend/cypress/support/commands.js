@@ -29,6 +29,63 @@ Cypress.Commands.add("loginUser", () => {
     });
   });
 });
+Cypress.Commands.add("setUserData", (userData) => {
+  const defaultUser = {
+    firstName: "Test",
+    lastName: "User",
+    email: "test@example.com",
+    imageUrl: null,
+  };
+
+  const user = { ...defaultUser, ...userData };
+
+  cy.window().then((win) => {
+    win.localStorage.setItem(
+      "persist:root",
+      JSON.stringify({
+        user: JSON.stringify({
+          user: user,
+        }),
+      })
+    );
+  });
+
+  cy.reload();
+});
+// In cypress/support/commands.js
+Cypress.Commands.add("fakeUser", (userData = {}) => {
+  // Default user data
+  const defaultUser = {
+    id: "test-user-id",
+    firstName: "Test",
+    lastName: "User",
+    email: "test@example.com",
+    imageUrl: null,
+    subscription: "free",
+  };
+
+  // Merge default user with provided user data
+  const user = { ...defaultUser, ...userData };
+
+  // Set the access token in cookies
+  cy.setCookie("token", "fake-access-token-for-testing");
+
+  // Set up user in Redux store via localStorage
+  cy.window().then((win) => {
+    win.localStorage.setItem(
+      "persist:root",
+      JSON.stringify({
+        user: JSON.stringify({
+          user: user,
+        }),
+      })
+    );
+  });
+
+  // Reload the page
+  cy.reload();
+});
+
 Cypress.Commands.add("getDataCy", (dataTestSelector) => {
   return cy.get(`[data-cy="${dataTestSelector}"]`);
 });

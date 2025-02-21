@@ -11,7 +11,7 @@ const cld = new Cloudinary({
   },
 });
 
-const CloudImage = ({ publicId }) => {
+const CloudImage = ({ publicId, ...props }) => {
   // Create image with specific transformations to prevent multiple resizing attempts
   const myImage = cld
     .image(publicId)
@@ -29,6 +29,7 @@ const CloudImage = ({ publicId }) => {
       onError={(e) => {
         e.target.style.display = "none";
       }}
+      {...props}
     />
   );
 };

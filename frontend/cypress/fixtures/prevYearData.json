@@ -1,20 +1,30 @@
 {
   "data": {
     "yearlyStats": {
-      "totalExpenses": 4000.0,
-      "totalIncomes": 7000.0,
-      "totalBalance": 3000.0
+      "totalExpenses": 4950,
+      "totalIncomes": 3500,
+      "totalBalance": -1450
     },
     "monthlyStats": [
       {
-        "month": 0,
-        "totalExpenses": 300,
+        "month": 6,
+        "totalExpenses": 700,
         "totalIncomes": 500
       },
       {
-        "month": 1,
-        "totalExpenses": 350,
-        "totalIncomes": 600
+        "month": 8,
+        "totalExpenses": 1000,
+        "totalIncomes": 1500
+      },
+      {
+        "month": 9,
+        "totalExpenses": 2000,
+        "totalIncomes": 500
+      },
+      {
+        "month": 10,
+        "totalExpenses": 1250,
+        "totalIncomes": 1000
       }
     ]
   }

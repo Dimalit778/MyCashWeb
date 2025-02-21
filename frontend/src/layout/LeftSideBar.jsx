@@ -29,13 +29,20 @@ const LeftSideBar = () => {
       className="d-flex flex-column p-2 "
       style={{ height: "100vh", backgroundColor: "black" }}
     >
-      <div className="mb-3">
+      <div data-cy="brand-logo" className="mb-3">
         <BrandLogo />
       </div>
 
-      <div className="d-flex flex-column align-items-center justify-content-center text-center p-2">
+      <div
+        data-cy="profile-image-container"
+        className="d-flex flex-column align-items-center justify-content-center text-center p-2"
+      >
         {user?.imageUrl ? (
-          <div style={{ width: "100px", height: "100px", overflow: "hidden" }} className="rounded-circle">
+          <div
+            data-cy="user-profile-image"
+            style={{ width: "100px", height: "100px", overflow: "hidden" }}
+            className="rounded-circle"
+          >
             <CloudImage
               publicId={user.imageUrl}
               style={{
@@ -48,7 +55,7 @@ const LeftSideBar = () => {
           </div>
         ) : (
           <img
-            data-testid="nav-profile-icon"
+            data-cy="avatar-icon"
             src={avatarIcon}
             alt="profile"
             className="rounded-circle me-2"
@@ -58,18 +65,21 @@ const LeftSideBar = () => {
         )}
 
         <div className="mt-2">
-          <h3 className="mb-0">{user.firstName + " " + user.lastName}</h3>
-          <small className="">{user.email}</small>
+          <h3 data-cy="user-name" className="mb-0">
+            {user.firstName + " " + user.lastName}
+          </h3>
+          <small data-cy="user-email">{user.email}</small>
         </div>
       </div>
 
       <hr style={{ backgroundColor: "gray", height: "3px" }} />
-      <ul className="nav flex-column p-0 gap-2 mt-1 ps-2 ">
+      <ul data-cy="nav-links" className="nav flex-column p-0 gap-2 mt-1 ps-2 ">
         {HOME_LINKS.map((link) => {
           const isActive = pathname === link.route;
           return (
             <li key={link.label}>
               <NavLink
+                data-cy={`nav-link-${link.label.toLowerCase()}`}
                 to={link.route}
                 className="nav-link p-2 rounded"
                 style={{ backgroundColor: isActive ? THEME.orange : "transparent" }}
@@ -86,7 +96,7 @@ const LeftSideBar = () => {
           );
         })}
       </ul>
-      <MyButton bgColor={THEME.dark} className="mt-auto w-auto" onClick={logoutHandler}>
+      <MyButton data-cy="logout-button" bgColor={THEME.dark} className="mt-auto w-auto" onClick={logoutHandler}>
         Logout
       </MyButton>
     </div>

@@ -22,6 +22,7 @@ const MainLayout = () => {
           md={3}
           lg={2}
           className="d-none d-md-block"
+          data-cy="left-sidebar-container"
           style={{
             position: "fixed",
             top: 0,
@@ -38,7 +39,7 @@ const MainLayout = () => {
           <Outlet />
         </Col>
       </Row>
-      <BottomNav className="d-md-none" />
+      <BottomNav className="d-md-none" data-cy="bottom-nav" />
     </div>
   );
 };

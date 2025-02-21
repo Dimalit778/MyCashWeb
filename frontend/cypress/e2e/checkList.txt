@@ -1,0 +1,7 @@
+
+--- Home page ---
+Calender Navigation - WORK
+Yearly Stats display - WORK
+Yearly Chart Display - need to do !
+
+--- Transactions page ---

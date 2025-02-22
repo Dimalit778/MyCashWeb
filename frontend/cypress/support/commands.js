@@ -29,30 +29,8 @@ Cypress.Commands.add("loginUser", () => {
     });
   });
 });
-Cypress.Commands.add("setUserData", (userData) => {
-  const defaultUser = {
-    firstName: "Test",
-    lastName: "User",
-    email: "test@example.com",
-    imageUrl: null,
-  };
 
-  const user = { ...defaultUser, ...userData };
-
-  cy.window().then((win) => {
-    win.localStorage.setItem(
-      "persist:root",
-      JSON.stringify({
-        user: JSON.stringify({
-          user: user,
-        }),
-      })
-    );
-  });
-
-  cy.reload();
-});
-// In cypress/support/commands.js
+// Fake User
 Cypress.Commands.add("fakeUser", (userData = {}) => {
   // Default user data
   const defaultUser = {

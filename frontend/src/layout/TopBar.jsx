@@ -15,7 +15,7 @@ const TopBar = ({ className }) => {
   const location = useLocation();
   const logoutHandler = async () => {
     try {
-      await logout();
+      await logout().unwrap();
     } catch (error) {
       console.log(error);
     }
@@ -38,7 +38,7 @@ const TopBar = ({ className }) => {
         paddingRight: "10px",
       }}
     >
-      <Navbar.Brand data-cy="landing-link" as={Link} to="/">
+      <Navbar.Brand data-cy="app-logo-link-to-home" as={Link} to="/home">
         <BrandLogo className="me-2" />
       </Navbar.Brand>
       <Nav className="ms-auto">
@@ -64,11 +64,11 @@ const TopBar = ({ className }) => {
         ) : (
           <div className="d-flex align-items-center">
             <div className="me-4">
-              <Button variant="link" className="text-light p-0" onClick={logoutHandler}>
+              <Button data-cy="top-bar-logout-button" variant="link" className="text-light p-0" onClick={logoutHandler}>
                 <img data-cy="nav-profile-icon" src={logoutIcon} alt="logout" width="24" height="24" />
               </Button>
             </div>
-            <div className="text-light">
+            <div data-cy="top-bar-profile-image" className="text-light">
               <img
                 src={user?.avatar ? user.avatar : avatarIcon}
                 alt="profile"

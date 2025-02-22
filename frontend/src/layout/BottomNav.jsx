@@ -31,11 +31,12 @@ const BottomNav = ({ className }) => {
         const isActive = pathname === link.route;
 
         return (
-          <Nav.Item key={`bottomNav-${link.label}`} className="flex-grow-1 text-center">
+          <Nav.Item key={link.label} className="flex-grow-1 text-center">
             <Nav.Link
               as={Link}
               to={link.route}
               className="d-flex flex-column align-items-center"
+              data-cy={`nav-link-${link.label}`}
               style={{ backgroundColor: isActive ? THEME.orange : "transparent" }}
               onClick={handleNavClick}
             >

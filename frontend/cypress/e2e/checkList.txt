@@ -1,7 +1,11 @@
+______Layout______
+-- Desktop View + left sideBar + Navigate pages + logout User    [YES]
+-- Mobile View + left sideBar + Navigate pages + logout User     [YES]
+-- Responsive Desktop + Mobile View                              [YES]
+ 
+______Home page______
+-- Calender Navigation                                          [YES]
+-- Yearly Stats display                                         [YES]
+-- Yearly Chart Display                                         [NO]
 
---- Home page ---
-Calender Navigation - WORK
-Yearly Stats display - WORK
-Yearly Chart Display - need to do !
-
---- Transactions page ---
+______Transactions page______

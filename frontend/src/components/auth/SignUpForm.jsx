@@ -9,6 +9,7 @@ import IconButton from "components/ui/icon";
 import TextInput from "components/ui/textInput";
 import MyButton from "components/ui/button";
 import { THEME } from "constants/Theme";
+import { emailValidation } from "utils/emailValidation";
 
 const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,27 +25,6 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
     },
   });
   const password = watch("password");
-
-  const emailValidation = {
-    required: "Email is required",
-    pattern: {
-      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      message: "Invalid email address",
-    },
-    validate: {
-      notAdmin: (value) => {
-        return !value.toLowerCase().includes("admin") || 'Email cannot contain word "admin"';
-      },
-      notTest: (value) => {
-        return !value.toLowerCase().includes("test") || 'Email cannot contain word "test"';
-      },
-      validDomain: (value) => {
-        const domain = value.split("@")[1];
-        const validDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com"];
-        return validDomains.includes(domain) || "Please use a valid email ";
-      },
-    },
-  };
 
   return (
     <div className="auth-container ">
@@ -89,7 +69,6 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
               data-cy="signup-email"
               name="email"
               control={control}
-              type="email"
               placeholder="Email"
               className="form-control"
               rules={emailValidation}
@@ -112,6 +91,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
               }}
               endAdornment={
                 <IconButton
+                  data-cy="toggle-password"
                   icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
                   onClick={() => setShowPassword(!showPassword)}
                   color="white"

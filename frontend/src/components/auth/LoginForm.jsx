@@ -10,6 +10,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import MyButton from "components/ui/button";
 import { THEME } from "constants/Theme";
 import "./authStyle.css";
+import { emailValidation } from "utils/emailValidation";
 const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -35,13 +36,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
               control={control}
               placeholder="Email"
               className="form-control"
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              }}
+              rules={emailValidation}
             />
 
             <TextInput
@@ -61,6 +56,7 @@ const LoginForm = ({ onSubmit, signGoogleClick, isLoading }) => {
               }}
               endAdornment={
                 <IconButton
+                  data-cy="toggle-password"
                   icon={<FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />}
                   onClick={() => setShowPassword(!showPassword)}
                   color="white"

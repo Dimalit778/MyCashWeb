@@ -73,13 +73,13 @@ const LeftSideBar = () => {
       </div>
 
       <hr style={{ backgroundColor: "gray", height: "3px" }} />
-      <ul data-cy="nav-links" className="nav flex-column p-0 gap-2 mt-1 ps-2 ">
+      <ul className="nav flex-column p-0 gap-2 mt-1 ps-2 ">
         {HOME_LINKS.map((link) => {
           const isActive = pathname === link.route;
           return (
             <li key={link.label}>
               <NavLink
-                data-cy={`nav-link-${link.label.toLowerCase()}`}
+                data-cy={`nav-link-${link.label}`}
                 to={link.route}
                 className="nav-link p-2 rounded"
                 style={{ backgroundColor: isActive ? THEME.orange : "transparent" }}
@@ -96,7 +96,12 @@ const LeftSideBar = () => {
           );
         })}
       </ul>
-      <MyButton data-cy="logout-button" bgColor={THEME.dark} className="mt-auto w-auto" onClick={logoutHandler}>
+      <MyButton
+        data-cy="left-sidebar-logout-button"
+        bgColor={THEME.dark}
+        className="mt-auto w-auto"
+        onClick={logoutHandler}
+      >
         Logout
       </MyButton>
     </div>

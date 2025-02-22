@@ -35,11 +35,17 @@ const MainLayout = () => {
         >
           <LeftSideBar />
         </Col>
-        <Col xs={12} md={{ span: 9, offset: 3 }} lg={{ span: 10, offset: 2 }} className="main-content">
+        <Col
+          data-cy="main-layout-outlet"
+          xs={12}
+          md={{ span: 9, offset: 3 }}
+          lg={{ span: 10, offset: 2 }}
+          className="main-content"
+        >
           <Outlet />
         </Col>
       </Row>
-      <BottomNav className="d-md-none" data-cy="bottom-nav" />
+      <BottomNav className="d-md-none" />
     </div>
   );
 };

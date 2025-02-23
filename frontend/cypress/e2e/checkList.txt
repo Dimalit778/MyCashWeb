@@ -1,11 +1,29 @@
-______Layout______
+Layout________________________________________________________________
 -- Desktop View + left sideBar + Navigate pages + logout User    [YES]
 -- Mobile View + left sideBar + Navigate pages + logout User     [YES]
 -- Responsive Desktop + Mobile View                              [YES]
  
-______Home page______
+
+AUTH_________________________________________________________________
+-- Sign Up                                                      [YES]
+-- Login                                                        [YES]
+
+
+HOME PAGE____________________________________________________________
 -- Calender Navigation                                          [YES]
 -- Yearly Stats display                                         [YES]
 -- Yearly Chart Display                                         [NO]
 
-______Transactions page______
+CONTACT US PAGE_______________________________________________________
+-- Responsive Desktop + Mobile View                              [YES]
+-- UI elements                                                   [YES]
+-- Form Validation                                               [YES]
+-- Form Submission                                               [YES]
+
+SETTINGS US PAGE_______________________________________________________
+-- Responsive Desktop + Mobile View                              [YES]
+-- UI elements                                                   [YES]
+-- Form Validation                                               [YES]
+-- Form Submission                                               [YES]
+
+TRANSACTIONS PAGE_____________________________________________________

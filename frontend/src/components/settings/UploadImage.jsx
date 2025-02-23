@@ -71,19 +71,28 @@ const UploadImage = () => {
       {imageState.preview ? (
         <>
           <MyButton
+            data-cy="save-image-button"
             bgColor={THEME.orange}
             onClick={() => imageState.data && handleImageAction("upload", imageState.data)}
           >
             Save
           </MyButton>
-          <MyButton bgColor="red" size="sm" onClick={handleCancel}>
+          <MyButton data-cy="cancel-upload-button" bgColor="red" size="sm" onClick={handleCancel}>
             Cancel
           </MyButton>
         </>
       ) : (
         <>
-          <input id="fileInput" type="file" accept="image/*" onChange={handleFileChange} className="d-none" />
+          <input
+            data-cy="upload-image-input"
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="d-none"
+          />
           <MyButton
+            data-cy="upload-image-button"
             type="button"
             size="sm"
             bgColor={THEME.secondary}
@@ -92,7 +101,12 @@ const UploadImage = () => {
             Upload
           </MyButton>
           {user.imageUrl && (
-            <MyButton bgColor="red" size="sm" onClick={() => handleImageAction("delete", null)}>
+            <MyButton
+              data-cy="delete-image-button"
+              bgColor="red"
+              size="sm"
+              onClick={() => handleImageAction("delete", null)}
+            >
               Delete
             </MyButton>
           )}

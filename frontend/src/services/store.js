@@ -33,7 +33,6 @@ const unauthorizedMiddleware = (store) => (next) => (action) => {
   return next(action);
 };
 
-// Store configuration
 export const store = configureStore({
   reducer: {
     root: persistedReducer,

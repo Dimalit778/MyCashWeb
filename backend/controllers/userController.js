@@ -7,6 +7,7 @@ import handleProfileImage from "../utils/handleProfileImage.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { customUserFields } from "../utils/customUserFileds.js";
 const getUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
@@ -19,7 +20,7 @@ const getUser = asyncHandler(async (req, res) => {
     new ApiResponse(
       200,
       {
-        user,
+        user: customUserFields(user),
       },
       "User Fetched Successfully"
     )
@@ -63,7 +64,7 @@ const updateUser = asyncHandler(async (req, res) => {
     new ApiResponse(
       200,
       {
-        user,
+        user: customUserFields(user),
       },
       "User Updated Successfully"
     )
@@ -121,7 +122,7 @@ const imageActions = asyncHandler(async (req, res) => {
     new ApiResponse(
       200,
       {
-        user,
+        user: customUserFields(user),
       },
       "Image updated successfully"
     )

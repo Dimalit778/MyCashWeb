@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
 import User from "../models/userSchema.js";
-import Category from "../models/categorySchema.js";
-import { DEFAULT_CATEGORIES } from "../config/config.js";
+
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { customUserFields } from "../utils/customUserFileds.js";
 
 const generateTokenAndSetCookie = async (userId) => {
   try {
@@ -80,6 +79,7 @@ const login = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({ email });
+
   if (!user) {
     throw new ApiError(404, "User not found");
   }
@@ -91,7 +91,7 @@ const login = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateTokenAndSetCookie(user._id);
 
-  const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+  const loggedInUser = await User.findById(user._id).select("-password ");
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -106,7 +106,7 @@ const login = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-          user: loggedInUser,
+          user: customUserFields(loggedInUser),
           accessToken,
           refreshToken,
         },

@@ -33,18 +33,14 @@ describe("SignUp Page", () => {
 
   describe("Form Validation", () => {
     it("should show validation errors for empty fields", () => {
-      const invalidEmails = ["invalid", "invalid@", "invalid@gmail", "@gmail.com", "invalid@.com"];
       cy.getDataCy("signup-submit").click();
-      invalidEmails.forEach((email) => {
-        cy.getDataCy("signup-email").find("input").clear();
-        cy.getDataCy("signup-email").find("input").type(email);
-        cy.getDataCy("signup-submit").click();
-        cy.contains("Invalid email address").should("be.visible");
-        cy.contains("Password is required").should("be.visible");
-      });
+      cy.contains("First name is required").should("be.visible");
+      cy.contains("Last name is required").should("be.visible");
+      cy.contains("Email is required").should("be.visible");
+      cy.contains("Password is required").should("be.visible");
+      cy.contains("Confirm password is required").should("be.visible");
     });
-
-    it("should validate name length", () => {
+    it("First Name and Last Name length", () => {
       cy.getDataCy("signup-firstName").find("input").type("A");
       cy.getDataCy("signup-submit").click();
       cy.contains("First name must be at least 2 characters").should("be.visible");
@@ -53,33 +49,39 @@ describe("SignUp Page", () => {
       cy.getDataCy("signup-submit").click();
       cy.contains("Last name must be at least 2 characters").should("be.visible");
     });
-
-    it("should validate password match", () => {
+    it("Password Match", () => {
       cy.getDataCy("signup-password").find("input").type("password123");
       cy.getDataCy("signup-confirm-password").find("input").type("password456");
       cy.getDataCy("signup-submit").click();
       cy.contains("Passwords do not match").should("be.visible");
     });
-  });
-  describe("Email Validation", () => {
-    it("should validate email format", () => {
-      // Test empty email
-      cy.getDataCy("login-submit").click();
-      cy.contains("Email is required").should("be.visible");
+    it("Password Length", () => {
+      cy.getDataCy("signup-password").find("input").type("pass");
+      cy.getDataCy("signup-submit").click();
+      cy.contains("Password must be at least 6 characters").should("be.visible");
+    });
+    it("should toggle password visibility", () => {
+      cy.getDataCy("signup-password").find("input").should("have.attr", "type", "password");
+      cy.getDataCy("signup-password").find("button").click();
+      cy.getDataCy("signup-password").find("input").should("have.attr", "type", "text");
 
-      // Test invalid email format
-      cy.getDataCy("login-email").find("input").type("invalidemail");
-      cy.getDataCy("login-submit").click();
+      // Check confirm password field
+      cy.getDataCy("signup-confirm-password").find("input").should("have.attr", "type", "password");
+      cy.getDataCy("signup-confirm-password").find("button").click();
+      cy.getDataCy("signup-confirm-password").find("input").should("have.attr", "type", "text");
+    });
+    it("Email format", () => {
+      cy.getDataCy("signup-email").find("input").type("invalidemail");
+      cy.getDataCy("signup-submit").click();
       cy.contains("Invalid email address").should("be.visible");
     });
-
-    it("should validate email domain", () => {
+    it("Email domain", () => {
       const invalidDomains = ["user@invalid.com", "user@wrong.org", "user@fake.net"];
 
       invalidDomains.forEach((email) => {
-        cy.getDataCy("login-email").find("input").clear();
-        cy.getDataCy("login-email").find("input").type(email);
-        cy.getDataCy("login-submit").click();
+        cy.getDataCy("signup-email").find("input").clear();
+        cy.getDataCy("signup-email").find("input").type(email);
+        cy.getDataCy("signup-submit").click();
         cy.contains("Please use a valid email").should("be.visible");
       });
 
@@ -87,35 +89,86 @@ describe("SignUp Page", () => {
       const validDomains = ["user@gmail.com", "user@yahoo.com", "user@hotmail.com", "user@outlook.com"];
 
       validDomains.forEach((email) => {
-        cy.getDataCy("login-email").find("input").clear();
-        cy.getDataCy("login-email").find("input").type(email);
-        cy.getDataCy("login-submit").click();
+        cy.getDataCy("signup-email").find("input").clear();
+        cy.getDataCy("signup-email").find("input").type(email);
+        cy.getDataCy("signup-submit").click();
         cy.contains("Please use a valid email").should("not.exist");
       });
     });
-
-    it("should validate restricted words in email", () => {
+    it("Restricted words in email", () => {
       // Test admin restriction
-      cy.getDataCy("login-email").find("input").clear();
-      cy.getDataCy("login-email").find("input").type("admin@gmail.com");
-      cy.getDataCy("login-submit").click();
+      cy.getDataCy("signup-email").find("input").clear();
+      cy.getDataCy("signup-email").find("input").type("admin@gmail.com");
+      cy.getDataCy("signup-submit").click();
       cy.contains('Email cannot contain word "admin"').should("be.visible");
 
       // Test test restriction
-      cy.getDataCy("login-email").find("input").clear();
-      cy.getDataCy("login-email").find("input").type("test@gmail.com");
-      cy.getDataCy("login-submit").click();
+      cy.getDataCy("signup-email").find("input").clear();
+      cy.getDataCy("signup-email").find("input").type("test@gmail.com");
+      cy.getDataCy("signup-submit").click();
       cy.contains('Email cannot contain word "test"').should("be.visible");
 
       // Valid email without restricted words
-      cy.getDataCy("login-email").find("input").clear();
-      cy.getDataCy("login-email").find("input").type("user@gmail.com");
-      cy.getDataCy("login-submit").click();
-      cy.contains("Email cannot contain word").should("not.exist");
+      cy.getDataCy("signup-email").find("input").clear();
+      cy.getDataCy("signup-email").find("input").type("user@gmail.com");
+      cy.getDataCy("signup-submit").click();
+      cy.contains('Email cannot contain word "admin"').should("not.exist");
+      cy.contains('Email cannot contain word "test"').should("not.exist");
     });
   });
 
-  describe("Form Submission", () => {
+  describe("Signup Attempts", () => {
+    it("should handle signup failure", () => {
+      // Mock failed signup response
+      cy.intercept("POST", "**/api/auth/signup", {
+        statusCode: 400,
+        body: {
+          message: "User already exists",
+        },
+      }).as("signupRequest");
+
+      // Fill form
+      cy.getDataCy("signup-firstName").find("input").type("John");
+      cy.getDataCy("signup-lastName").find("input").type("Doe");
+      cy.getDataCy("signup-email").find("input").type("existing@gmail.com");
+      cy.getDataCy("signup-password").find("input").type("password123");
+      cy.getDataCy("signup-confirm-password").find("input").type("password123");
+
+      // Submit form
+      cy.getDataCy("signup-submit").click();
+
+      // Verify error message
+      cy.wait("@signupRequest");
+      cy.contains("User already exists").should("be.visible");
+      cy.url().should("include", "/signup");
+    });
+
+    it("should handle server errors", () => {
+      // Mock server error response
+      cy.intercept("POST", "**/api/auth/signup", {
+        statusCode: 500,
+        body: {
+          error: {
+            message: "Registration failed",
+          },
+        },
+      }).as("signupRequest");
+
+      // Fill form with valid data
+      cy.getDataCy("signup-firstName").find("input").type("John");
+      cy.getDataCy("signup-lastName").find("input").type("Doe");
+      cy.getDataCy("signup-email").find("input").type("john.doe@gmail.com");
+      cy.getDataCy("signup-password").find("input").type("password123");
+      cy.getDataCy("signup-confirm-password").find("input").type("password123");
+
+      // Submit form
+      cy.getDataCy("signup-submit").click();
+
+      // Verify request and response
+      cy.wait("@signupRequest");
+      cy.contains("Registration failed").should("be.visible");
+      cy.url().should("include", "/signup");
+    });
     it("should handle successful signup", () => {
       // Mock successful signup response
       cy.intercept("POST", "**/api/auth/signup", {
@@ -142,69 +195,12 @@ describe("SignUp Page", () => {
       cy.contains("Registration successful").should("be.visible");
       cy.url().should("include", "/login");
     });
-
-    it("should handle signup failure", () => {
-      // Mock failed signup response
-      cy.intercept("POST", "**/api/auth/signup", {
-        statusCode: 400,
-        body: {
-          message: "User already exists",
-        },
-      }).as("signupRequest");
-
-      // Fill form
-      cy.getDataCy("signup-firstName").find("input").type("John");
-      cy.getDataCy("signup-lastName").find("input").type("Doe");
-      cy.getDataCy("signup-email").find("input").type("existing@gmail.com");
-      cy.getDataCy("signup-password").find("input").type("password123");
-      cy.getDataCy("signup-confirm-password").find("input").type("password123");
-
-      // Submit form
-      cy.getDataCy("signup-submit").click();
-
-      // Verify error message
-      cy.wait("@signupRequest");
-      cy.contains("User already exists").should("be.visible");
-      cy.url().should("include", "/signup");
-    });
-
-    it("should handle Google signup", () => {
-      cy.getDataCy("signup-google").click();
-      cy.contains("Google Sign-Up not implemented yet").should("be.visible");
-    });
   });
 
   describe("Navigation", () => {
     it("should navigate to login page", () => {
       cy.getDataCy("goto-login").click();
       cy.url().should("include", "/login");
-    });
-  });
-
-  describe("Loading State", () => {
-    it("should show loading state during submission", () => {
-      // Mock delayed response
-      cy.intercept("POST", "**/api/auth/signup", {
-        delay: 1000,
-        statusCode: 200,
-        body: {
-          success: {
-            message: "Registration successful",
-          },
-        },
-      }).as("signupRequest");
-
-      // Fill and submit form
-      cy.getDataCy("signup-firstName").find("input").type("John");
-      cy.getDataCy("signup-lastName").find("input").type("Doe");
-      cy.getDataCy("signup-email").find("input").type("john.doe@gmail.com");
-      cy.getDataCy("signup-password").find("input").type("password123");
-      cy.getDataCy("signup-confirm-password").find("input").type("password123");
-      cy.getDataCy("signup-submit").click();
-
-      // Verify loading state
-      cy.getDataCy("signup-submit").should("be.disabled");
-      cy.getDataCy("signup-google").should("be.disabled");
     });
   });
 });

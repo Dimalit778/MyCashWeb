@@ -109,7 +109,7 @@ const SignUpForm = ({ onSubmit, onGoogleClick, isLoading }) => {
               className="form-control"
               autoComplete="none"
               rules={{
-                required: "Please confirm your password",
+                required: "Confirm password is required",
                 validate: (value) => value === password || "Passwords do not match",
               }}
               endAdornment={

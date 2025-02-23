@@ -22,6 +22,7 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addMatcher(authApiSlice.endpoints.login.matchFulfilled, (state, { payload }) => {
+        console.log("payload", payload.data);
         state.user = payload.data.user;
       })
       .addMatcher(authApiSlice.endpoints.googleAuth.matchFulfilled, (state, { payload }) => {

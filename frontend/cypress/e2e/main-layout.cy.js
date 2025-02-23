@@ -1,4 +1,4 @@
-import { navLinks } from "../../support/utils/navLinks";
+import { navLinks } from "../support/utils/navLinks";
 
 describe("Main Layout", () => {
   beforeEach(() => {

@@ -2,17 +2,14 @@ describe("Home Page", () => {
   const currentYear = new Date().getFullYear();
 
   beforeEach(() => {
-    // Mock initial year data
     cy.intercept("GET", `**/api/transactions/yearly?year=${currentYear}`, {
       fixture: "currentYearData",
     }).as("getCurrentYearData");
 
-    // Mock next year data
     cy.intercept("GET", `**/api/transactions/yearly?year=${currentYear + 1}`, {
       fixture: "nextYearData",
     }).as("getNextYearData");
 
-    // Mock previous year data
     cy.intercept("GET", `**/api/transactions/yearly?year=${currentYear - 1}`, {
       fixture: "prevYearData",
     }).as("getPrevYearData");

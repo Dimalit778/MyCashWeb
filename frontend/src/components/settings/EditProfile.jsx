@@ -151,7 +151,7 @@ export default function EditProfile() {
   );
 
   return (
-    <Container fluid data-cy="edit-profile" className="p-4 bg-dark border border-1 border-secondary rounded">
+    <Container fluid data-cy="editProfile-container" className="p-4 bg-dark border border-1 border-secondary rounded">
       <Form onSubmit={handleSubmit(onSubmit)}>
         {renderFormFields()}
 

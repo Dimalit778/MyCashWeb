@@ -83,24 +83,3 @@ describe("Transaction Page", () => {
     });
   });
 });
-
-// For specific components:
-// cypress/e2e/transactions/components/calendar.cy.js
-// describe("Calendar Component", () => {
-//   transactionTypes.forEach((type) => {
-//     describe(`Calendar for ${type}`, () => {
-//       beforeEach(() => {
-//         cy.setupApiMonitors();
-//         cy.loginUser();
-//         cy.visit(`/transactions/${type}`);
-//       });
-
-//       it("should update data on month change", () => {
-//         cy.wait("@monthlyData");
-//         cy.getDataCy("calendar-next-button").click();
-//         cy.wait("@monthlyData");
-//         // Verify data updates
-//       });
-//     });
-//   });
-// });

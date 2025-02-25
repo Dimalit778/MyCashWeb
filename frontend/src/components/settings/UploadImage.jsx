@@ -67,7 +67,7 @@ const UploadImage = () => {
   );
 
   const ActionButtons = () => (
-    <div className="d-flex gap-3">
+    <div data-cy="action-buttons" className="d-flex gap-3">
       {imageState.preview ? (
         <>
           <MyButton
@@ -117,7 +117,7 @@ const UploadImage = () => {
 
   return (
     <LoadingOverlay show={isLoading}>
-      <Container fluid data-cy="upload-image" className="bg-dark border border-1 border-secondary rounded p-3">
+      <Container fluid data-cy="uploadImage-container" className="bg-dark border border-1 border-secondary rounded p-3">
         <Row className="gy-4">
           <Col xs={12} md={6}>
             <div className="d-flex flex-column align-items-center">
@@ -138,13 +138,16 @@ const UploadImage = () => {
 
           <Col xs={12} md={6}>
             <div className="h-100 d-flex flex-column justify-content-between">
-              <div className="text-center text-md-start">
+              <div data-cy="uploadImage-user-info" className="text-center text-md-start">
                 <h2 className="text-white h3 mb-2">
                   {user.firstName} {user.lastName}
                 </h2>
                 <p className="text-light mb-3 opacity-75">{user.email}</p>
               </div>
-              <div className="d-flex justify-content-center justify-content-md-start align-items-center gap-2">
+              <div
+                data-cy="user-subscription"
+                className="d-flex justify-content-center justify-content-md-start align-items-center gap-2"
+              >
                 <span className="text-light">Subscription:</span>
                 <span className="badge bg-primary px-3">{user.subscription}</span>
               </div>

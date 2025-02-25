@@ -131,18 +131,27 @@ describe("Login Page", () => {
     });
 
     it("should handle successful login", () => {
-      cy.intercept("POST", "**/api/auth/login", {
-        statusCode: 200,
-      }).as("successfulLogin");
+      cy.fixture("user.json").then((userData) => {
+        cy.intercept("POST", "**/api/auth/login", {
+          statusCode: 200,
+          body: {
+            data: userData.data,
+          },
+        }).as("successfulLogin");
 
-      cy.getDataCy("login-email").find("input").type(Cypress.env("TEST_EMAIL"));
-      cy.getDataCy("login-password").find("input").type(Cypress.env("TEST_PASSWORD"));
-      cy.getDataCy("login-submit").click();
+        cy.getDataCy("login-email").find("input").type(Cypress.env("TEST_EMAIL"));
+        cy.getDataCy("login-password").find("input").type(Cypress.env("TEST_PASSWORD"));
+        cy.getDataCy("login-submit").click();
 
-      // Verify successful login
-      cy.wait("@successfulLogin");
-      cy.visit("/home");
-      cy.url().should("include", "/home");
+        // Verify successful login
+        cy.wait("@successfulLogin");
+
+        // After successful login, the app should redirect to home
+        cy.url().should("include", "/home");
+
+        // You can also verify that elements on the home page are visible
+        cy.getDataCy("year-calender").should("exist");
+      });
     });
   });
 

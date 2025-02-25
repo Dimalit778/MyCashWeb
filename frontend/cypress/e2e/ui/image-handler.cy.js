@@ -2,19 +2,15 @@ describe("Upload Image Section", () => {
   beforeEach(() => {
     cy.intercept("PATCH", "**/api/users/imageActions", {
       statusCode: 200,
-      body: { message: "Image updated successfully" },
-    }).as("uploadImage");
-    cy.intercept("PATCH", "**/api/users/imageActions", {
-      statusCode: 200,
-      body: { message: "Image deleted successfully" },
-    }).as("deleteImage");
-    cy.loginUser();
+    }).as("upload");
+
+    cy.mockUser();
     cy.visit("/settings");
   });
 
-  it("test upload", () => {
-    cy.wait("@uploadImage").then((interception) => {
-      console.log("uploadImage", interception);
+  it.only("test upload", () => {
+    cy.wait("@upload").then((interception) => {
+      console.log("upload", interception);
     });
   });
   it("test delete", () => {

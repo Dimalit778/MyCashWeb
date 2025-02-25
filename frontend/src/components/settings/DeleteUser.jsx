@@ -47,7 +47,7 @@ export default function DeleteUser() {
   };
 
   return (
-    <div className="text-center mt-5">
+    <div data-cy="deleteUser-container" className="text-center mt-5">
       <button data-cy="delete-account-btn" className="btn btn-danger" onClick={deleteAlert}>
         Delete Account
       </button>

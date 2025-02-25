@@ -1,69 +1,51 @@
-// Login Session
-Cypress.Commands.add("loginUser", () => {
-  const email = Cypress.env("TEST_EMAIL");
-  const password = Cypress.env("TEST_PASSWORD");
+import "cypress-file-upload";
+
+// Login User with real Api Call
+Cypress.Commands.add("loginUser", (email = Cypress.env("TEST_EMAIL"), password = Cypress.env("TEST_PASSWORD")) => {
   cy.session([email, password], () => {
-    // Make login request
     cy.request({
       method: "POST",
       url: "/api/auth/login",
       body: { email, password },
     }).then((response) => {
       expect(response.status).to.eq(200);
-      cy.log("Login response:", response.body);
-
       const { accessToken, user } = response.body.data;
       cy.setCookie("token", accessToken);
 
-      // Set up Redux store with user data
+      // Set up Redux store
       cy.window().then((win) => {
         win.localStorage.setItem(
           "persist:root",
           JSON.stringify({
-            user: JSON.stringify({
-              user: user,
-            }),
+            user: JSON.stringify({ user }),
           })
         );
       });
     });
   });
 });
+// Login User with Mocked Data
+Cypress.Commands.add("mockUser", () => {
+  cy.session("mockedUser", () => {
+    cy.fixture("user.json").then((userData) => {
+      // First visit a page to have access to window
+      cy.visit("/");
 
-// Fake User
-Cypress.Commands.add("fakeUser", (userData = {}) => {
-  // Default user data
-  const defaultUser = {
-    id: "test-user-id",
-    firstName: "Test",
-    lastName: "User",
-    email: "test@example.com",
-    imageUrl: null,
-    subscription: "free",
-  };
+      cy.window().then((win) => {
+        win.localStorage.setItem(
+          "persist:root",
+          JSON.stringify({
+            user: JSON.stringify({
+              user: userData.data.user,
+            }),
+          })
+        );
+      });
 
-  // Merge default user with provided user data
-  const user = { ...defaultUser, ...userData };
-
-  // Set the access token in cookies
-  cy.setCookie("token", "fake-access-token-for-testing");
-
-  // Set up user in Redux store via localStorage
-  cy.window().then((win) => {
-    win.localStorage.setItem(
-      "persist:root",
-      JSON.stringify({
-        user: JSON.stringify({
-          user: user,
-        }),
-      })
-    );
+      cy.setCookie("token", userData.data.accessToken);
+    });
   });
-
-  // Reload the page
-  cy.reload();
 });
-
 Cypress.Commands.add("getDataCy", (dataTestSelector) => {
   return cy.get(`[data-cy="${dataTestSelector}"]`);
 });

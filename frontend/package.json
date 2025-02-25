@@ -83,6 +83,7 @@
     "@types/node": "^22.8.6",
     "concurrently": "^9.1.2",
     "cypress": "^13.17.0",
+    "cypress-file-upload": "^5.0.8",
     "eslint-plugin-cypress": "^4.1.0",
     "jest": "^27.5.1"
   }

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "user": {
+      "email": "example@gmail.com",
+      "firstName": "Cy",
+      "lastName": "Test",
+      "imageUrl": "",
+      "role": "user",
+      "subscription": "free",
+      "_id": "67952bc8edea680fb371e84c"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ek1MmjQGVkZWE2ODBmYjM3MWU4NGM1LCJpYXQiOjE",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ek1MmjQGVkZWE2ODBmYjM3MWU4NGM1LCJpYXQiOjE"
+  }
+}

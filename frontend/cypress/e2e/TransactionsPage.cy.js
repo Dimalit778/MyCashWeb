@@ -1,14 +1,7 @@
 // cypress/e2e/transactions.cy.js
 describe("Transactions Page", () => {
   beforeEach(() => {
-    // Mock API responses
-    cy.fixture("monthlyData.json").then((monthlyData) => {
-      cy.intercept("GET", "**/api/transactions/monthly*", {
-        statusCode: 200,
-        body: monthlyData,
-      }).as("getMonthlyData");
-    });
-
+    cy.setupApiMonitors();
     cy.loginUser();
     cy.visit("/transactions/expenses");
   });
@@ -35,7 +28,7 @@ describe("Transactions Page", () => {
     });
   });
 
-  it.only("should handle calendar navigation and data fetching", () => {
+  it("should handle calendar navigation and data fetching", () => {
     const currentDate = new Date();
     let nextMonth = new Date(currentDate);
     nextMonth.setMonth(currentDate.getMonth() + 1);

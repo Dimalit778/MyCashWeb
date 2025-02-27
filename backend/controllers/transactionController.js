@@ -197,20 +197,20 @@ export const updateTransaction = asyncHandler(async (req, res) => {
   }
 
   let updateData = { description, amount, date };
+  console.log("updateData", updateData);
 
   if (category) {
-    const userCategories = await Category.findOne({ user: userId });
-    const newCategory = userCategories.categories.find((cat) => cat.description === category);
+    const categoryToUpdate = await Category.findOne({ user: userId, type: type, name: category });
 
-    if (!newCategory) {
+    if (!categoryToUpdate) {
       throw new ApiError(400, "Invalid category");
     }
 
-    if (newCategory.type !== type && type !== existingTransaction.type) {
+    if (categoryToUpdate.type !== type && type !== existingTransaction.transactionType) {
       throw new ApiError(400, "Category type doesn't match transaction type");
     }
 
-    updateData.categoryDescription = newCategory.description;
+    updateData.category = categoryToUpdate.name;
   }
 
   // Update transaction

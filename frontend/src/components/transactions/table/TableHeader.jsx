@@ -11,6 +11,7 @@ const TableHeader = ({ total = 0, exportData, openModal, type }) => {
     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
       <div className=" d-flex justify-content-center align-items-center gap-3 ">
         <MyButton
+          data-cy="add-transaction"
           bgColor={THEME.dark}
           color={THEME.light}
           border={THEME.light}

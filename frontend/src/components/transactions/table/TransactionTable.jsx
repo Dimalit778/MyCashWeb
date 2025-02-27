@@ -138,7 +138,7 @@ const TransactionsTable = ({ monthData, type }) => {
 
         <div className="table-responsive">
           {!transactions.length ? (
-            <div className="d-flex justify-content-center mt-5">
+            <div data-cy="transactions-empty" className="d-flex justify-content-center mt-5">
               <h3 className="text-secondary">{type} List is empty</h3>
             </div>
           ) : (

@@ -6,7 +6,7 @@ import "./inputStyle.css";
 const SelectInput = ({ name, control, label, options, renderOption, rules }) => {
   return (
     <Controller
-      name="category"
+      name={name}
       control={control}
       rules={rules}
       render={({ field, fieldState: { error } }) => (

@@ -39,7 +39,6 @@ const CalendarMonth = ({ date, setDate }) => {
         >
           {format(date, isExpanded ? "yyyy" : "MMMM yyyy")}
         </motion.h2>
-
         <motion.button
           data-cy="calendar-next-button"
           className="nav-button"

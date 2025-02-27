@@ -1,4 +1,3 @@
-// src/features/transactions/components/TransactionModal/index.jsx
 import React, { useEffect, useMemo } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
@@ -23,8 +22,7 @@ const TransactionModal = ({ type, date, categories }) => {
     () => ({
       description: editItem?.description || "",
       amount: editItem?.amount || "",
-      category: editItem?.category?.name || "",
-
+      category: editItem?.category || "",
       date: format(editItem?.date ? new Date(editItem.date) : date, "yyyy-MM-dd"),
     }),
     [editItem, date]
@@ -34,7 +32,7 @@ const TransactionModal = ({ type, date, categories }) => {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
     setError,
   } = useForm({
     defaultValues,
@@ -80,9 +78,15 @@ const TransactionModal = ({ type, date, categories }) => {
       }
     }
   };
-
   return (
-    <Modal show={isOpen} onHide={handleClose} contentClassName="bg-dark" className="mt-5" backdrop="static">
+    <Modal
+      data-cy="transaction-modal"
+      show={isOpen}
+      onHide={handleClose}
+      contentClassName="bg-dark"
+      className="mt-5"
+      backdrop="static"
+    >
       <Modal.Header closeButton closeVariant="white">
         <Modal.Title className="text-light">{editItem ? `Edit ${type}` : `Add ${type}`}</Modal.Title>
       </Modal.Header>
@@ -92,6 +96,7 @@ const TransactionModal = ({ type, date, categories }) => {
           <Row className="mb-3">
             <Col md={6}>
               <TextInput
+                data-cy="modal-description"
                 name="description"
                 control={control}
                 label="Description"
@@ -107,6 +112,7 @@ const TransactionModal = ({ type, date, categories }) => {
             </Col>
             <Col md={6}>
               <TextInput
+                data-cy="modal-amount"
                 name="amount"
                 control={control}
                 label="Amount"
@@ -149,14 +155,15 @@ const TransactionModal = ({ type, date, categories }) => {
                 options={categories}
                 renderOption={(option) => ({
                   value: option.name,
-                  label: `${option.name}${option.isDeleted ? " (deleted)" : ""}`,
+                  label: `${option.name}`,
                 })}
+                rules={{ required: "Category is required" }}
               />
             </Col>
           </Row>
 
           <div className="d-flex justify-content-end gap-2">
-            <MyButton type="submit" disabled={isSubmitting || isAdding || isUpdating}>
+            <MyButton type="submit" disabled={isSubmitting || isAdding || isUpdating || (editItem && !isDirty)}>
               {isSubmitting || isAdding || isUpdating ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" />

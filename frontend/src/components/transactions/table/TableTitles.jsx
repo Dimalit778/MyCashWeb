@@ -2,7 +2,7 @@ import { faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import MyButton from "components/ui/button";
-const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }) => {
+const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
   const headers = [
     { key: "label", label: "Description", sortable: false, width: "30%", align: "left" },
     { key: "amount", label: "Amount", sortable: true, width: "20%", align: "center" },
@@ -13,6 +13,7 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig, dataCy }
       label: (
         <div className="d-flex align-items-center justify-content-center h-100" style={{ minWidth: "100px" }}>
           <MyButton
+            data-cy="delete-transaction-button"
             onClick={onDelete}
             disabled={selectedItems.length === 0}
             bgColor={selectedItems.length > 0 ? "red" : "transparent"}

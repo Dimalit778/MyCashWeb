@@ -37,14 +37,9 @@ function TextInput({
                 </div>
               )}
               {error && (
-                <Form.Control.Feedback
-                  type="invalid-feedback"
-                  tooltip
-                  data-cy="error-message"
-                  className="small text-danger"
-                >
+                <div data-cy="error-message" className="invalid-feedback d-block mt-1">
                   {error.message}
-                </Form.Control.Feedback>
+                </div>
               )}
             </>
           )}

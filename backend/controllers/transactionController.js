@@ -159,6 +159,9 @@ export const addTransaction = asyncHandler(async (req, res) => {
   if (amount <= 0) {
     throw new ApiError(400, "Amount must be greater than 0");
   }
+  if (amount > 1000000) {
+    throw new ApiError(400, "Amount must be less than 1000000");
+  }
 
   if (type !== TRANSACTION_TYPES.INCOME && type !== TRANSACTION_TYPES.EXPENSE) {
     throw new ApiError(400, "Invalid transaction type");

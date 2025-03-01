@@ -95,7 +95,7 @@ const Categories = ({ categories, max }) => {
 
         {categories?.length < max && (
           <form
-            data-cy="add-category-form"
+            data-cy="category-form"
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit(categoryName);
@@ -112,6 +112,7 @@ const Categories = ({ categories, max }) => {
                 className="form-input w-100   px-3 py-2 rounded"
               />
               <MyButton
+                data-cy="submit-category"
                 type="submit"
                 bgColor={THEME.dark}
                 border={THEME.light}

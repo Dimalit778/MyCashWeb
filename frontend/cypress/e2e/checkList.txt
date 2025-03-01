@@ -27,3 +27,10 @@ SETTINGS US PAGE_______________________________________________________
 -- Form Submission                                               [YES]
 
 TRANSACTIONS PAGE_____________________________________________________
+-- Create                                                        [YES]
+-- Delete                                                        [YES]
+-- Update                                                        [YES]
+-- Sort Date and Amount                                          [YES]
+
+PAGINATION_____________________________________________________  [YES]
+

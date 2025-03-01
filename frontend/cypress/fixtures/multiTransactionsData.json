@@ -1,0 +1,35 @@
+{
+  "data": {
+    "transactions": [
+      {
+        "_id": "existing-id-1",
+        "description": "Existing Transaction",
+        "amount": 500,
+        "category": "Salary",
+        "date": "2025-02-16T00:00:00.000Z"
+      },
+      {
+        "_id": "mocked-id-123",
+        "description": "Test Income",
+        "amount": 750,
+        "category": "Salary",
+        "date": "2025-02-21T00:00:00.000Z"
+      },
+      {
+        "_id": "mocked-id-456",
+        "description": "Test Expense",
+        "amount": 400,
+        "category": "Salary",
+        "date": "2025-02-20T00:00:00.000Z"
+      },
+      {
+        "_id": "mocked-id-789",
+        "description": "Test Expense",
+        "amount": 200,
+        "category": "Salary",
+        "date": "2025-02-29T00:00:00.000Z"
+      }
+    ],
+    "total": 2500
+  }
+}

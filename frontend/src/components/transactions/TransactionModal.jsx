@@ -63,10 +63,10 @@ const TransactionModal = ({ type, date, categories }) => {
           ...formattedData,
           _id: editItem._id,
         }).unwrap();
-        toast.success(`${type} updated`);
+        toast.success("Successfully updated");
       } else {
         await addTransaction(formattedData).unwrap();
-        toast.success(`${type} added`);
+        toast.success("Successfully added");
       }
       handleClose();
     } catch (error) {
@@ -92,7 +92,7 @@ const TransactionModal = ({ type, date, categories }) => {
       </Modal.Header>
 
       <Modal.Body>
-        <Form onSubmit={handleSubmit(onSubmit)} className="bg-dark">
+        <Form noValidate onSubmit={handleSubmit(onSubmit)} className="bg-dark">
           <Row className="mb-3">
             <Col md={6}>
               <TextInput
@@ -105,7 +105,11 @@ const TransactionModal = ({ type, date, categories }) => {
                   required: "Description is required",
                   minLength: {
                     value: 2,
-                    message: "Description must be at least 2 characters",
+                    message: "must be at least 2 characters",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "must be less then 20 characters",
                   },
                 }}
               />
@@ -118,11 +122,16 @@ const TransactionModal = ({ type, date, categories }) => {
                 label="Amount"
                 type="number"
                 placeholder="0.00"
+                max={1000000}
                 rules={{
                   required: "Amount is required",
                   min: {
                     value: 0.01,
-                    message: "Amount must be greater than 0",
+                    message: "must be greater than 0",
+                  },
+                  max: {
+                    value: 1000000,
+                    message: "must not exceed 1,000,000",
                   },
                   validate: {
                     isNumber: (value) => !isNaN(value) || "Please enter a valid number",

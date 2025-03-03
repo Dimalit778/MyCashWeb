@@ -105,7 +105,7 @@ export default function EditProfile() {
       </Row>
 
       {isEditing && (
-        <Row data-cy="edit-password-form" className="d-flex py-3 mt-3 border-bottom border-secondary">
+        <Row data-cy="edit-account-form" className="d-flex py-3 mt-3 border-bottom border-secondary">
           <Col md={6}>
             <TextInput
               data-cy="current-password-input"
@@ -151,7 +151,7 @@ export default function EditProfile() {
   );
 
   return (
-    <Container fluid data-cy="editProfile-container" className="p-4 bg-dark border border-1 border-secondary rounded">
+    <Container fluid data-cy="edit-profile-container" className="p-4 bg-dark border border-1 border-secondary rounded">
       <Form onSubmit={handleSubmit(onSubmit)}>
         {renderFormFields()}
 

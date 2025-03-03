@@ -33,7 +33,6 @@ const IconButton = ({
     },
   };
 
-  // Use state to handle hover
   const [isHovered, setIsHovered] = useState(false);
 
   const buttonStyle = {

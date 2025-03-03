@@ -32,5 +32,12 @@ TRANSACTIONS PAGE_____________________________________________________
 -- Update                                                        [YES]
 -- Sort Date and Amount                                          [YES]
 
-PAGINATION_____________________________________________________  [YES]
+PAGINATION____________________________________________________________
+ -- Check Pagination pages number                                 [YES]
+-- Check data changes when switch page                            [YES]
+-- Check Next and Prev button work and show different data        [YES]
 
+MONTH CALENDER________________________________________________________
+-- Open and Close months Overlay                                  [YES]
+-- test next and prev click url                                   [YES]
+-- open months , click on month and check the url change          [YES]

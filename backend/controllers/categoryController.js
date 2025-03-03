@@ -3,6 +3,7 @@ import { CATEGORY_LIMITS } from "../config/config.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+
 const getCategories = asyncHandler(async (req, res) => {
   const type = req.query.type;
   const userId = req.user._id;
@@ -49,7 +50,7 @@ const addCategory = asyncHandler(async (req, res) => {
   });
 
   if (isDuplicate) {
-    throw new ApiError(400, "Category name must be unique for this type");
+    throw new ApiError(400, "Category already exists");
   }
 
   // Create new category

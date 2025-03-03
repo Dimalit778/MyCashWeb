@@ -83,6 +83,7 @@ describe("Delete Transaction ", () => {
         message: "Transaction deleted successfully",
       },
     }).as("deleteTransaction");
+
     cy.get('.table-responsive input[type="checkbox"]').first().check();
 
     cy.contains("button", "Delete").click();

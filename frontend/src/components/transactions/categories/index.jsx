@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "components/ui/icon";
@@ -11,19 +11,42 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { THEME } from "constants/Theme";
 import Capitalize from "utils/Capitalize";
+import { useForm } from "react-hook-form";
+import TextInput from "components/ui/textInput";
+import { Form } from "react-bootstrap";
 
 const Categories = ({ categories, max }) => {
   const { type } = useParams();
+  const formRef = useRef(null);
 
   const [addCategory, { isLoading: isAdding }] = useAddCategoryMutation();
-  const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
-  const [categoryName, setCategoryName] = useState("");
+  const [deleteCategory] = useDeleteCategoryMutation();
 
-  const handleSubmit = async (categoryName) => {
-    if (!categoryName) return toast.error("Category name is required");
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: {
+      categoryName: "",
+    },
+  });
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        reset();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [reset]);
+  const onSubmit = async (data) => {
     try {
-      await addCategory({ categoryName, type }).unwrap();
-      setCategoryName("");
+      await addCategory({ categoryName: data.categoryName, type }).unwrap();
+      reset();
       toast.success("Category added successfully");
     } catch (error) {
       toast.error(error.data.message);
@@ -79,50 +102,55 @@ const Categories = ({ categories, max }) => {
           {categories?.map((category) => (
             <div data-cy="category-item" key={category._id} className="my-card-item">
               <span data-cy="category-name">{category.name}</span>
-              {!category.isDefault && (
-                <IconButton
-                  data-cy="delete-category-btn"
-                  onClick={() => handleDelete(category._id)}
-                  icon={<FontAwesomeIcon icon={faXmark} />}
-                  color="red"
-                  size="lg"
-                  hoverBgColor="rgba(60, 60, 60, 0.8)"
-                />
-              )}
+
+              <IconButton
+                data-cy="delete-category-btn"
+                onClick={() => handleDelete(category._id)}
+                icon={<FontAwesomeIcon icon={faXmark} />}
+                color="red"
+                size="lg"
+                hoverBgColor="rgba(60, 60, 60, 0.8)"
+              />
             </div>
           ))}
         </div>
 
         {categories?.length < max && (
-          <form
-            data-cy="category-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(categoryName);
-            }}
-            className="mt-3"
-          >
+          <Form data-cy="category-form" noValidate ref={formRef} onSubmit={handleSubmit(onSubmit)} className="mt-3">
             <div className="mb-3 border-bottom border-3 border-secondary"></div>
-            <div className="d-flex  gap-2">
-              <input
-                type="text"
-                placeholder={`Add new category ...`}
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-                className="form-input w-100   px-3 py-2 rounded"
-              />
+            <div className="d-flex gap-2 align-items-start">
+              <div className="w-100" style={{ marginBottom: "-1rem" }}>
+                <TextInput
+                  data-cy="category-input"
+                  name="categoryName"
+                  control={control}
+                  placeholder=" Add new category..."
+                  className="form-input  py-2 rounded"
+                  rules={{
+                    required: "Category name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Category name must be at least 2 characters",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Category name must be at most 20 characters",
+                    },
+                  }}
+                />
+              </div>
+
               <MyButton
                 data-cy="submit-category"
                 type="submit"
                 bgColor={THEME.dark}
                 border={THEME.light}
-                isLoading={isAdding || isDeleting}
-                size="none"
+                isLoading={isAdding || isSubmitting}
               >
                 <FontAwesomeIcon icon={faPlus} style={{ fontSize: "1.5rem" }} />
               </MyButton>
             </div>
-          </form>
+          </Form>
         )}
       </div>
     </div>

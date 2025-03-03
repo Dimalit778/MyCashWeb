@@ -24,28 +24,7 @@ Cypress.Commands.add("loginUser", (email = Cypress.env("TEST_EMAIL"), password =
     });
   });
 });
-// Login User with Mocked Data
-Cypress.Commands.add("mockUser", () => {
-  cy.session("mockedUser", () => {
-    cy.fixture("user.json").then((userData) => {
-      // First visit a page to have access to window
-      cy.visit("/");
 
-      cy.window().then((win) => {
-        win.localStorage.setItem(
-          "persist:root",
-          JSON.stringify({
-            user: JSON.stringify({
-              user: userData.data.user,
-            }),
-          })
-        );
-      });
-
-      cy.setCookie("token", userData.data.accessToken);
-    });
-  });
-});
 Cypress.Commands.add("getDataCy", (dataTestSelector) => {
   return cy.get(`[data-cy="${dataTestSelector}"]`);
 });
@@ -95,35 +74,35 @@ Cypress.Commands.add("setupApiMonitors", () => {
     url: "**/api/transactions/yearly*",
   }).as("yearlyData");
 });
-Cypress.Commands.add("transactionInterceptor", () => {
-  cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
-    delete req.headers["if-none-match"];
-    delete req.headers["if-modified-since"];
-  }).as("monthlyData");
+// Cypress.Commands.add("transactionInterceptor", () => {
+//   cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
+//     delete req.headers["if-none-match"];
+//     delete req.headers["if-modified-since"];
+//   }).as("monthlyData");
 
-  cy.intercept("POST", "**/api/transactions/add", (req) => {
-    delete req.headers["if-none-match"];
-    delete req.headers["if-modified-since"];
-  }).as("addTransaction");
-  cy.intercept("POST", "**/api/transactions/update", (req) => {
-    delete req.headers["if-none-match"];
-    delete req.headers["if-modified-since"];
-  }).as("updateTransaction");
-  cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
-});
+//   cy.intercept("POST", "**/api/transactions/add", (req) => {
+//     delete req.headers["if-none-match"];
+//     delete req.headers["if-modified-since"];
+//   }).as("addTransaction");
+//   cy.intercept("POST", "**/api/transactions/update", (req) => {
+//     delete req.headers["if-none-match"];
+//     delete req.headers["if-modified-since"];
+//   }).as("updateTransaction");
+//   cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
+// });
 
-Cypress.Commands.add("getCategoryInterceptor", () => {
-  cy.intercept({
-    method: "GET",
-    url: "**/api/categories/get",
-  }).as("categories");
-});
-Cypress.Commands.add("updateUser", () => {
-  cy.intercept({
-    method: "POST",
-    url: "**/api/users/update",
-  }).as("UpdateUser");
-});
+// Cypress.Commands.add("getCategoryInterceptor", () => {
+//   cy.intercept({
+//     method: "GET",
+//     url: "**/api/categories/get",
+//   }).as("categories");
+// });
+// Cypress.Commands.add("updateUser", () => {
+//   cy.intercept({
+//     method: "POST",
+//     url: "**/api/users/update",
+//   }).as("UpdateUser");
+// });
 // Test Responsive Layout
 Cypress.Commands.add("testResponsiveLayout", () => {
   // Test desktop layout

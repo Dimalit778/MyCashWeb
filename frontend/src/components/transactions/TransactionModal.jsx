@@ -150,7 +150,13 @@ const TransactionModal = ({ type, date, categories }) => {
                 render={({ field, fieldState: { error } }) => (
                   <Form.Group>
                     <Form.Label>Date</Form.Label>
-                    <Form.Control type="date" {...field} isInvalid={!!error} className="bg-dark text-light" />
+                    <Form.Control
+                      data-cy="modal-date"
+                      type="date"
+                      {...field}
+                      isInvalid={!!error}
+                      className="bg-dark text-light"
+                    />
                     <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                   </Form.Group>
                 )}
@@ -158,6 +164,7 @@ const TransactionModal = ({ type, date, categories }) => {
             </Col>
             <Col md={6}>
               <SelectInput
+                dataCy="modal-category"
                 name="category"
                 control={control}
                 label="Category"
@@ -172,7 +179,11 @@ const TransactionModal = ({ type, date, categories }) => {
           </Row>
 
           <div className="d-flex justify-content-end gap-2">
-            <MyButton type="submit" disabled={isSubmitting || isAdding || isUpdating || (editItem && !isDirty)}>
+            <MyButton
+              data-cy="modal-submit"
+              type="submit"
+              disabled={isSubmitting || isAdding || isUpdating || (editItem && !isDirty)}
+            >
               {isSubmitting || isAdding || isUpdating ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" />
@@ -185,6 +196,7 @@ const TransactionModal = ({ type, date, categories }) => {
               )}
             </MyButton>
             <MyButton
+              data-cy="modal-cancel"
               type="button"
               bgColor="gray"
               color="black"

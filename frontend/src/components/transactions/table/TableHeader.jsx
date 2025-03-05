@@ -11,7 +11,7 @@ const TableHeader = ({ total = 0, exportData, openModal, type }) => {
     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
       <div className=" d-flex justify-content-center align-items-center gap-3 ">
         <MyButton
-          data-cy="add-transaction"
+          data-cy="add-transaction-btn"
           bgColor={THEME.dark}
           color={THEME.light}
           border={THEME.light}
@@ -20,7 +20,14 @@ const TableHeader = ({ total = 0, exportData, openModal, type }) => {
         >
           New {Capitalize(type.slice(0, -1))}
         </MyButton>
-        <MyButton bgColor={THEME.dark} color={THEME.light} border={THEME.light} onClick={() => exportData()} size="sm">
+        <MyButton
+          data-cy="export-transaction-btn"
+          bgColor={THEME.dark}
+          color={THEME.light}
+          border={THEME.light}
+          onClick={() => exportData()}
+          size="sm"
+        >
           <FontAwesomeIcon icon={faFileExport} />
           Export
         </MyButton>
@@ -28,7 +35,7 @@ const TableHeader = ({ total = 0, exportData, openModal, type }) => {
 
       <div className="d-flex align-items-center">
         <h3 className="me-3 text-secondary">Total:</h3>
-        <h3 className="text-secondary">
+        <h3 data-cy="transaction-total-amount" className="text-secondary">
           <CountUp start={0} end={total || 0} separator="," prefix="$" duration={2.5} />
         </h3>
       </div>

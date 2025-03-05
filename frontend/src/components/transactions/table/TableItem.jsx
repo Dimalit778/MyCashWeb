@@ -35,11 +35,7 @@ const TableItem = ({ item, selectedItems, toggleSelection, categoryColors, handl
       </td>
 
       <td style={{ minWidth: "120px" }}>{format(new Date(item.date), "MMM dd, yyyy")}</td>
-      <td
-        className="text-center"
-        onClick={(e) => e.stopPropagation()}
-        style={{ minWidth: "80px" }} // Minimum width for checkbox
-      >
+      <td className="text-center" onClick={(e) => e.stopPropagation()} style={{ minWidth: "80px" }}>
         <div className="form-check d-flex justify-content-center">
           <input
             className="form-check-input bg-secondary"

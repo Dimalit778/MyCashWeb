@@ -8,7 +8,7 @@
       {
         "_id": "id_1",
         "description": "item 1",
-        "amount": 3424,
+        "amount": 1000,
         "date": "2025-03-26T00:00:00.000Z",
         "transactionType": "expenses",
         "category": "Home",
@@ -20,7 +20,7 @@
       {
         "_id": "id_2",
         "description": "item 2",
-        "amount": 2434,
+        "amount": 500,
         "date": "2025-03-18T00:00:00.000Z",
         "transactionType": "expenses",
         "category": "Shopping",
@@ -32,7 +32,7 @@
       {
         "_id": "id_3",
         "description": "item 3",
-        "amount": 453,
+        "amount": 600,
         "date": "2025-03-13T00:00:00.000Z",
         "transactionType": "expenses",
         "category": "Shopping",
@@ -44,7 +44,7 @@
       {
         "_id": "id_4",
         "description": "item 4",
-        "amount": 535,
+        "amount": 700,
         "date": "2025-03-01T00:00:00.000Z",
         "transactionType": "expenses",
         "category": "Home",
@@ -52,92 +52,8 @@
         "createdAt": "2025-03-01T14:24:07.986Z",
         "updatedAt": "2025-03-01T14:24:07.986Z",
         "__v": 0
-      },
-      {
-        "_id": "id_5",
-        "description": "item 5",
-        "amount": 3423,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Shopping",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T14:55:44.213Z",
-        "updatedAt": "2025-03-01T14:55:44.213Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_6",
-        "description": "item 6",
-        "amount": 56456,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Car",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T14:56:28.259Z",
-        "updatedAt": "2025-03-01T14:56:28.259Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_7",
-        "description": "item 7",
-        "amount": 444,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Home",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T15:31:46.407Z",
-        "updatedAt": "2025-03-01T15:31:46.407Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_8",
-        "description": "item 8",
-        "amount": 4535,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Home",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T15:31:51.361Z",
-        "updatedAt": "2025-03-01T15:31:51.361Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_9",
-        "description": "item 9",
-        "amount": 3554,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Car",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T15:31:57.231Z",
-        "updatedAt": "2025-03-01T15:31:57.231Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_10",
-        "description": "item 10",
-        "amount": 34534,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Home",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T15:32:02.667Z",
-        "updatedAt": "2025-03-01T15:32:02.667Z",
-        "__v": 0
-      },
-      {
-        "_id": "id_11",
-        "description": "item 11",
-        "amount": 453545,
-        "date": "2025-03-01T00:00:00.000Z",
-        "transactionType": "expenses",
-        "category": "Car",
-        "user": "67952bc8edea680fb371e84c",
-        "createdAt": "2025-03-01T15:32:08.498Z",
-        "updatedAt": "2025-03-01T15:32:08.498Z",
-        "__v": 0
       }
     ],
-    "total": 563337
+    "total": 2800
   }
 }

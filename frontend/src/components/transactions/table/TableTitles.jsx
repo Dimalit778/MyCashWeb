@@ -13,7 +13,7 @@ const TableTitles = ({ selectedItems, onDelete, handleSort, sortConfig }) => {
       label: (
         <div className="d-flex align-items-center justify-content-center h-100" style={{ minWidth: "100px" }}>
           <MyButton
-            data-cy="delete-transaction-button"
+            data-cy="delete-transaction-btn"
             onClick={onDelete}
             disabled={selectedItems.length === 0}
             bgColor={selectedItems.length > 0 ? "red" : "transparent"}

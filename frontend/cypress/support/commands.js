@@ -74,22 +74,26 @@ Cypress.Commands.add("setupApiMonitors", () => {
     url: "**/api/transactions/yearly*",
   }).as("yearlyData");
 });
-// Cypress.Commands.add("transactionInterceptor", () => {
-//   cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//   }).as("monthlyData");
+Cypress.Commands.add("transactionInterceptor", (fixturePath = "smallMonthlyData.json") => {
+  cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
+    delete req.headers["if-none-match"];
+    delete req.headers["if-modified-since"];
+    req.reply({
+      statusCode: 200,
+      fixture: fixturePath,
+    });
+  }).as("monthlyData");
 
-//   cy.intercept("POST", "**/api/transactions/add", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//   }).as("addTransaction");
-//   cy.intercept("POST", "**/api/transactions/update", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//   }).as("updateTransaction");
-//   cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
-// });
+  cy.intercept("POST", "**/api/transactions/add", (req) => {
+    delete req.headers["if-none-match"];
+    delete req.headers["if-modified-since"];
+  }).as("addTransaction");
+  cy.intercept("POST", "**/api/transactions/update", (req) => {
+    delete req.headers["if-none-match"];
+    delete req.headers["if-modified-since"];
+  }).as("updateTransaction");
+  cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
+});
 
 // Cypress.Commands.add("getCategoryInterceptor", () => {
 //   cy.intercept({

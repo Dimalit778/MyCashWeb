@@ -2,9 +2,17 @@ import express from "express";
 
 import Category from "../models/categorySchema.js";
 import Transaction from "../models/transactionSchema.js";
+import { seedDatabase } from "../db/seedDataBase.js";
 
 const router = express.Router();
-
+router.post("/seed-all", async (req, res) => {
+  try {
+    await seedDatabase();
+    res.status(200).json({ message: "Database seeded successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 router.post("/seed-transactions", async (req, res) => {
   try {
     const userId = req.user._id;
@@ -15,8 +23,7 @@ router.post("/seed-transactions", async (req, res) => {
 
     const incomeCategories = categories.filter((cat) => cat.type === "incomes");
     const expenseCategories = categories.filter((cat) => cat.type === "expenses");
-    console.log("expenseCategories", expenseCategories);
-    console.log("incomeCategories", incomeCategories);
+
     let transactions = [];
 
     // Helper function to get random date in 2025
@@ -32,7 +39,7 @@ router.post("/seed-transactions", async (req, res) => {
     };
 
     // // Generate 150 expense transactions
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 25; i++) {
       const category = expenseCategories[Math.floor(Math.random() * expenseCategories.length)];
       transactions.push({
         description: `Transaction ${i + 1}`,
@@ -45,7 +52,7 @@ router.post("/seed-transactions", async (req, res) => {
     }
 
     // // Generate 50 income transactions
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 25; i++) {
       const category = incomeCategories[Math.floor(Math.random() * incomeCategories.length)];
       transactions.push({
         description: `Income ${i + 1}`,
@@ -61,6 +68,7 @@ router.post("/seed-transactions", async (req, res) => {
     res.json({
       success: true,
       transactionCount: result.length,
+      transactions: transactions,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

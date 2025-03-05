@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import "./inputStyle.css";
 
-const SelectInput = ({ name, control, label, options, renderOption, rules }) => {
+const SelectInput = ({ name, control, label, options, renderOption, rules, dataCy }) => {
   return (
     <Controller
       name={name}
@@ -12,7 +12,7 @@ const SelectInput = ({ name, control, label, options, renderOption, rules }) => 
       render={({ field, fieldState: { error } }) => (
         <Form.Group>
           <Form.Label>{label}</Form.Label>
-          <Form.Select {...field} isInvalid={!!error} className="bg-dark text-light">
+          <Form.Select data-cy={dataCy} {...field} isInvalid={!!error} className="bg-dark text-light">
             <option value="">Select {label}</option>
             {options.map((option) => {
               const { value, label } = renderOption(option);

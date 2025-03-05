@@ -1,0 +1,513 @@
+{
+  "users": [
+    {
+      "_id": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "cypress@gmail.com",
+      "password": "$2a$10$iwkHfR7cIQzAcR029ZwKseN7VzWKmEGbuSt1ZqCUoUTUx/.lVsICC",
+      "subscription": "free",
+      "role": "user",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzk1MmJjOGVkZWE2ODBmYjM3MWU4NGMiLCJpYXQiOjE3NDExNzczMzAsImV4cCI6MTc0MTc4MjEzMH0.r6fKNdmkC7-rkqpjlX73zOAaPpitUmXz2j1SCoVaJgE",
+      "createdAt": {
+        "$date": "2025-01-25T18:22:00.913Z"
+      },
+      "updatedAt": {
+        "$date": "2025-03-05T12:22:10.568Z"
+      },
+      "__v": 0,
+      "imageUrl": null
+    }
+  ],
+  "categories": [
+    {
+      "_id": {
+        "$oid": "67954718edea680fb371e869"
+      },
+      "user": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "name": "Salary",
+      "type": "incomes",
+      "__v": 0,
+      "createdAt": {
+        "$date": "2025-01-25T20:18:32.712Z"
+      },
+      "updatedAt": {
+        "$date": "2025-01-25T20:18:32.712Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "67954718edea680fb371e86d"
+      },
+      "user": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "name": "Shopping",
+      "type": "expenses",
+      "__v": 0,
+      "createdAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      },
+      "updatedAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "67954718edea680fb371e86b"
+      },
+      "user": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "name": "Home",
+      "type": "expenses",
+      "__v": 0,
+      "createdAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      },
+      "updatedAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "67954718edea680fb371e86a"
+      },
+      "user": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "name": "Investments",
+      "type": "incomes",
+      "__v": 0,
+      "createdAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      },
+      "updatedAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "67954718edea680fb371e86c"
+      },
+      "user": {
+        "$oid": "67952bc8edea680fb371e84c"
+      },
+      "name": "Car",
+      "type": "expenses",
+      "__v": 0,
+      "createdAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      },
+      "updatedAt": {
+        "$date": "2025-01-25T20:18:32.713Z"
+      }
+    }
+  ],
+  "transactions": [
+    {
+      "description": "Transaction 1",
+      "amount": 4873,
+      "date": "2025-01-16T14:07:09.555Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 2",
+      "amount": 4614,
+      "date": "2025-04-01T05:24:51.637Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 3",
+      "amount": 4250,
+      "date": "2025-09-06T14:02:47.227Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 4",
+      "amount": 1788,
+      "date": "2025-12-12T21:49:11.728Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 5",
+      "amount": 886,
+      "date": "2025-03-14T09:54:17.814Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 6",
+      "amount": 3245,
+      "date": "2025-03-06T13:47:31.627Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 7",
+      "amount": 1361,
+      "date": "2025-03-05T23:22:38.152Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 8",
+      "amount": 1005,
+      "date": "2025-01-18T04:24:51.583Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 9",
+      "amount": 1744,
+      "date": "2025-12-19T23:24:28.145Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 10",
+      "amount": 4487,
+      "date": "2025-01-11T05:02:18.823Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 11",
+      "amount": 3255,
+      "date": "2025-02-23T16:14:55.453Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 12",
+      "amount": 1224,
+      "date": "2025-06-21T16:02:48.977Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 13",
+      "amount": 1841,
+      "date": "2025-06-02T14:44:56.064Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 14",
+      "amount": 2484,
+      "date": "2025-08-28T17:25:06.138Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 15",
+      "amount": 4860,
+      "date": "2025-09-16T09:40:44.889Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 16",
+      "amount": 335,
+      "date": "2025-04-02T01:19:05.278Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 17",
+      "amount": 489,
+      "date": "2025-04-20T17:09:36.600Z",
+      "transactionType": "expenses",
+      "category": "Shopping",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 18",
+      "amount": 2549,
+      "date": "2025-01-01T09:41:11.784Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 19",
+      "amount": 4042,
+      "date": "2025-01-31T04:15:35.572Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 20",
+      "amount": 3044,
+      "date": "2025-08-14T04:22:31.453Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 21",
+      "amount": 2490,
+      "date": "2025-08-13T13:04:47.986Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 22",
+      "amount": 4650,
+      "date": "2025-04-20T07:59:56.089Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 23",
+      "amount": 3514,
+      "date": "2025-04-05T04:26:34.593Z",
+      "transactionType": "expenses",
+      "category": "Car",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 24",
+      "amount": 2499,
+      "date": "2025-08-02T05:16:51.783Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Transaction 25",
+      "amount": 1293,
+      "date": "2025-04-28T20:12:54.577Z",
+      "transactionType": "expenses",
+      "category": "Home",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 1",
+      "amount": 5672,
+      "date": "2025-05-18T02:27:05.624Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 2",
+      "amount": 5147,
+      "date": "2025-10-01T00:42:56.838Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 3",
+      "amount": 5279,
+      "date": "2025-01-05T09:15:41.977Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 4",
+      "amount": 8890,
+      "date": "2025-04-21T17:15:56.991Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 5",
+      "amount": 4507,
+      "date": "2025-11-09T16:40:20.071Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 6",
+      "amount": 7571,
+      "date": "2025-10-16T10:04:28.486Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 7",
+      "amount": 6615,
+      "date": "2025-04-14T20:00:08.995Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 8",
+      "amount": 7455,
+      "date": "2025-12-23T22:29:05.538Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 9",
+      "amount": 6812,
+      "date": "2025-04-12T12:03:54.243Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 10",
+      "amount": 6182,
+      "date": "2025-03-20T17:43:28.182Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 11",
+      "amount": 5412,
+      "date": "2025-09-28T19:23:34.788Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 12",
+      "amount": 4053,
+      "date": "2025-06-11T03:11:20.524Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 13",
+      "amount": 6018,
+      "date": "2025-09-22T12:14:46.302Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 14",
+      "amount": 9878,
+      "date": "2025-06-24T20:10:07.800Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 15",
+      "amount": 3707,
+      "date": "2025-05-03T18:20:12.040Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 16",
+      "amount": 4301,
+      "date": "2025-07-10T15:16:17.810Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 17",
+      "amount": 9868,
+      "date": "2025-06-02T05:52:33.927Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 18",
+      "amount": 7192,
+      "date": "2025-01-29T05:39:29.333Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 19",
+      "amount": 9290,
+      "date": "2025-03-09T08:19:21.914Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 20",
+      "amount": 9222,
+      "date": "2025-10-02T11:28:52.462Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 21",
+      "amount": 4046,
+      "date": "2025-11-04T21:20:38.440Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 22",
+      "amount": 9499,
+      "date": "2025-09-28T22:29:34.723Z",
+      "transactionType": "incomes",
+      "category": "Investments",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 23",
+      "amount": 3064,
+      "date": "2025-10-22T01:19:31.516Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 24",
+      "amount": 9789,
+      "date": "2025-08-30T12:38:28.392Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    },
+    {
+      "description": "Income 25",
+      "amount": 9612,
+      "date": "2025-03-24T03:57:21.384Z",
+      "transactionType": "incomes",
+      "category": "Salary",
+      "user": "67952bc8edea680fb371e84c"
+    }
+  ]
+}

@@ -3,7 +3,9 @@ import { isPlatformMobile } from "utils/paltformUtils";
 import { tokenStorage } from "utils/tokenStorage";
 
 // const BASE_URL = "https://mycashserver.onrender.com";
-const BASE_URL = "http://localhost:5000";
+const BASE_URL =
+  process.env.REACT_APP_ENVIRONMENT === "test" ? process.env.REACT_APP_TEST_API_URL : process.env.REACT_APP_API_URL;
+
 const isMobile = isPlatformMobile();
 
 const baseQuery = fetchBaseQuery({

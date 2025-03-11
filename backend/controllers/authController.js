@@ -56,7 +56,7 @@ const signup = asyncHandler(async (req, res) => {
             ...user._doc,
           },
         },
-        "User created successfully"
+        "User successfully created"
       )
     );
   } catch (error) {
@@ -81,12 +81,12 @@ const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new ApiError(404, "User not found");
+    throw new ApiError(404, "Invalid Email or Password");
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid credentials");
+    throw new ApiError(401, "Invalid Email or Password");
   }
 
   const { accessToken, refreshToken } = await generateTokenAndSetCookie(user._id);

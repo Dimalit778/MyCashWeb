@@ -1,5 +1,6 @@
 describe("Login Page", () => {
   beforeEach(() => {
+    cy.task("db:seed");
     cy.visit("/login");
   });
 

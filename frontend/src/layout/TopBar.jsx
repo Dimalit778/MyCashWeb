@@ -22,7 +22,7 @@ const TopBar = ({ className }) => {
   };
   return (
     <Navbar
-      data-cy="topBar"
+      data-cy="top-bar"
       expand="lg"
       className={`${className}  `}
       style={{

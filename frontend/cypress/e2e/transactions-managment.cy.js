@@ -2,7 +2,7 @@ describe("Transactions Management", () => {
   before(() => {
     cy.clearDatabase();
     cy.seedDatabase({
-      count: 5,
+      count: 25,
       type: "expenses",
       targetMonth: new Date().getMonth(),
     });

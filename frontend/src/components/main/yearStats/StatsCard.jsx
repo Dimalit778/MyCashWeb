@@ -18,10 +18,8 @@ const StatsCard = ({ dataCy, title, amount, isBalance = false, isPositive = fals
         transition: "all 0.3s ease",
       }}
     >
-      <div className="d-flex flex-column">
-        <h3 data-cy={`${dataCy}-title`} className="text-uppercase text-dark">
-          {title}
-        </h3>
+      <div data-cy={`${dataCy}`} className="d-flex flex-column">
+        <h3 className="text-uppercase text-dark">{title}</h3>
         <h5
           data-cy={`${dataCy}-amount`}
           data-amount={amount}

@@ -6,10 +6,8 @@ Cypress.Commands.add("seedDatabase", (options = {}) => {
 Cypress.Commands.add("clearDatabase", () => {
   cy.task("db:clear");
 });
-Cypress.Commands.add("loginWithTestUser", () => {
+Cypress.Commands.add("loginTestUser", () => {
   const apiUrl = Cypress.env("API_URL");
-  console.log("Using API URL:", apiUrl); // Debug log
-
   cy.request({
     method: "POST",
     url: `${apiUrl}/api/auth/login`,
@@ -32,6 +30,24 @@ Cypress.Commands.add("loginWithTestUser", () => {
         })
       );
     });
+  });
+});
+Cypress.Commands.add("saveFakeUser", () => {
+  const user = {
+    firstName: "Cypress",
+    lastName: "Test",
+    email: "cypress@gmail.com",
+  };
+  cy.setCookie("token", "fakeToken");
+
+  // Set up Redux store
+  cy.window().then((win) => {
+    win.localStorage.setItem(
+      "persist:root",
+      JSON.stringify({
+        user: JSON.stringify({ user }),
+      })
+    );
   });
 });
 // Login User with real Api Call

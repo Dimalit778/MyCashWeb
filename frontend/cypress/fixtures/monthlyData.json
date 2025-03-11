@@ -52,6 +52,18 @@
         "createdAt": "2025-03-01T14:24:07.986Z",
         "updatedAt": "2025-03-01T14:24:07.986Z",
         "__v": 0
+      },
+      {
+        "_id": "id_5",
+        "description": "item 5",
+        "amount": 800,
+        "date": "2025-03-01T00:00:00.000Z",
+        "transactionType": "expenses",
+        "category": "Home",
+        "user": "67952bc8edea680fb371e84c",
+        "createdAt": "2025-03-01T14:24:07.986Z",
+        "updatedAt": "2025-03-01T14:24:07.986Z",
+        "__v": 0
       }
     ],
     "total": 2800

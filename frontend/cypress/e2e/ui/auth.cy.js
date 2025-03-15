@@ -18,7 +18,7 @@ describe("User Sign-up and Login", () => {
     cy.visit("/");
     cy.location("pathname").should("equal", "/home");
   });
-  it.only('should switch between "Login" and "Sign-up" forms', () => {
+  it('should switch between "Login" and "Sign-up" forms', () => {
     cy.getDataCy("signup-link").should("be.visible").click();
     cy.url().should("include", "/signup");
     cy.getDataCy("login-link").should("be.visible").click();

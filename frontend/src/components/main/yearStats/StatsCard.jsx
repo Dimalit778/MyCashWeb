@@ -21,7 +21,6 @@ const StatsCard = ({ dataCy, title, amount, isBalance = false, isPositive = fals
       <div data-cy={`${dataCy}`} className="d-flex flex-column">
         <h3 className="text-uppercase text-dark">{title}</h3>
         <h5
-          data-cy={`${dataCy}-amount`}
           data-amount={amount}
           className="mb-0"
           style={{

@@ -1,8 +1,16 @@
-import { navLinks } from "../../support/utils/navLinks";
-
+const navLinks = [
+  { name: "Expenses", route: "/transactions/expenses" },
+  { name: "Incomes", route: "/transactions/incomes" },
+  { name: "Contact", route: "/contact" },
+  { name: "Settings", route: "/settings" },
+  { name: "Home", route: "/home" },
+];
 describe("Main Layout", () => {
   beforeEach(() => {
-    cy.loginUser();
+    cy.task("db:clear");
+    cy.task("db:seed");
+    cy.loginTestUser();
+
     cy.visit("/home");
   });
 
@@ -13,14 +21,14 @@ describe("Main Layout", () => {
 
     it("should display correct layout and sidebar elements", () => {
       cy.getDataCy("left-sidebar-container").should("be.visible");
-      cy.getDataCy("topBar").should("not.be.visible");
+      cy.getDataCy("top-bar").should("not.be.visible");
       cy.getDataCy("bottom-nav").should("not.be.visible");
       cy.getDataCy("main-layout-outlet").should("be.visible");
 
       cy.getDataCy("left-sidebar").within(() => {
         cy.getDataCy("brand-logo").should("be.visible");
         cy.getDataCy("profile-image-container").should("be.visible");
-        cy.getDataCy("user-name").should("be.visible").and("contain", "user test");
+        cy.getDataCy("user-name").should("be.visible").and("contain", "Test User");
         cy.getDataCy("user-email").should("be.visible").and("contain", "cypress@gmail.com");
 
         navLinks.forEach((link) => {
@@ -54,11 +62,11 @@ describe("Main Layout", () => {
 
     it("should display correct mobile layout elements", () => {
       cy.getDataCy("left-sidebar-container").should("not.be.visible");
-      cy.getDataCy("topBar").should("be.visible");
+      cy.getDataCy("top-bar").should("be.visible");
       cy.getDataCy("bottom-nav").should("be.visible");
       cy.getDataCy("main-layout-outlet").should("be.visible");
 
-      cy.getDataCy("topBar").within(() => {
+      cy.getDataCy("top-bar").within(() => {
         cy.getDataCy("app-logo-link-to-home").should("be.visible");
         cy.getDataCy("top-bar-profile-image").should("be.visible");
         cy.getDataCy("top-bar-logout-button").should("be.visible");

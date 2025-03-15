@@ -6,9 +6,10 @@ describe("Transactions Management", () => {
     cy.task("db:seed", { count: 25 });
     cy.loginTestUser();
     cy.visit("/home");
+    cy.wait("@yearlyData");
   });
   it("should display yearly stats with correct data", () => {
-    cy.wait("@yearlyData")
+    cy.get("@yearlyData")
       .its("response.body.data")
       .then((data) => {
         cy.getDataCy("year-stats").should("be.visible");
@@ -29,7 +30,38 @@ describe("Transactions Management", () => {
         });
 
         // Check for chart/graph elements
-        // cy.get(".recharts-responsive-container").should("exist");
+        cy.getDataCy("year-chart").should("exist");
+      });
+  });
+  it("should navigate next Year when clicking '>' button", () => {
+    cy.getDataCy("year-display")
+      .invoke("text")
+      .then((text) => {
+        let currentYear = parseInt(text.trim());
+        cy.getDataCy("year-next-btn").click();
+
+        cy.wait("@yearlyData").then((interception) => {
+          const url = new URL(interception.request.url);
+          const year = url.searchParams.get("year");
+          expect(parseInt(year)).to.equal(currentYear + 1);
+        });
+        cy.getDataCy("year-display").should("contain", currentYear + 1);
+      });
+  });
+
+  it("should navigate to previous Year when clicking '<' button", () => {
+    cy.getDataCy("year-display")
+      .invoke("text")
+      .then((text) => {
+        let currentYear = parseInt(text.trim());
+        cy.getDataCy("year-prev-btn").click();
+
+        cy.wait("@yearlyData").then((interception) => {
+          const url = new URL(interception.request.url);
+          const year = url.searchParams.get("year");
+          expect(parseInt(year)).to.equal(currentYear - 1);
+        });
+        cy.getDataCy("year-display").should("contain", currentYear - 1);
       });
   });
 });

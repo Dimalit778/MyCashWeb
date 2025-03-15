@@ -1,4 +1,4 @@
-import { isMobile } from "../../support/utils";
+import { isMobile } from "../support/utils";
 
 describe("app layout and responsiveness", () => {
   beforeEach(() => {

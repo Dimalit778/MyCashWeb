@@ -32,7 +32,6 @@ const baseQuery = fetchBaseQuery({
 const customBaseQuery = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  // Handle token refresh for mobile
   if (isMobile && result.meta?.response?.headers) {
     const newToken = result.meta.response.headers.get("mobileToken");
     if (newToken) {

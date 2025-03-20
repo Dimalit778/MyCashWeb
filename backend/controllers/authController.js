@@ -1,9 +1,10 @@
 import User from "../models/userSchema.js";
+import Category from "../models/categorySchema.js";
 
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { customUserFields } from "../utils/customUserFileds.js";
+import { customUserFields } from "../utils/customUserFields.js";
 
 const generateTokenAndSetCookie = async (userId) => {
   try {
@@ -46,7 +47,13 @@ const signup = asyncHandler(async (req, res) => {
       password,
     });
 
-    await user.save();
+    const newUser = await user.save();
+    await Category.insertMany([
+      { user: newUser._id, name: "Home", type: "expenses" },
+      { user: newUser._id, name: "Other", type: "expenses" },
+      { user: newUser._id, name: "Job", type: "incomes" },
+      { user: newUser._id, name: "Other", type: "incomes" },
+    ]);
 
     return res.status(201).json(
       new ApiResponse(

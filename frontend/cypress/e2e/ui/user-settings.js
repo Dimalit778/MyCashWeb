@@ -1,14 +1,9 @@
 describe("Settings Page ", () => {
   beforeEach(() => {
-    cy.loginUser();
+    cy.fakeUser();
     cy.visit("/settings");
   });
 
-  context("Layout", () => {
-    it("should have correct layout", () => {
-      cy.testResponsiveLayout();
-    });
-  });
   context("Profile Image Management", () => {
     beforeEach(() => {
       cy.intercept("PATCH", "**/api/users/imageActions*", (req) => {

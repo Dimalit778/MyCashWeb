@@ -13,16 +13,13 @@ export const getYearlyData = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Year is required");
   }
 
-  const startDate = new Date(`${year}-01-01`);
-  const endDate = new Date(`${year}-12-31`);
-
+  const yearNum = parseInt(year);
   const result = await Transaction.aggregate([
     {
       $match: {
         user: userId,
-        date: {
-          $gte: startDate,
-          $lte: endDate,
+        $expr: {
+          $and: [{ $eq: [{ $year: "$date" }, yearNum] }],
         },
       },
     },
@@ -36,7 +33,6 @@ export const getYearlyData = asyncHandler(async (req, res) => {
             },
           },
         ],
-        // Calculate monthly breakdowns
         monthlyStats: [
           {
             $group: {
@@ -47,50 +43,62 @@ export const getYearlyData = asyncHandler(async (req, res) => {
               total: { $sum: "$amount" },
             },
           },
+          { $sort: { "_id.month": 1 } },
         ],
-      },
-    },
-    {
-      $project: {
-        yearlyTotals: 1,
-        monthlyStats: 1,
       },
     },
   ]);
 
-  // Process the aggregation results
-  const yearlyTotals = result[0].yearlyTotals.reduce(
-    (acc, curr) => {
-      if (curr._id === "incomes") acc.totalIncomes = curr.total;
-      if (curr._id === "expenses") acc.totalExpenses = curr.total;
-      return acc;
-    },
-    { totalIncomes: 0, totalExpenses: 0 }
-  );
-  // Calculate balance
-  const balance = yearlyTotals.totalIncomes - yearlyTotals.totalExpenses;
-  yearlyTotals.totalBalance = balance < 0 ? -Math.abs(balance) : balance;
+  // Create an object with defaulted values for both expense and income types
+  const yearlyTotals = {
+    totalIncomes: 0,
+    totalExpenses: 0,
+    totalBalance: 0,
+  };
 
-  // Create an array for all 12 months with default values
+  // Process yearly totals
+  result[0].yearlyTotals.forEach((item) => {
+    if (item._id === "incomes") yearlyTotals.totalIncomes = item.total;
+    if (item._id === "expenses") yearlyTotals.totalExpenses = item.total;
+  });
+
+  // Calculate balance (improved sign handling)
+  yearlyTotals.totalBalance = yearlyTotals.totalIncomes - yearlyTotals.totalExpenses;
+
+  // More efficient monthly stats creation
   const monthlyStats = Array.from({ length: 12 }, (_, i) => ({
     month: i + 1,
     totalIncomes: 0,
     totalExpenses: 0,
+    balance: 0,
   }));
 
   // Fill in the actual values from the aggregation
   result[0].monthlyStats.forEach((stat) => {
     const monthIndex = stat._id.month - 1;
-    if (stat._id.transactionType === TRANSACTION_TYPES.INCOME) {
+    if (stat._id.transactionType === "incomes") {
       monthlyStats[monthIndex].totalIncomes = stat.total;
-    } else if (stat._id.transactionType === TRANSACTION_TYPES.EXPENSE) {
+    } else if (stat._id.transactionType === "expenses") {
       monthlyStats[monthIndex].totalExpenses = stat.total;
     }
   });
+
+  monthlyStats.forEach((month) => {
+    month.balance = month.totalIncomes - month.totalExpenses;
+  });
+
   return res.json(
-    new ApiResponse(200, { yearlyStats: yearlyTotals, monthlyStats }, "Yearly data retrieved successfully")
+    new ApiResponse(
+      200,
+      {
+        yearlyStats: yearlyTotals,
+        monthlyStats,
+      },
+      "Yearly data retrieved successfully"
+    )
   );
 });
+
 export const getMonthlyData = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { year, month, type } = req.query;
@@ -99,19 +107,17 @@ export const getMonthlyData = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Year, month, and type parameters are required");
   }
 
-  const dateStart = new Date(`${year}-${month}-01`);
-  const dateEnd = new Date(`${year}-${month}-31`);
+  const yearNum = parseInt(year);
+  const monthNum = parseInt(month) + 1;
 
-  // Get transactions with populated category
   const transactions = await Transaction.find({
     user: userId,
     transactionType: type,
-    date: {
-      $gte: dateStart,
-      $lte: dateEnd,
+    $expr: {
+      $and: [{ $eq: [{ $year: "$date" }, yearNum] }, { $eq: [{ $month: "$date" }, monthNum] }],
     },
   })
-    .populate("category", "description type") // Get category details
+    .populate("category", "description type")
     .lean();
 
   const total = transactions.reduce((sum, t) => sum + t.amount, 0);
@@ -123,7 +129,7 @@ export const getMonthlyData = asyncHandler(async (req, res) => {
         transactions,
         total,
       },
-      "Monthly data retrieved successfully"
+      "Monthly Transactions retrieved successfully"
     )
   );
 });
@@ -200,7 +206,6 @@ export const updateTransaction = asyncHandler(async (req, res) => {
   }
 
   let updateData = { description, amount, date };
-  console.log("updateData", updateData);
 
   if (category) {
     const categoryToUpdate = await Category.findOne({ user: userId, type: type, name: category });

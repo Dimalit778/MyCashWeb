@@ -28,7 +28,7 @@ const Transaction = () => {
   } = useGetMonthlyTransactionsQuery({
     type,
     year: date.getFullYear(),
-    month: date.getMonth() + 1,
+    month: date.getMonth(),
   });
 
   const {

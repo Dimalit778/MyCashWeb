@@ -7,10 +7,41 @@ const navLinks = [
 ];
 describe("Main Layout", () => {
   beforeEach(() => {
-    cy.task("db:clear");
-    cy.task("db:seed");
-    cy.loginTestUser();
+    cy.intercept("GET", "**/api/transactions/yearly*", {
+      statusCode: 200,
+      body: {
+        data: {
+          monthlyStats: [],
+          yearlyStats: {
+            totalExpenses: 0,
+            totalIncomes: 0,
+            totalBalance: 0,
+          },
+        },
+      },
+    }).as("yearlyData");
 
+    cy.intercept("GET", "**/api/transactions/monthly*", {
+      statusCode: 200,
+      body: {
+        data: {
+          transactions: [],
+          total: 0,
+        },
+      },
+    }).as("monthlyData");
+
+    cy.intercept("GET", "**/api/categories/get*", {
+      statusCode: 200,
+      body: {
+        data: {
+          categories: [],
+          maxCategories: 10,
+        },
+      },
+    }).as("categoriesData");
+
+    cy.fakeUser();
     cy.visit("/home");
   });
 

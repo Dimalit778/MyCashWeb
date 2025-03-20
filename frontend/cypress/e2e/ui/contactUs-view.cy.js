@@ -1,6 +1,6 @@
 describe("Contact Page", () => {
   beforeEach(() => {
-    cy.saveFakeUser();
+    cy.fakeUser();
     cy.visit("/contact");
     cy.url().should("include", "/contact");
   });

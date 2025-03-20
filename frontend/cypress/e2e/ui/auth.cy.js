@@ -1,9 +1,13 @@
 import { isMobile } from "../../support/utils";
 
 describe("User Sign-up and Login", () => {
-  beforeEach(() => {
-    cy.task("db:clear");
+  before(() => {
     cy.task("db:seed");
+  });
+  after(() => {
+    cy.task("db:clear");
+  });
+  beforeEach(() => {
     cy.intercept("POST", "**/api/auth/login").as("login");
     cy.intercept("POST", "**/api/auth/signup").as("signup");
     cy.visit("/");
@@ -16,7 +20,7 @@ describe("User Sign-up and Login", () => {
   it("should redirect to the home page after login", () => {
     cy.loginTestUser();
     cy.visit("/");
-    cy.location("pathname").should("equal", "/home");
+    cy.url().should("include", "/home");
   });
   it('should switch between "Login" and "Sign-up" forms', () => {
     cy.getDataCy("signup-link").should("be.visible").click();

@@ -2,7 +2,12 @@ import Category from "./../models/categorySchema.js";
 import Transaction from "./../models/transactionSchema.js";
 import { faker } from "@faker-js/faker";
 
-const seedUserWithTransactions = async (user, count, targetMonth, type) => {
+const seedUserWithTransactions = async (user, count, dateStr, type) => {
+  console.log("seedUserWithTransactions", dateStr);
+  const date = dateStr ? new Date(dateStr) : new Date();
+  const targetMonth = date.getMonth();
+  const targetYear = date.getFullYear();
+
   try {
     let categories = await Category.find({ user: user._id });
 
@@ -16,7 +21,6 @@ const seedUserWithTransactions = async (user, count, targetMonth, type) => {
     }
 
     const transactions = [];
-    const currentDate = new Date();
 
     const filteredCategories = type ? categories.filter((category) => category.type === type) : categories;
 
@@ -29,14 +33,13 @@ const seedUserWithTransactions = async (user, count, targetMonth, type) => {
 
       const typeCategories = categories.filter((cat) => cat.type === transactionType);
 
-      // Select a random category from the available ones
       const randomIndex = Math.floor(Math.random() * typeCategories.length);
       const selectedCategory = typeCategories[randomIndex];
 
-      const day = Math.floor(Math.random() * 27) + 1;
+      const day = Math.floor(Math.random() * 28) + 1;
       const month = targetMonth !== undefined ? targetMonth : Math.floor(Math.random() * 12);
 
-      const transactionDate = new Date(currentDate.getFullYear(), month, day);
+      const transactionDate = new Date(targetYear, month, day);
 
       transactions.push({
         description: faker.lorem.sentence({ min: 1, max: 3 }),

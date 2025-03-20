@@ -7,7 +7,7 @@ import handleProfileImage from "../utils/handleProfileImage.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { customUserFields } from "../utils/customUserFileds.js";
+import { customUserFields } from "../utils/customUserFields.js";
 const getUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 

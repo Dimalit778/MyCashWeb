@@ -27,6 +27,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const unauthorizedMiddleware = (store) => (next) => (action) => {
   // Check for unauthorized error in RTK Query actions
   if (action?.payload?.status === 401 || action?.error?.status === 401) {
+    console.log("Unauthorized error");
     store.dispatch(clearUser());
     storage.removeItem("persist:root");
   }

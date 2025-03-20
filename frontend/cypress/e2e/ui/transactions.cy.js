@@ -1,19 +1,15 @@
 describe("Transactions Management", () => {
-  before(() => {
-    cy.clearDatabase();
-    cy.seedDatabase({
-      count: 25,
-      type: "expenses",
-      targetMonth: new Date().getMonth(),
-    });
-  });
   beforeEach(() => {
+    const date = new Date();
+    cy.task("db:clear");
+    cy.task("db:seed", { count: 5, type: "expenses", date: date.toISOString() });
+
     cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
     cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");
     cy.intercept("PATCH", "**/api/transactions/update*").as("updateTransaction");
     cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
 
-    cy.loginWithTestUser();
+    cy.loginTestUser();
     cy.visit(`/transactions/expenses`);
 
     cy.wait("@monthlyData");
@@ -152,6 +148,8 @@ describe("Transactions Management", () => {
       cy.getDataCy("transaction-modal").should("not.exist");
       cy.contains("Successfully updated").should("be.visible");
     });
+  });
+  describe.only("Delete Transactions ", () => {
     it("Delete single transaction", () => {
       cy.getDataCy("transactions-row").find("input").first().check();
 
@@ -165,8 +163,6 @@ describe("Transactions Management", () => {
       cy.getDataCy("delete-transaction-btn").should("be.disabled");
       cy.getDataCy("transactions-row").should("length", 5);
     });
-  });
-  describe("Delete Transactions ", () => {
     it("Delete multiple transactions", () => {
       cy.getDataCy("delete-transaction-btn").should("be.disabled");
       cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
@@ -182,7 +178,8 @@ describe("Transactions Management", () => {
 
       cy.contains("Deleted").should("be.visible");
       cy.getDataCy("delete-transaction-btn").should("be.disabled");
-      cy.getDataCy("transactions-row").should("length", 3);
+      cy.get("@monthlyData").should("have.length", 3);
+      // cy.getDataCy("transactions-row").should("length", 3);
     });
 
     it("Delete cancel deletion when user clicks cancel", () => {

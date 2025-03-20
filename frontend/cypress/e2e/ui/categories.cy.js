@@ -1,13 +1,19 @@
 describe("Transaction Categories", () => {
   beforeEach(() => {
-    cy.intercept("GET", "**/api/categories/get*", { fixture: "categoriesData" }).as("getCategories");
-    cy.loginUser();
+    cy.task("db:clear");
+    cy.task("db:seed", { type: "expenses" });
+
+    cy.intercept("GET", "**/api/categories/get*").as("categories");
+    cy.intercept("POST", "**/api/categories/add*").as("addCategory");
+    cy.intercept("DELETE", "**/api/categories/delete/*").as("deleteCategory");
+
+    cy.loginTestUser();
     cy.visit("/transactions/expenses");
-    cy.wait("@getCategories");
+    cy.wait("@categories");
   });
 
   it("displays all categories correctly", () => {
-    cy.get("@getCategories").then((response) => {
+    cy.get("@categories").then((response) => {
       const { categories, maxCategories } = response.response.body.data;
       cy.getDataCy("categories-max").should("have.text", `${categories.length} / ${maxCategories}`);
       cy.getDataCy("category-item").should("have.length", categories.length);
@@ -19,31 +25,6 @@ describe("Transaction Categories", () => {
   });
 
   it("adds a new category successfully", () => {
-    cy.intercept("POST", "**/api/categories/add", {
-      statusCode: 200,
-      body: {
-        data: {
-          _id: "cat5",
-          name: "Entertainment",
-          isDefault: false,
-        },
-      },
-    }).as("addCategory");
-    cy.intercept("GET", "**/api/categories/get*", {
-      statusCode: 200,
-      body: {
-        data: {
-          categories: [
-            { _id: "cat1", name: "Home", isDefault: true },
-            { _id: "cat2", name: "Shopping", isDefault: false },
-            { _id: "cat3", name: "Car", isDefault: false },
-            { _id: "cat4", name: "Food", isDefault: false },
-          ],
-          maxCategories: 5,
-        },
-      },
-    }).as("getUpdatedCategories");
-
     cy.getDataCy("category-input").type("Entertainment");
 
     cy.getDataCy("submit-category").click();
@@ -52,7 +33,7 @@ describe("Transaction Categories", () => {
 
     cy.contains("Category added successfully").should("be.visible");
 
-    cy.wait("@getUpdatedCategories").then((response) => {
+    cy.wait("@categories").then((response) => {
       const { categories, maxCategories } = response.response.body.data;
       cy.getDataCy("categories-max").should("have.text", `${categories.length} / ${maxCategories}`);
       cy.getDataCy("category-item").should("have.length", categories.length);
@@ -60,27 +41,6 @@ describe("Transaction Categories", () => {
   });
 
   it("deletes a category with confirmation", () => {
-    cy.intercept("DELETE", "**/api/categories/delete/*", {
-      statusCode: 200,
-      body: {
-        success: true,
-        message: "Category deleted successfully",
-      },
-    }).as("deleteCategory");
-    cy.intercept("GET", "**/api/categories/get*", {
-      statusCode: 200,
-      body: {
-        data: {
-          categories: [
-            { _id: "cat1", name: "Home", isDefault: true },
-            { _id: "cat3", name: "Car", isDefault: false },
-            { _id: "cat4", name: "Food", isDefault: false },
-          ],
-          maxCategories: 10,
-        },
-      },
-    }).as("getUpdatedCategories");
-
     cy.getDataCy("category-item").last().find("button").click();
 
     cy.get(".swal2-confirm").click();
@@ -88,14 +48,15 @@ describe("Transaction Categories", () => {
     cy.wait("@deleteCategory");
     cy.contains("Category deleted successfully").should("be.visible");
 
-    cy.wait("@getUpdatedCategories").then((response) => {
+    cy.wait("@categories").then((response) => {
       const { categories, maxCategories } = response.response.body.data;
       cy.getDataCy("categories-max").should("have.text", `${categories.length} / ${maxCategories}`);
       cy.getDataCy("category-item").should("have.length", categories.length);
     });
   });
   it("close delete confirmation modal", () => {
-    cy.get("@getCategories").then((response) => {
+    cy.get("@categories").then((response) => {
+      console.log("response", response);
       const { categories, maxCategories } = response.response.body.data;
       cy.getDataCy("category-item").last().find("button").click();
       cy.get(".swal2-cancel").click();
@@ -105,7 +66,6 @@ describe("Transaction Categories", () => {
   });
 
   it("displays validation error for empty category name", () => {
-    //Empty input error
     cy.getDataCy("submit-category").click();
     cy.getDataCy("error-message").should("be.visible");
     cy.getDataCy("error-message").should("contain", "Category name is required");

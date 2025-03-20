@@ -11,9 +11,11 @@ describe("Month Calendar Navigation", () => {
         },
       },
     }).as("monthlyData");
+    cy.intercept("GET", "**/api/categories/get*", { fixture: "categoriesData" }).as("categories");
 
-    cy.loginUser();
-    cy.visit("/transactions/expenses");
+    cy.fakeUser();
+    cy.visit(`/transactions/expenses`);
+    cy.url().should("include", "/transactions/expenses");
   });
 
   it("Open and Close months overlay when clicking the calendar title", () => {
@@ -26,7 +28,7 @@ describe("Month Calendar Navigation", () => {
     ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((month) => {
       cy.contains(month).should("be.visible");
     });
-    //close the months overlay
+
     cy.getDataCy("calendar-title").click();
     cy.getDataCy("months-overlay").should("not.exist");
   });
@@ -42,9 +44,9 @@ describe("Month Calendar Navigation", () => {
       const url = new URL(interception.request.url);
       const month = url.searchParams.get("month");
       const year = url.searchParams.get("year");
-      const dateString = format(new Date(year, month - 1), "MMMM yyyy");
+      const dateString = format(new Date(year, month), "MMMM yyyy");
 
-      expect(month).to.equal("8");
+      expect(month).to.equal("7");
       expect(year).to.equal("2025");
 
       cy.getDataCy("calendar-title").should("contain", dateString);
@@ -62,15 +64,16 @@ describe("Month Calendar Navigation", () => {
       const url = new URL(interception.request.url);
       const month = url.searchParams.get("month");
       const year = url.searchParams.get("year");
-      const dateString = format(new Date(year, month - 1), "MMMM yyyy");
+      const dateString = format(new Date(year, month), "MMMM yyyy");
 
-      expect(month).to.equal((currentMonth + 1).toString());
+      expect(month).to.equal(currentMonth.toString());
 
       cy.getDataCy("calendar-title").should("contain", dateString);
     });
   });
   it("Should navigate to Previous Month", () => {
-    const currentMonth = new Date().getMonth() + 1;
+    const currentMonth = new Date().getMonth() - 1;
+    console.log("currentMonth", currentMonth);
 
     cy.getDataCy("calendar-title").should("be.visible");
     cy.getDataCy("calendar-prev-button").should("be.visible").click();
@@ -79,9 +82,10 @@ describe("Month Calendar Navigation", () => {
       const url = new URL(interception.request.url);
       const month = url.searchParams.get("month");
       const year = url.searchParams.get("year");
-      const dateString = format(new Date(year, month - 1), "MMMM yyyy");
+      const dateString = format(new Date(year, month), "MMMM yyyy");
+      console.log("month", month);
 
-      expect(month).to.equal((currentMonth - 1).toString());
+      expect(month).to.equal(currentMonth.toString());
       cy.getDataCy("calendar-title").should("contain", dateString);
     });
   });

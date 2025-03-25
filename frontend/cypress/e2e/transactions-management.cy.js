@@ -1,12 +1,11 @@
 describe("Transactions Management", () => {
   before(() => {
-    cy.task("db:seedUser");
+    cy.task("db:clear-db");
+    cy.task("db:seed-user");
   });
-  after(() => {
-    cy.task("db:clear");
-  });
+
   beforeEach(() => {
-    cy.task("db:seedTransactions", { count: 3, type: "expenses", monthly: true });
+    cy.task("db:seed-transactions", { count: 3, type: "expenses", monthly: true });
 
     cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
     cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");

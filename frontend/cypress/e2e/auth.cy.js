@@ -1,12 +1,6 @@
-import { isMobile } from "../../support/utils";
+import { isMobile } from "../support/utils";
 
 describe("User Sign-up and Login", () => {
-  before(() => {
-    cy.task("db:seed");
-  });
-  after(() => {
-    cy.task("db:clear");
-  });
   beforeEach(() => {
     cy.intercept("POST", "**/api/auth/login").as("login");
     cy.intercept("POST", "**/api/auth/signup").as("signup");

@@ -1,11 +1,11 @@
 import express from "express";
-import { clearDb, seedTransactions, seedUserWithCategories } from "../controllers/seedDbController.js";
+import { seedClearDb, seedTransactions, seedUserWithCategories } from "../controllers/seedDbController.js";
 
 const router = express.Router();
 
 router
   .post("/userAndCategories", seedUserWithCategories)
   .post("/transactions", seedTransactions)
-  .delete("/clear", clearDb);
+  .delete("/clear", seedClearDb);
 
 export default router;

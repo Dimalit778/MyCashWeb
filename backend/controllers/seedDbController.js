@@ -5,10 +5,6 @@ import Transaction from "./../models/transactionSchema.js";
 import User from "./../models/userSchema.js";
 
 const seedUserWithCategories = asyncHandler(async (req, res) => {
-  await Category.deleteMany({});
-  await Transaction.deleteMany({});
-  await User.deleteMany({});
-
   const user = await User.create({
     firstName: "Test",
     lastName: "User",
@@ -36,9 +32,8 @@ const seedUserWithCategories = asyncHandler(async (req, res) => {
   );
 });
 const seedTransactions = asyncHandler(async (req, res) => {
-  const { count = 0, type, monthly } = req.body;
-  console.log("count", count);
   await Transaction.deleteMany({});
+  const { count = 0, type, monthly } = req.body;
 
   const user = await User.findOne({ email: "cypress@gmail.com" });
   if (!user) throw new ApiError(404, "User not found");
@@ -81,11 +76,11 @@ const seedTransactions = asyncHandler(async (req, res) => {
     )
   );
 });
-const clearDb = asyncHandler(async (req, res) => {
+const seedClearDb = asyncHandler(async (req, res) => {
   await Transaction.deleteMany({});
   await Category.deleteMany({});
   await User.deleteMany({});
   return res.status(200).json(new ApiResponse(200, {}, "Database cleared successfully"));
 });
 
-export { seedUserWithCategories, seedTransactions, clearDb };
+export { seedUserWithCategories, seedTransactions, seedClearDb };

@@ -57,11 +57,11 @@ const UploadImage = () => {
   const ImageContainer = () => (
     <div className="w-100 h-100 overflow-hidden rounded" style={{ backgroundColor: THEME.dark, minHeight: "200px" }}>
       {user.imageUrl && !imageState.preview ? (
-        <CloudImage publicId={user.imageUrl} />
+        <CloudImage data-cy="profile-image" publicId={user.imageUrl} />
       ) : imageState.preview ? (
-        <img src={imageState.preview} alt="Preview" className="w-100 h-100 object-fit-cover" />
+        <img data-cy="preview-image" src={imageState.preview} alt="Preview" className="w-100 h-100 object-fit-cover" />
       ) : (
-        <img src={uploadUserImg} alt="Upload" className="w-100 h-100 object-fit-cover" />
+        <img data-cy="default-profile" src={uploadUserImg} alt="Upload" className="w-100 h-100 object-fit-cover" />
       )}
     </div>
   );

@@ -12,7 +12,6 @@ const cld = new Cloudinary({
 });
 
 const CloudImage = ({ publicId, ...props }) => {
-  // Create image with specific transformations to prevent multiple resizing attempts
   const myImage = cld
     .image(publicId)
     .quality("auto:best")

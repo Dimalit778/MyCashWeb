@@ -20,7 +20,7 @@ module.exports = defineConfig({
 
     setupNodeEvents(on, config) {
       on("task", {
-        async "db:seedUser"() {
+        async "db:seed-user"() {
           try {
             await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/userAndCategories`, {
               method: "POST",
@@ -32,7 +32,7 @@ module.exports = defineConfig({
           }
         },
 
-        async "db:seedTransactions"({ count, type, monthly }) {
+        async "db:seed-transactions"({ count, type, monthly }) {
           try {
             await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/transactions`, {
               method: "POST",
@@ -48,7 +48,7 @@ module.exports = defineConfig({
           }
         },
 
-        async "db:clear"() {
+        async "db:clear-db"() {
           try {
             await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/clear`, {
               method: "DELETE",

@@ -84,27 +84,6 @@ Cypress.Commands.add("testViewport", (testCallback) => {
   testCallback("mobile");
 });
 
-// Cypress.Commands.add("transactionInterceptor", (fixturePath = "smallMonthlyData.json") => {
-//   cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//     req.reply({
-//       statusCode: 200,
-//       fixture: fixturePath,
-//     });
-//   }).as("monthlyData");
-
-//   cy.intercept("POST", "**/api/transactions/add", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//   }).as("addTransaction");
-//   cy.intercept("POST", "**/api/transactions/update", (req) => {
-//     delete req.headers["if-none-match"];
-//     delete req.headers["if-modified-since"];
-//   }).as("updateTransaction");
-//   cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
-// });
-
 Cypress.Commands.add("testResponsiveLayout", () => {
   // Test desktop layout
   cy.viewport(1200, 800);
@@ -117,4 +96,44 @@ Cypress.Commands.add("testResponsiveLayout", () => {
   cy.getDataCy("top-bar").should("be.visible");
   cy.getDataCy("left-sidebar").should("not.be.visible");
   cy.getDataCy("bottom-nav").should("be.visible");
+});
+// Add transaction
+Cypress.Commands.add("addTransaction", (description, amount, category) => {
+  cy.getDataCy("add-transaction-btn").click();
+  cy.getDataCy("transaction-modal").within(() => {
+    cy.getDataCy("modal-description").type(description);
+    cy.getDataCy("modal-amount").type(amount);
+    cy.getDataCy("modal-category").select(category);
+    cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
+    cy.getDataCy("modal-submit").click();
+  });
+  cy.wait("@addTransaction");
+  cy.contains("Successfully added").should("be.visible");
+});
+// Setup for transaction tests
+Cypress.Commands.add("setupTransactionTest", () => {
+  cy.task("db:seedUser");
+  cy.task("db:seedTransactions", { type: "expenses", monthly: true });
+  cy.loginTestUser();
+  cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
+  cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");
+  cy.intercept("PATCH", "**/api/transactions/update*").as("updateTransaction");
+  cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
+  cy.visit("/transactions/expenses");
+  cy.wait("@monthlyData");
+});
+// Add transaction via API (faster)
+Cypress.Commands.add("addTransactionViaAPI", (transactionData) => {
+  return cy
+    .request({
+      method: "POST",
+      url: "/api/transactions/add",
+      body: transactionData,
+      headers: {
+        Authorization: `Bearer ${Cypress.env("token")}`,
+      },
+    })
+    .then((response) => {
+      return response.body.data;
+    });
 });

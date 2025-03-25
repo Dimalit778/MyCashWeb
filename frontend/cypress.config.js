@@ -20,14 +20,10 @@ module.exports = defineConfig({
 
     setupNodeEvents(on, config) {
       on("task", {
-        async "db:seed"(options = {}) {
+        async "db:seedUser"() {
           try {
-            await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/create`, {
+            await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/userAndCategories`, {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(options),
             });
             return null;
           } catch (error) {
@@ -35,6 +31,23 @@ module.exports = defineConfig({
             return null;
           }
         },
+
+        async "db:seedTransactions"({ count, type, monthly }) {
+          try {
+            await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/transactions`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ count, type, monthly }),
+            });
+            return null;
+          } catch (error) {
+            console.error("Seed error:", error);
+            return null;
+          }
+        },
+
         async "db:clear"() {
           try {
             await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/clear`, {

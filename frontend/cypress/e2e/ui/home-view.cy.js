@@ -1,9 +1,10 @@
 describe("Transactions Management", () => {
+  before(() => {
+    cy.task("db:seed", { count: 100 });
+  });
   beforeEach(() => {
     cy.intercept("GET", "**/api/transactions/yearly*").as("yearlyData");
 
-    cy.task("db:clear");
-    cy.task("db:seed", { count: 25 });
     cy.loginTestUser();
     cy.visit("/home");
     cy.wait("@yearlyData");

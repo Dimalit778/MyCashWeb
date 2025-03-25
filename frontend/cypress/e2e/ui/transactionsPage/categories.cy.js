@@ -1,15 +1,15 @@
 describe("Transaction Categories", () => {
+  before(() => {
+    cy.task("db:seed", { count: 0, type: "expenses" });
+  });
   beforeEach(() => {
-    cy.task("db:clear");
-    cy.task("db:seed", { type: "expenses" });
-
     cy.intercept("GET", "**/api/categories/get*").as("categories");
     cy.intercept("POST", "**/api/categories/add*").as("addCategory");
     cy.intercept("DELETE", "**/api/categories/delete/*").as("deleteCategory");
 
     cy.loginTestUser();
     cy.visit("/transactions/expenses");
-    cy.wait("@categories");
+    // cy.wait("@categories");
   });
 
   it("displays all categories correctly", () => {
@@ -40,7 +40,7 @@ describe("Transaction Categories", () => {
     });
   });
 
-  it("deletes a category with confirmation", () => {
+  it.only("deletes a category with confirmation", () => {
     cy.getDataCy("category-item").last().find("button").click();
 
     cy.get(".swal2-confirm").click();

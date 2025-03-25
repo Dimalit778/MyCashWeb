@@ -1,8 +1,12 @@
 describe("Transactions Management", () => {
-  beforeEach(() => {
-    const date = new Date();
+  before(() => {
+    cy.task("db:seedUser");
+  });
+  after(() => {
     cy.task("db:clear");
-    cy.task("db:seed", { count: 5, type: "expenses", date: date.toISOString() });
+  });
+  beforeEach(() => {
+    cy.task("db:seedTransactions", { count: 3, type: "expenses", monthly: true });
 
     cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
     cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");
@@ -11,48 +15,47 @@ describe("Transactions Management", () => {
 
     cy.loginTestUser();
     cy.visit(`/transactions/expenses`);
-
     cy.wait("@monthlyData");
   });
   describe("Create Transactions ", () => {
-    it("should open and close transaction modal", () => {
+    beforeEach(() => {
+      cy.getDataCy("transaction-modal").should("not.exist");
       cy.getDataCy("add-transaction-btn").click();
-
       cy.getDataCy("transaction-modal").should("be.exist");
-
+    });
+    it("handle close modal", () => {
       cy.getDataCy("transaction-modal").within(() => {
         cy.getDataCy("modal-cancel").click();
       });
-
       cy.getDataCy("transaction-modal").should("not.exist");
     });
-    it("Create new Transaction Successfully", () => {
-      cy.getDataCy("add-transaction-btn").click();
 
-      cy.getDataCy("transaction-modal").within(() => {
+    it("Create new Transaction Successfully", () => {
+      cy.getDataCy("transactions-row").then(($rows) => {
+        const initialCount = $rows.length;
         cy.getDataCy("modal-description").type("Test Transaction");
-        cy.getDataCy("modal-amount").type(250);
+        cy.getDataCy("modal-amount").type("100");
         cy.getDataCy("modal-category").select(1);
         cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
         cy.getDataCy("modal-submit").click();
-      });
 
-      cy.wait("@addTransaction").then((interception) => {
-        expect(interception.response.statusCode).to.equal(201);
+        cy.wait("@addTransaction").then((interception) => {
+          expect(interception.request.body).to.include({
+            description: "Test Transaction",
+            amount: 100,
+          });
+          expect(interception.response.statusCode).to.equal(201);
+
+          cy.getDataCy("transactions-row").should("have.length", initialCount + 1);
+          cy.contains("Test Transaction").should("be.visible");
+        });
+
+        cy.getDataCy("transaction-modal").should("not.exist");
       });
-      cy.contains("Successfully added").should("be.visible");
-      cy.getDataCy("transaction-modal").should("not.exist");
-      cy.getDataCy("transactions-row").should("have.length", 6).should("contain", "Test Transaction");
     });
 
     it("Create Form Validation errors", () => {
-      cy.getDataCy("transaction-modal").should("not.exist");
-      cy.getDataCy("add-transaction-btn").click();
-
-      cy.getDataCy("transaction-modal").should("exist");
-
       cy.getDataCy("modal-submit").as("submit-btn");
-
       cy.get("@submit-btn").click();
 
       cy.contains("Description is required").should("be.visible");
@@ -84,19 +87,18 @@ describe("Transactions Management", () => {
           message: "Failed to add transaction",
         },
       }).as("addTransactionError");
-      cy.getDataCy("add-transaction-btn").click();
 
-      cy.getDataCy("transaction-modal").within(() => {
-        cy.getDataCy("modal-description").type("Test Error");
-        cy.getDataCy("modal-amount").type(100);
-        cy.getDataCy("modal-category").select(1);
-        cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
-        cy.getDataCy("modal-submit").click();
-      });
+      cy.getDataCy("modal-description").type("Test Error");
+      cy.getDataCy("modal-amount").type(100);
+      cy.getDataCy("modal-category").select(1);
+      cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
+      cy.getDataCy("modal-submit").click();
 
       cy.wait("@addTransactionError");
 
       cy.contains("Failed to add transaction").should("be.visible");
+
+      cy.reload();
     });
   });
   describe("Update Transactions ", () => {
@@ -149,39 +151,37 @@ describe("Transactions Management", () => {
       cy.contains("Successfully updated").should("be.visible");
     });
   });
-  describe.only("Delete Transactions ", () => {
+  describe("Delete Transactions ", () => {
     it("Delete single transaction", () => {
-      cy.getDataCy("transactions-row").find("input").first().check();
+      cy.getDataCy("transactions-row").then(($rows) => {
+        const initialCount = $rows.length;
+        cy.getDataCy("transactions-row").find("input").first().check();
+        cy.contains("button", "Delete").click();
+        cy.get(".swal2-confirm").click();
+        cy.wait("@deleteTransaction");
 
-      cy.contains("button", "Delete").click();
+        cy.contains("Transaction deleted").should("be.visible");
+        cy.getDataCy("delete-transaction-btn").should("be.disabled");
 
-      cy.get(".swal2-confirm").click();
-
-      cy.wait("@deleteTransaction");
-
-      cy.contains("Transaction deleted").should("be.visible");
-      cy.getDataCy("delete-transaction-btn").should("be.disabled");
-      cy.getDataCy("transactions-row").should("length", 5);
+        cy.getDataCy("transactions-row").should("have.length", initialCount - 1);
+      });
     });
     it("Delete multiple transactions", () => {
-      cy.getDataCy("delete-transaction-btn").should("be.disabled");
-      cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
-      cy.getDataCy("transactions-row").find("input[type='checkbox']").eq(1).check();
-
-      cy.getDataCy("delete-transaction-btn").should("be.enabled").click();
-
-      cy.get(".swal2-confirm").click();
-
-      cy.wait("@deleteTransaction").then((interception) => {
-        expect(interception.response.statusCode).to.equal(200);
+      cy.getDataCy("transactions-row").then(($rows) => {
+        const initialCount = $rows.length;
+        cy.getDataCy("delete-transaction-btn").should("be.disabled");
+        cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
+        cy.getDataCy("transactions-row").find("input[type='checkbox']").eq(1).check();
+        cy.getDataCy("delete-transaction-btn").should("be.enabled").click();
+        cy.get(".swal2-confirm").click();
+        cy.wait("@deleteTransaction").then((interception) => {
+          expect(interception.response.statusCode).to.equal(200);
+        });
+        cy.contains("Deleted").should("be.visible");
+        cy.getDataCy("delete-transaction-btn").should("be.disabled");
+        cy.getDataCy("transactions-row").should("have.length", initialCount - 2);
       });
-
-      cy.contains("Deleted").should("be.visible");
-      cy.getDataCy("delete-transaction-btn").should("be.disabled");
-      cy.get("@monthlyData").should("have.length", 3);
-      // cy.getDataCy("transactions-row").should("length", 3);
     });
-
     it("Delete cancel deletion when user clicks cancel", () => {
       cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
 
@@ -209,6 +209,8 @@ describe("Transactions Management", () => {
       cy.wait("@deleteTransactionError");
 
       cy.contains("Failed to delete transaction").should("be.visible");
+
+      cy.reload();
     });
   });
 });

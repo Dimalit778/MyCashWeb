@@ -1,60 +1,16 @@
 import { format } from "date-fns";
 
-function generateCurrentMonthTransactions(count) {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-
-  // Get days in current month
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  const userId = "67952bc8edea680fb371e84c";
-  const transactions = [];
-  let total = 0;
-
-  // Generate transactions
-  for (let i = 1; i <= count; i++) {
-    // Random amount between 100 and 2000
-    const amount = Math.floor(Math.random() * 1900) + 100;
-    total += amount;
-
-    // Random date within current month
-    const day = Math.floor(Math.random() * daysInMonth) + 1;
-    const transactionDate = new Date(year, month, day);
-
-    transactions.push({
-      _id: `id_${i}`,
-      description: `item ${i}`,
-      amount: amount,
-      category: "Home",
-      date: transactionDate.toISOString(),
-      transactionType: "expenses",
-      user: userId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      __v: 0,
-    });
-  }
-
-  return {
-    success: {
-      message: "Monthly data retrieved successfully",
-      statusCode: 200,
-    },
-    data: {
-      transactions: transactions,
-      total: total,
-    },
-  };
-}
 describe("Transaction Table", () => {
+  before(() => {
+    cy.task("db:clear-db");
+    cy.task("db:seed-user");
+  });
   beforeEach(() => {
-    cy.intercept("GET", "**/api/transactions/monthly*", {
-      body: generateCurrentMonthTransactions(25),
-    }).as("monthlyData");
-    cy.intercept("GET", "**/api/categories/get*", { fixture: "categoriesData" }).as("categories");
+    cy.task("db:seed-transactions", { count: 20, type: "expenses", monthly: true });
+    cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
+    cy.intercept("GET", "**/api/categories/get*").as("categories");
 
-    cy.fakeUser();
+    cy.loginTestUser();
     cy.visit("/transactions/expenses");
     cy.wait("@monthlyData");
   });
@@ -108,8 +64,8 @@ describe("Transaction Table", () => {
     cy.get(".pagination .page-item").last().should("have.class", "disabled");
   });
   it("should sort by date in ascending and descending order", () => {
-    cy.get("@monthlyData").then((interceptObj) => {
-      const transactions = interceptObj.response.body.data.transactions;
+    cy.get("@monthlyData").then(({ response }) => {
+      const transactions = response.body.data.transactions;
       expect(transactions).to.be.an("array");
 
       cy.contains("th", "Date").click();

@@ -79,7 +79,7 @@ const LeftSideBar = () => {
           return (
             <li key={link.label}>
               <NavLink
-                data-cy={`nav-link-${link.label}`}
+                data-cy={`nav-${link.dataCy}`}
                 to={link.route}
                 className="nav-link p-2 rounded"
                 style={{ backgroundColor: isActive ? THEME.orange : "transparent" }}

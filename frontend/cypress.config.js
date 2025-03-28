@@ -47,6 +47,17 @@ module.exports = defineConfig({
             return null;
           }
         },
+        async "db:multiple-users"() {
+          try {
+            await fetch(`${process.env.REACT_APP_TEST_API_URL}/seed/multipleUsers`, {
+              method: "POST",
+            });
+            return null;
+          } catch (error) {
+            console.error("Seed error:", error);
+            return null;
+          }
+        },
 
         async "db:clear-db"() {
           try {

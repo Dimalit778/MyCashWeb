@@ -111,3 +111,104 @@ describe("Month Calendar Navigation", () => {
       });
   });
 });
+describe("Yearly Calendar", () => {
+  before(() => {
+    cy.task("db:clear-db");
+    cy.task("db:seed-user");
+    cy.task("db:seed-transactions", {
+      count: 150,
+    });
+  });
+  const currentYear = new Date().getFullYear();
+  beforeEach(() => {
+    cy.intercept("GET", "**/api/transactions/yearly*").as("yearlyData");
+
+    cy.loginTestUser();
+    cy.visit("/home");
+    cy.getDataCy("loading-overlay").should("be.visible");
+    cy.wait("@yearlyData");
+    cy.getDataCy("loading-overlay").should("not.exist");
+  });
+
+  it("should display correct yearly statistics", () => {
+    cy.get("@yearlyData").then(({ response }) => {
+      const { yearlyStats } = response.body.data;
+
+      cy.getDataCy("total-expenses").find("h5").and("have.attr", "data-amount", yearlyStats.totalExpenses.toString());
+
+      cy.getDataCy("total-incomes").find("h5").and("have.attr", "data-amount", yearlyStats.totalIncomes.toString());
+
+      cy.getDataCy("total-balance").find("h5").should("have.attr", "data-amount", yearlyStats.totalBalance.toString());
+
+      if (yearlyStats.totalBalance >= 0) {
+        cy.getDataCy("total-balance").find("h5").should("have.css", "color", "rgb(40, 167, 69)");
+      } else {
+        cy.getDataCy("total-balance").find("h5").should("have.css", "color", "rgb(220, 53, 69)");
+      }
+    });
+  });
+  it("should handle empty data gracefully", () => {
+    cy.intercept("GET", "**/api/transactions/yearly*", {
+      statusCode: 200,
+      body: {
+        data: {
+          yearlyStats: {
+            totalIncomes: 0,
+            totalExpenses: 0,
+            totalBalance: 0,
+          },
+          monthlyStats: [],
+        },
+      },
+    }).as("emptyYearlyData");
+
+    cy.visit("/home");
+    cy.wait("@emptyYearlyData");
+
+    // Verify UI handles empty data gracefully
+    cy.getDataCy("year-chart").should("be.visible");
+    cy.getDataCy("total-expenses").find("h5").should("contain", "$0");
+    cy.getDataCy("total-incomes").find("h5").should("contain", "$0");
+    cy.getDataCy("total-balance").find("h5").should("contain", "$0");
+  });
+  it("updates URL with next year when clicking next", () => {
+    cy.getDataCy("year-display").should("contain", currentYear.toString());
+    cy.getDataCy("year-next-btn").click();
+
+    cy.wait("@yearlyData").then((interception) => {
+      const url = new URL(interception.request.url);
+      const yearParam = url.searchParams.get("year");
+
+      expect(yearParam).to.equal((currentYear + 1).toString());
+      cy.getDataCy("year-display").should("contain", (currentYear + 1).toString());
+    });
+  });
+
+  it("updates URL with previous year when clicking previous", () => {
+    cy.getDataCy("year-prev-btn").click();
+    cy.wait("@yearlyData").then((interception) => {
+      const url = new URL(interception.request.url);
+      const yearParam = url.searchParams.get("year");
+
+      expect(yearParam).to.equal((currentYear - 1).toString());
+      cy.getDataCy("year-display").should("contain", (currentYear - 1).toString());
+    });
+  });
+
+  it("should handle API error for next year", () => {
+    cy.intercept("GET", `**/api/transactions/yearly?year=${currentYear + 1}`, {
+      statusCode: 500,
+      body: {
+        message: "Server error",
+      },
+    }).as("getYearError");
+
+    // Click next year
+    cy.getDataCy("year-next-btn").click();
+    cy.wait("@getYearError");
+
+    // Verify error state
+    cy.getDataCy("year-error").should("be.visible").and("contain", "Something went wrong");
+    cy.reload();
+  });
+});

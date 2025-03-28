@@ -26,24 +26,7 @@ Cypress.Commands.add("loginTestUser", () => {
     });
   });
 });
-Cypress.Commands.add("fakeUser", () => {
-  const user = {
-    firstName: "Test",
-    lastName: "User",
-    email: "cypress@gmail.com",
-  };
-  cy.setCookie("token", "fakeToken");
 
-  // Set up Redux store
-  cy.window().then((win) => {
-    win.localStorage.setItem(
-      "persist:root",
-      JSON.stringify({
-        user: JSON.stringify({ user }),
-      })
-    );
-  });
-});
 // Login User with real Api Call
 Cypress.Commands.add("loginUser", (email = Cypress.env("TEST_EMAIL"), password = Cypress.env("TEST_PASSWORD")) => {
   const apiUrl = Cypress.env("API_URL");
@@ -97,43 +80,21 @@ Cypress.Commands.add("testResponsiveLayout", () => {
   cy.getDataCy("left-sidebar").should("not.be.visible");
   cy.getDataCy("bottom-nav").should("be.visible");
 });
-// Add transaction
-Cypress.Commands.add("addTransaction", (description, amount, category) => {
-  cy.getDataCy("add-transaction-btn").click();
-  cy.getDataCy("transaction-modal").within(() => {
-    cy.getDataCy("modal-description").type(description);
-    cy.getDataCy("modal-amount").type(amount);
-    cy.getDataCy("modal-category").select(category);
-    cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
-    cy.getDataCy("modal-submit").click();
+Cypress.Commands.add("getCategories", (type) => {
+  cy.request({
+    method: "GET",
+    url: `${Cypress.env("API_URL")}/api/categories/get?type=${type}`,
+  }).then((response) => {
+    return response.body;
   });
-  cy.wait("@addTransaction");
-  cy.contains("Successfully added").should("be.visible");
 });
-// Setup for transaction tests
-Cypress.Commands.add("setupTransactionTest", () => {
-  cy.task("db:seedUser");
-  cy.task("db:seedTransactions", { type: "expenses", monthly: true });
-  cy.loginTestUser();
-  cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
-  cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");
-  cy.intercept("PATCH", "**/api/transactions/update*").as("updateTransaction");
-  cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
-  cy.visit("/transactions/expenses");
-  cy.wait("@monthlyData");
-});
-// Add transaction via API (faster)
-Cypress.Commands.add("addTransactionViaAPI", (transactionData) => {
-  return cy
-    .request({
-      method: "POST",
-      url: "/api/transactions/add",
-      body: transactionData,
-      headers: {
-        Authorization: `Bearer ${Cypress.env("token")}`,
-      },
-    })
-    .then((response) => {
-      return response.body.data;
-    });
+Cypress.Commands.add("getTransactions", (type) => {
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth();
+  cy.request({
+    method: "GET",
+    url: `${Cypress.env("API_URL")}/api/transactions/monthly?type=${type}&year=${year}&month=${month}`,
+  }).then((response) => {
+    return response.body;
+  });
 });

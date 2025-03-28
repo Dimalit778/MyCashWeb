@@ -90,7 +90,7 @@ describe("User Management ", () => {
       cy.getDataCy("edit-account-form").should("not.exist");
       cy.getDataCy("profile-edit-btn").should("be.visible");
     });
-    it("should validate name fields", () => {
+    it("should validate form fields", () => {
       // Test first name validation
       cy.getDataCy("first-name-input").clear();
       cy.getDataCy("error-message").should("be.visible").and("contain", "First Name is required");
@@ -103,9 +103,7 @@ describe("User Management ", () => {
       cy.getDataCy("first-name-input").type("Valid");
       cy.getDataCy("last-name-input").type("User");
       cy.getDataCy("error-message").should("not.exist");
-    });
 
-    it("should validate password fields", () => {
       // Test missing new password
       cy.getDataCy("current-password-input").type("123456");
       cy.contains("button", "Save Changes").click();
@@ -132,6 +130,7 @@ describe("User Management ", () => {
         .should("be.visible")
         .and("contain", "New password must be different from current password");
     });
+
     it("should cancel editing without saving changes", () => {
       cy.getDataCy("first-name-input")
         .find("input")

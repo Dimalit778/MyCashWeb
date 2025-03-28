@@ -3,7 +3,7 @@ import "./transactionSkeletonStyle.css";
 
 const TransactionSkeleton = () => {
   return (
-    <div className="skeleton-container">
+    <div data-cy="transaction-skeleton" className="skeleton-container">
       <div className="row g-3">
         {/* First Column - Charts */}
         <div className="col-12 col-lg-8">

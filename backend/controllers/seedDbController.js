@@ -76,6 +76,44 @@ const seedTransactions = asyncHandler(async (req, res) => {
     )
   );
 });
+const seedMultipleUsers = asyncHandler(async (req, res) => {
+  await User.deleteMany({});
+  const user1 = await User.create({
+    firstName: "Test",
+    lastName: "User",
+    email: "cypress@gmail.com",
+    password: "144695",
+    imageUrl: null,
+  });
+
+  const user2 = await User.create({
+    firstName: "Daniel",
+    lastName: "Smith",
+    email: "daniel@gmail.com",
+    password: "144695",
+    imageUrl: null,
+  });
+
+  const user3 = await User.create({
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@gmail.com",
+    password: "144695",
+    imageUrl: null,
+  });
+
+  const user4 = await User.create({
+    firstName: "Alice",
+    lastName: "Smith",
+    email: "alice@gmail.com",
+    password: "144695",
+    imageUrl: null,
+  });
+
+  const users = [user1, user2, user3, user4];
+
+  return res.status(201).json(new ApiResponse(201, { users }, "Users created successfully"));
+});
 const seedClearDb = asyncHandler(async (req, res) => {
   await Transaction.deleteMany({});
   await Category.deleteMany({});
@@ -83,4 +121,4 @@ const seedClearDb = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Database cleared successfully"));
 });
 
-export { seedUserWithCategories, seedTransactions, seedClearDb };
+export { seedUserWithCategories, seedTransactions, seedMultipleUsers, seedClearDb };

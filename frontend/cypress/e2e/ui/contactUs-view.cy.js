@@ -1,13 +1,14 @@
 describe("Contact Page", () => {
+  before(() => {
+    cy.task("db:clear-db");
+    cy.task("db:seed-user");
+  });
   beforeEach(() => {
-    cy.fakeUser();
+    cy.loginTestUser();
     cy.visit("/contact");
     cy.url().should("include", "/contact");
   });
 
-  it("should have correct layout", () => {
-    cy.testResponsiveLayout();
-  });
   it("should display Header section", () => {
     cy.getDataCy("brand-logo").should("be.visible");
     cy.getDataCy("contact-title").within(() => {

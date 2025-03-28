@@ -1,11 +1,9 @@
 describe("Transactions Management", () => {
-  before(() => {
+  const initialCount = 3;
+  beforeEach(() => {
     cy.task("db:clear-db");
     cy.task("db:seed-user");
-  });
-
-  beforeEach(() => {
-    cy.task("db:seed-transactions", { count: 3, type: "expenses", monthly: true });
+    cy.task("db:seed-transactions", { count: initialCount, type: "expenses", monthly: true });
 
     cy.intercept("GET", "**/api/transactions/monthly*").as("monthlyData");
     cy.intercept("POST", "**/api/transactions/add*").as("addTransaction");
@@ -13,44 +11,48 @@ describe("Transactions Management", () => {
     cy.intercept("DELETE", "**/api/transactions/delete/*").as("deleteTransaction");
 
     cy.loginTestUser();
+
     cy.visit(`/transactions/expenses`);
     cy.wait("@monthlyData");
   });
+  it("should test loading state and Modal", () => {
+    cy.visit("/transactions/expenses");
+    cy.getDataCy("loading-overlay").should("be.visible");
+    cy.wait("@monthlyData");
+    cy.getDataCy("loading-overlay").should("not.exist");
+
+    cy.getDataCy("add-transaction-btn").click();
+    cy.getDataCy("transaction-modal").should("be.exist");
+    cy.contains("Cancel").click();
+    cy.getDataCy("transaction-modal").should("not.exist");
+  });
+
   describe("Create Transactions ", () => {
     beforeEach(() => {
       cy.getDataCy("transaction-modal").should("not.exist");
       cy.getDataCy("add-transaction-btn").click();
       cy.getDataCy("transaction-modal").should("be.exist");
     });
-    it("handle close modal", () => {
-      cy.getDataCy("transaction-modal").within(() => {
-        cy.getDataCy("modal-cancel").click();
-      });
-      cy.getDataCy("transaction-modal").should("not.exist");
-    });
 
     it("Create new Transaction Successfully", () => {
-      cy.getDataCy("transactions-row").then(($rows) => {
-        const initialCount = $rows.length;
-        cy.getDataCy("modal-description").type("Test Transaction");
-        cy.getDataCy("modal-amount").type("100");
-        cy.getDataCy("modal-category").select(1);
-        cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
-        cy.getDataCy("modal-submit").click();
+      cy.getDataCy("modal-description").type("Test Transaction");
+      cy.getDataCy("modal-amount").type("100");
+      cy.getDataCy("modal-category").select(1);
+      cy.getDataCy("modal-date").type(new Date().toISOString().split("T")[0]);
+      cy.getDataCy("modal-submit").click();
 
-        cy.wait("@addTransaction").then((interception) => {
-          expect(interception.request.body).to.include({
-            description: "Test Transaction",
-            amount: 100,
-          });
-          expect(interception.response.statusCode).to.equal(201);
-
-          cy.getDataCy("transactions-row").should("have.length", initialCount + 1);
-          cy.contains("Test Transaction").should("be.visible");
+      cy.wait("@addTransaction").then((interception) => {
+        expect(interception.request.body).to.include({
+          description: "Test Transaction",
+          amount: 100,
         });
+        expect(interception.response.statusCode).to.equal(201);
 
-        cy.getDataCy("transaction-modal").should("not.exist");
+        cy.getDataCy("transactions-row").should("have.length", initialCount + 1);
+        cy.contains("Test Transaction").should("be.visible");
       });
+
+      cy.getDataCy("transaction-modal").should("not.exist");
     });
 
     it("Create Form Validation errors", () => {
@@ -147,39 +149,35 @@ describe("Transactions Management", () => {
         expect(interception.response.statusCode).to.equal(200);
       });
       cy.getDataCy("transaction-modal").should("not.exist");
+      cy.getDataCy("transactions-row").first().should("contain", "Updated Transaction");
       cy.contains("Successfully updated").should("be.visible");
     });
   });
   describe("Delete Transactions ", () => {
     it("Delete single transaction", () => {
-      cy.getDataCy("transactions-row").then(($rows) => {
-        const initialCount = $rows.length;
-        cy.getDataCy("transactions-row").find("input").first().check();
-        cy.contains("button", "Delete").click();
-        cy.get(".swal2-confirm").click();
-        cy.wait("@deleteTransaction");
+      cy.getDataCy("transactions-row").find("input").first().check();
+      cy.contains("button", "Delete").click();
+      cy.get(".swal2-confirm").click();
+      cy.wait("@deleteTransaction");
 
-        cy.contains("Transaction deleted").should("be.visible");
-        cy.getDataCy("delete-transaction-btn").should("be.disabled");
+      cy.contains("Transaction deleted").should("be.visible");
+      cy.getDataCy("delete-transaction-btn").should("be.disabled");
 
-        cy.getDataCy("transactions-row").should("have.length", initialCount - 1);
-      });
+      cy.getDataCy("transactions-row").should("have.length", initialCount - 1);
     });
     it("Delete multiple transactions", () => {
-      cy.getDataCy("transactions-row").then(($rows) => {
-        const initialCount = $rows.length;
-        cy.getDataCy("delete-transaction-btn").should("be.disabled");
-        cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
-        cy.getDataCy("transactions-row").find("input[type='checkbox']").eq(1).check();
-        cy.getDataCy("delete-transaction-btn").should("be.enabled").click();
-        cy.get(".swal2-confirm").click();
-        cy.wait("@deleteTransaction").then((interception) => {
-          expect(interception.response.statusCode).to.equal(200);
-        });
-        cy.contains("Deleted").should("be.visible");
-        cy.getDataCy("delete-transaction-btn").should("be.disabled");
-        cy.getDataCy("transactions-row").should("have.length", initialCount - 2);
+      cy.getDataCy("delete-transaction-btn").should("be.disabled");
+      cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();
+      cy.getDataCy("transactions-row").find("input[type='checkbox']").eq(1).check();
+      cy.getDataCy("delete-transaction-btn").should("be.enabled").click();
+
+      cy.get(".swal2-confirm").click();
+      cy.wait("@deleteTransaction").then((interception) => {
+        expect(interception.response.statusCode).to.equal(200);
       });
+      cy.contains("Deleted").should("be.visible");
+      cy.getDataCy("delete-transaction-btn").should("be.disabled");
+      cy.getDataCy("transactions-row").should("have.length", initialCount - 2);
     });
     it("Delete cancel deletion when user clicks cancel", () => {
       cy.getDataCy("transactions-row").find("input[type='checkbox']").first().check();

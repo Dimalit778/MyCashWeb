@@ -1,12 +1,14 @@
 const navLinks = [
-  { name: "Expenses", route: "/transactions/expenses" },
-  { name: "Incomes", route: "/transactions/incomes" },
-  { name: "Contact", route: "/contact" },
-  { name: "Settings", route: "/settings" },
-  { name: "Home", route: "/home" },
+  { name: "Expenses", route: "/transactions/expenses", dataCy: "link-expenses" },
+  { name: "Incomes", route: "/transactions/incomes", dataCy: "link-incomes" },
+  { name: "Contact", route: "/contact", dataCy: "link-contact" },
+  { name: "Settings", route: "/settings", dataCy: "link-settings" },
+  { name: "Home", route: "/home", dataCy: "link-home" },
 ];
 describe("Main Layout", () => {
   beforeEach(() => {
+    cy.task("db:clear-db");
+    cy.task("db:seed-user");
     cy.intercept("GET", "**/api/transactions/yearly*", {
       statusCode: 200,
       body: {
@@ -41,7 +43,7 @@ describe("Main Layout", () => {
       },
     }).as("categoriesData");
 
-    cy.fakeUser();
+    cy.loginTestUser();
     cy.visit("/home");
   });
 
@@ -63,7 +65,7 @@ describe("Main Layout", () => {
         cy.getDataCy("user-email").should("be.visible").and("contain", "cypress@gmail.com");
 
         navLinks.forEach((link) => {
-          cy.getDataCy(`nav-link-${link.name}`).should("be.visible");
+          cy.getDataCy(`nav-${link.dataCy}`).should("be.visible");
         });
 
         cy.getDataCy("left-sidebar-logout-button").should("be.visible");
@@ -73,9 +75,9 @@ describe("Main Layout", () => {
     it("should navigate through sidebar links", () => {
       cy.getDataCy("left-sidebar").within(() => {
         navLinks.forEach((link) => {
-          cy.getDataCy(`nav-link-${link.name}`).click();
+          cy.getDataCy(`nav-${link.dataCy}`).click();
           cy.url().should("include", link.route);
-          cy.getDataCy(`nav-link-${link.name}`).should("have.css", "background-color").and("not.equal", "transparent");
+          cy.getDataCy(`nav-${link.dataCy}`).should("have.css", "background-color").and("not.equal", "transparent");
         });
       });
     });
@@ -137,6 +139,61 @@ describe("Main Layout", () => {
       cy.viewport(375, 667);
       cy.getDataCy("left-sidebar").should("not.be.visible");
       cy.getDataCy("bottom-nav").should("be.visible");
+    });
+  });
+  describe("Loading States", () => {
+    beforeEach(() => {
+      cy.intercept("GET", "**/api/transactions/yearly*", (req) => {
+        req.on("response", (res) => {
+          res.setDelay(300); // Add delay to see loading state
+        });
+      }).as("yearlyData");
+
+      cy.intercept("GET", "**/api/transactions/monthly*", (req) => {
+        req.on("response", (res) => {
+          res.setDelay(300);
+        });
+      }).as("monthlyData");
+
+      cy.intercept("GET", "**/api/categories/get*", (req) => {
+        req.on("response", (res) => {
+          res.setDelay(300);
+        });
+      }).as("categoriesData");
+    });
+
+    it("should show loading overlay on Home page", () => {
+      cy.visit("/home");
+      cy.getDataCy("loading-overlay").should("be.visible");
+      cy.wait("@yearlyData");
+      cy.getDataCy("loading-overlay").should("not.exist");
+    });
+
+    it("should show loading overlay on Transactions page", () => {
+      cy.visit("/transactions/expenses");
+      cy.getDataCy("loading-overlay").should("be.visible");
+      cy.wait(["@monthlyData", "@categoriesData"]);
+      cy.getDataCy("loading-overlay").should("not.exist");
+    });
+
+    it("should show loading overlay when navigating between Expenses and Incomes", () => {
+      cy.visit("/transactions/expenses");
+      cy.wait(["@monthlyData", "@categoriesData"]);
+
+      cy.getDataCy("nav-link-incomes").click();
+      cy.getDataCy("loading-overlay").should("be.visible");
+      cy.wait("@monthlyData");
+      cy.getDataCy("loading-overlay").should("not.exist");
+    });
+
+    it("should show loading overlay when changing month", () => {
+      cy.visit("/transactions/expenses");
+      cy.wait(["@monthlyData", "@categoriesData"]);
+
+      cy.getDataCy("calendar-next-button").click();
+      cy.getDataCy("loading-overlay").should("be.visible");
+      cy.wait("@monthlyData");
+      cy.getDataCy("loading-overlay").should("not.exist");
     });
   });
 });

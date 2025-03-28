@@ -9,25 +9,30 @@ export const HOME_LINKS = [
     imgURL: homeIcon,
     route: "/home",
     label: "Home",
+    dataCy: "link-home",
   },
   {
     imgURL: expenseIcon,
     route: "/transactions/expenses",
     label: "Expenses",
+    dataCy: "link-expenses",
   },
   {
     imgURL: incomeIcon,
     route: "/transactions/incomes",
     label: "Incomes",
+    dataCy: "link-incomes",
   },
   {
     imgURL: contactIcon,
     route: "/contact",
     label: "Contact",
+    dataCy: "link-contact",
   },
   {
     imgURL: settingsIcon,
     route: "/settings",
     label: "Settings",
+    dataCy: "link-settings",
   },
 ];

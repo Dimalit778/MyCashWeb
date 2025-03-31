@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./button.module.css";
 
 const MyButton = ({
+  dataCy,
   children,
   isLoading,
   disabled,
@@ -28,6 +29,7 @@ const MyButton = ({
 
   return (
     <button
+      data-cy={dataCy}
       className={`${styles.customButton} ${sizeClass} ${className}`}
       disabled={disabled || isLoading}
       onClick={onClick}

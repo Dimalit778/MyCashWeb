@@ -17,6 +17,7 @@ const UploadImage = () => {
   });
   const user = useSelector(currentUser);
   const [imageActions, { isLoading }] = useImageActionsMutation();
+  console.log("imageState", imageState);
 
   const handleImageAction = async (actionType, imageData = null) => {
     try {
@@ -45,10 +46,18 @@ const UploadImage = () => {
     });
 
     const reader = new FileReader();
-    reader.onloadend = () => setImageState((prev) => ({ ...prev, data: reader.result }));
+    reader.onloadend = () => {
+      const result = reader.result;
+      setImageState((prev) => ({ ...prev, data: result }));
+
+      // Add this line to emit a custom event when data is ready
+      // This will help Cypress know when the async operation is complete
+      if (window && typeof window.Cypress !== "undefined") {
+        window.dispatchEvent(new CustomEvent("fileReaderComplete"));
+      }
+    };
     reader.readAsDataURL(file);
   };
-
   const handleCancel = () => {
     URL.revokeObjectURL(imageState.preview);
     setImageState({ preview: "", data: "" });
@@ -71,13 +80,13 @@ const UploadImage = () => {
       {imageState.preview ? (
         <>
           <MyButton
-            data-cy="save-image-button"
+            dataCy="save-image-button"
             bgColor={THEME.orange}
             onClick={() => imageState.data && handleImageAction("upload", imageState.data)}
           >
             Save
           </MyButton>
-          <MyButton data-cy="cancel-upload-button" bgColor="red" size="sm" onClick={handleCancel}>
+          <MyButton dataCy="cancel-image-button" bgColor="red" size="sm" onClick={handleCancel}>
             Cancel
           </MyButton>
         </>
@@ -102,7 +111,7 @@ const UploadImage = () => {
           </MyButton>
           {user.imageUrl && (
             <MyButton
-              data-cy="delete-image-button"
+              dataCy="delete-image-button"
               bgColor="red"
               size="sm"
               onClick={() => handleImageAction("delete", null)}

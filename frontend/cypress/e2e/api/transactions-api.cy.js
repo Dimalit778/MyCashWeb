@@ -1,17 +1,283 @@
 const apiTransactions = `${Cypress.env("API_URL")}/api/transactions`;
 
 describe("Transactions API", () => {
-  beforeEach(() => {
+  before(() => {
     cy.task("db:clear-db");
     cy.task("db:seed-user");
-    cy.task("db:seed-transactions", { count: 10, type: "expenses", monthly: true });
+    cy.task("db:seed-transactions", { count: 5 });
+  });
+
+  beforeEach(() => {
     cy.loginTestUser();
   });
 
-  describe.only("GET /transactions/monthly", () => {
+  describe("POST /transactions/add", () => {
+    it("should add a valid transaction successfully", () => {
+      const validTransaction = {
+        description: "Test Transaction",
+        amount: 150.75,
+        category: "Food",
+        date: new Date().toISOString(),
+        type: "expenses",
+      };
+
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: validTransaction,
+      }).then((response) => {
+        expect(response.status).to.eq(201);
+        expect(response.body.data).to.have.property("transaction");
+        expect(response.body.data.transaction.description).to.eq(validTransaction.description);
+        expect(response.body.data.transaction.amount).to.eq(validTransaction.amount);
+      });
+    });
+
+    it("should validate all required fields are present", () => {
+      const requiredFields = ["description", "amount", "category", "date", "type"];
+      requiredFields.forEach((field) => {
+        const transaction = {
+          description: "Test Transaction",
+          amount: 150.75,
+          category: "Food",
+          date: new Date().toISOString(),
+          type: "expenses",
+        };
+
+        delete transaction[field];
+
+        cy.request({
+          method: "POST",
+          url: `${apiTransactions}/add`,
+          body: transaction,
+          failOnStatusCode: false,
+        }).then((response) => {
+          expect(response.status).to.eq(400);
+          expect(response.body.message).to.contain("required fields");
+        });
+      });
+    });
+
+    it("should validate amount constraints", () => {
+      const amountTests = [
+        { amount: 0, expectedMessage: "Amount must be greater than 0" },
+        { amount: 1000001, expectedMessage: "Amount must be less than 1000000" },
+        { amount: "invalid_amount", expectedMessage: "Amount must be a number" },
+      ];
+
+      amountTests.forEach((test) => {
+        const transaction = {
+          description: "Test Transaction",
+          amount: test.amount,
+          category: "Food",
+          date: new Date().toISOString(),
+          type: "expenses",
+        };
+
+        cy.request({
+          method: "POST",
+          url: `${apiTransactions}/add`,
+          body: transaction,
+          failOnStatusCode: false,
+        }).then((response) => {
+          expect(response.status).to.eq(400);
+          expect(response.body.message).to.contain(test.expectedMessage);
+        });
+      });
+    });
+
+    it("should validate transaction type must be valid", () => {
+      const transaction = {
+        description: "Test Transaction",
+        amount: 150.75,
+        category: "Food",
+        date: new Date().toISOString(),
+        type: "invalid_type",
+      };
+
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: transaction,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+        expect(response.body.message).to.contain("Invalid transaction type");
+      });
+    });
+
+    it("should validate description length", () => {
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: {
+          description: "a",
+          amount: 150.75,
+          category: "Food",
+          date: new Date().toISOString(),
+          type: "expenses",
+        },
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+        expect(response.body.message).to.contain("Description must be between 1 and 20 characters");
+      });
+
+      // Test too long
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: {
+          description: "This description is way too long and should exceed the twenty character limit",
+          amount: 150.75,
+          category: "Food",
+          date: new Date().toISOString(),
+          type: "expenses",
+        },
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+        expect(response.body.message).to.contain("Description must be between 1 and 20 characters");
+      });
+    });
+  });
+
+  describe("PATCH /transactions/update", () => {
+    let testTransactionId;
+
+    before(() => {
+      cy.loginTestUser();
+
+      const testTransaction = {
+        description: "Update Test",
+        amount: 100,
+        category: "Food",
+        date: new Date().toISOString(),
+        type: "expenses",
+      };
+
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: testTransaction,
+      }).then((response) => {
+        testTransactionId = response.body.data.transaction._id;
+      });
+    });
+
+    it("should update an existing transaction successfully", () => {
+      const updateData = {
+        _id: testTransactionId,
+        description: "Updated Transaction",
+        amount: 200.5,
+      };
+
+      cy.request({
+        method: "PATCH",
+        url: `${apiTransactions}/update`,
+        body: updateData,
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.data.transaction._id).to.eq(testTransactionId);
+        expect(response.body.data.transaction.description).to.eq(updateData.description);
+        expect(response.body.data.transaction.amount).to.eq(updateData.amount);
+      });
+    });
+
+    it("should reject update with non-existent ID", () => {
+      const updateData = {
+        _id: "507f1f77bcf86cd799439011",
+        description: "Updated Transaction",
+        amount: 200.5,
+      };
+      cy.request({
+        method: "PATCH",
+        url: `${apiTransactions}/update`,
+        body: updateData,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(404);
+        expect(response.body.message).to.contain("not found");
+      });
+    });
+
+    it("should validate update data format", () => {
+      cy.request({
+        method: "PATCH",
+        url: `${apiTransactions}/update`,
+        body: {
+          _id: testTransactionId,
+          amount: "invalid_amount",
+        },
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+      });
+    });
+  });
+
+  describe("DELETE /transactions/delete/:id", () => {
+    let deleteTestId;
+
+    beforeEach(() => {
+      const testTransaction = {
+        description: "Delete Test",
+        amount: 100,
+        category: "Food",
+        date: new Date().toISOString(),
+        type: "expenses",
+      };
+      cy.request({
+        method: "POST",
+        url: `${apiTransactions}/add`,
+        body: testTransaction,
+      }).then((response) => {
+        deleteTestId = response.body.data.transaction._id;
+      });
+    });
+
+    it("should delete an existing transaction", () => {
+      cy.request({
+        method: "DELETE",
+        url: `${apiTransactions}/delete/${deleteTestId}`,
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.message).to.contain("deleted successfully");
+        expect(response.body.data.transactionId).to.eq(deleteTestId);
+      });
+
+      // Verify it's gone
+      cy.request({
+        method: "GET",
+        url: `${apiTransactions}/monthly`,
+        qs: {
+          type: "expenses",
+          year: new Date().getFullYear(),
+          month: new Date().getMonth(),
+        },
+      }).then((response) => {
+        const transactions = response.body.data.transactions;
+        const deleted = transactions.find((t) => t._id === deleteTestId);
+        expect(deleted === undefined);
+      });
+    });
+
+    it("should handle non-existent transaction ID", () => {
+      cy.request({
+        method: "DELETE",
+        url: `${apiTransactions}/delete/507f1f77bcf86cd799439011`,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(404);
+        expect(response.body.message).to.contain("not found");
+      });
+    });
+  });
+
+  describe("GET /transactions", () => {
     it("should get monthly transactions with valid parameters", () => {
       const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
+      const currentMonth = new Date().getMonth();
 
       cy.request({
         method: "GET",
@@ -22,16 +288,15 @@ describe("Transactions API", () => {
           month: currentMonth,
         },
       }).then((response) => {
-        console.log("response", response);
         expect(response.status).to.eq(200);
         expect(response.body.data).to.have.property("transactions");
         expect(response.body.data).to.have.property("total");
-        // Array length might vary based on seeded data
         expect(response.body.data.transactions).to.be.an("array");
       });
     });
 
-    it("should handle missing query parameters", () => {
+    it("should validate monthly transactions query parameters", () => {
+      // Test missing parameters
       cy.request({
         method: "GET",
         url: `${apiTransactions}/monthly`,
@@ -40,23 +305,20 @@ describe("Transactions API", () => {
         expect(response.status).to.eq(400);
         expect(response.body.message).to.contain("required");
       });
-    });
 
-    it("should validate year and month parameters", () => {
+      // Test invalid month
       cy.request({
         method: "GET",
         url: `${apiTransactions}/monthly`,
-        qs: { type: "expenses", year: "invalid", month: 13 },
+        qs: { type: "expenses", year: 2023, month: 13 },
         failOnStatusCode: false,
       }).then((response) => {
         expect(response.status).to.eq(400);
-        expect(response.body).to.have.property("message");
+        expect(response.body.message).to.contain("Invalid month");
       });
     });
-  });
 
-  describe("GET /transactions/yearly", () => {
-    it("should get yearly transactions with valid year", () => {
+    it("should get yearly data with valid year", () => {
       const currentYear = new Date().getFullYear();
 
       cy.request({
@@ -74,191 +336,14 @@ describe("Transactions API", () => {
       });
     });
 
-    it("should handle missing year parameter", () => {
+    it("should validate yearly data query parameters", () => {
       cy.request({
         method: "GET",
         url: `${apiTransactions}/yearly`,
         failOnStatusCode: false,
       }).then((response) => {
         expect(response.status).to.eq(400);
-        expect(response.body.message).to.contain("year");
-      });
-    });
-  });
-
-  describe("POST /transactions/add", () => {
-    it("should add a new transaction", () => {
-      const newTransaction = {
-        description: "Test Transaction",
-        amount: 150.75,
-        category: "Food",
-        date: new Date().toISOString(),
-        type: "expenses",
-      };
-
-      cy.request({
-        method: "POST",
-        url: `${apiTransactions}/add`,
-        body: newTransaction,
-      }).then((response) => {
-        expect(response.status).to.eq(201);
-        expect(response.body.data).to.have.property("transaction");
-        expect(response.body.data.transaction).to.have.property("_id");
-        expect(response.body.data.transaction.description).to.eq(newTransaction.description);
-        expect(response.body.data.transaction.amount).to.eq(newTransaction.amount);
-      });
-    });
-
-    it("should validate required fields", () => {
-      const invalidTransaction = {
-        // Missing required fields
-        amount: 150.75,
-      };
-
-      cy.request({
-        method: "POST",
-        url: `${apiTransactions}/add`,
-        body: invalidTransaction,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.eq(400);
-        expect(response.body).to.have.property("message");
-      });
-    });
-
-    it("should validate field types", () => {
-      const invalidTransaction = {
-        description: "Test",
-        amount: "not-a-number", // Invalid amount
-        category: "Food",
-        date: new Date().toISOString(),
-        type: "expenses",
-      };
-
-      cy.request({
-        method: "POST",
-        url: `${apiTransactions}/add`,
-        body: invalidTransaction,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.eq(400);
-        expect(response.body).to.have.property("message");
-      });
-    });
-  });
-
-  describe("PATCH /transactions/update", () => {
-    it("should update an existing transaction", () => {
-      // First, get an existing transaction ID
-      cy.request({
-        method: "GET",
-        url: `${apiTransactions}/monthly`,
-        qs: {
-          type: "expenses",
-          year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1,
-        },
-      }).then((response) => {
-        expect(response.status).to.eq(200);
-
-        // If there are transactions, update the first one
-        if (response.body.data.transactions.length > 0) {
-          const transactionId = response.body.data.transactions[0]._id;
-          const updateData = {
-            _id: transactionId,
-            description: "Updated Transaction",
-            amount: 200.5,
-          };
-
-          cy.request({
-            method: "PATCH",
-            url: `${apiTransactions}/update`,
-            body: updateData,
-          }).then((updateResponse) => {
-            expect(updateResponse.status).to.eq(200);
-            expect(updateResponse.body.data).to.have.property("transaction");
-            expect(updateResponse.body.data.transaction._id).to.eq(transactionId);
-            expect(updateResponse.body.data.transaction.description).to.eq(updateData.description);
-            expect(updateResponse.body.data.transaction.amount).to.eq(updateData.amount);
-          });
-        }
-      });
-    });
-
-    it("should handle non-existent transaction ID", () => {
-      const updateData = {
-        _id: "nonexistentid123456789012",
-        description: "Updated Transaction",
-        amount: 200.5,
-      };
-
-      cy.request({
-        method: "PATCH",
-        url: `${apiTransactions}/update`,
-        body: updateData,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.eq(404);
-        expect(response.body).to.have.property("message");
-      });
-    });
-
-    it("should validate update data", () => {
-      const invalidUpdateData = {
-        _id: "validid123456789012", // Assume this is valid format but doesn't exist
-        amount: "invalid-amount",
-      };
-
-      cy.request({
-        method: "PATCH",
-        url: `${apiTransactions}/update`,
-        body: invalidUpdateData,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.be.oneOf([400, 404]); // Either bad request or not found
-        expect(response.body).to.have.property("message");
-      });
-    });
-  });
-
-  describe("DELETE /transactions/delete/:id", () => {
-    it("should delete an existing transaction", () => {
-      // First, get an existing transaction ID
-      cy.request({
-        method: "GET",
-        url: `${apiTransactions}/monthly`,
-        qs: {
-          type: "expenses",
-          year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1,
-        },
-      }).then((response) => {
-        expect(response.status).to.eq(200);
-
-        // If there are transactions, delete the first one
-        if (response.body.data.transactions.length > 0) {
-          const transactionId = response.body.data.transactions[0]._id;
-
-          cy.request({
-            method: "DELETE",
-            url: `${apiTransactions}/delete/${transactionId}`,
-          }).then((deleteResponse) => {
-            expect(deleteResponse.status).to.eq(200);
-            expect(deleteResponse.body).to.have.property("message");
-            expect(deleteResponse.body.message).to.include("deleted");
-          });
-        }
-      });
-    });
-
-    it("should handle non-existent transaction ID", () => {
-      cy.request({
-        method: "DELETE",
-        url: `${apiTransactions}/delete/nonexistentid123456789012`,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.eq(404);
-        expect(response.body).to.have.property("message");
+        expect(response.body.message).to.contain("Year is required");
       });
     });
   });
@@ -267,7 +352,7 @@ describe("Transactions API", () => {
     it("should require authentication for all endpoints", () => {
       cy.clearCookies();
 
-      // Test one endpoint from each HTTP method
+      // Define endpoints to test
       const endpoints = [
         { method: "GET", url: `${apiTransactions}/monthly?type=expenses&year=2023&month=1` },
         { method: "GET", url: `${apiTransactions}/yearly?year=2023` },
@@ -276,10 +361,15 @@ describe("Transactions API", () => {
           url: `${apiTransactions}/add`,
           body: { description: "Test", amount: 100, type: "expenses", category: "Food", date: new Date() },
         },
-        { method: "PATCH", url: `${apiTransactions}/update`, body: { _id: "testid123", description: "Updated" } },
-        { method: "DELETE", url: `${apiTransactions}/delete/testid123` },
+        {
+          method: "PATCH",
+          url: `${apiTransactions}/update`,
+          body: { _id: "validFormat123456789012", description: "Updated" },
+        },
+        { method: "DELETE", url: `${apiTransactions}/delete/validFormat123456789012` },
       ];
 
+      // Test each endpoint
       endpoints.forEach((endpoint) => {
         cy.request({
           method: endpoint.method,

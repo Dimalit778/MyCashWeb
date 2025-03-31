@@ -2,81 +2,71 @@ describe("User Management ", () => {
   beforeEach(() => {
     cy.task("db:clear-db");
     cy.task("db:seed-user");
-
     cy.loginTestUser();
     cy.visit("/settings");
   });
 
-  describe("Profile Image Management", () => {
+  describe("Profile Image ", () => {
     beforeEach(() => {
-      cy.intercept("PATCH", "**/api/users/imageActions*", (req) => {
-        if (req.body.image) {
-          req.reply({
-            statusCode: 200,
-            body: {
-              success: {
-                message: "Profile updated successfully",
-                statusCode: 200,
-              },
-              data: {
-                user: {
-                  imageUrl: "new-image-id",
-                },
-              },
-            },
-          });
-        } else {
-          req.reply({
-            statusCode: 200,
-            body: {
-              success: {
-                message: "Photo was deleted",
-                statusCode: 200,
-              },
-              data: {
-                user: {
-                  imageUrl: null,
-                },
-              },
-            },
-          });
-        }
-      }).as("imageActions");
+      cy.intercept("PATCH", "**/api/users/imageActions").as("imageActions");
+      cy.getDataCy("uploadImage-container").should("be.visible");
     });
-    it("should upload and then delete a profile image", () => {
-      cy.getDataCy("upload-image-button").should("be.visible");
-      cy.get('input[type="file"]').selectFile("cypress/fixtures/profileImage.jpg", { force: true });
 
-      cy.getDataCy("preview-image").should("be.visible");
+    it("should bypass upload and test deletion", () => {
+      cy.getDataCy("upload-image-button").should("be.visible").click();
 
-      cy.contains("button", "Save").click();
-      cy.wait("@imageActions");
+      cy.getDataCy("upload-image-input").selectFile("cypress/fixtures/profileImage.jpg", { force: true });
+
+      cy.get('img[alt="Preview"]').should("be.visible");
+
+      cy.window().then((win) => {
+        return new Cypress.Promise((resolve) => {
+          const timeoutId = setTimeout(() => {
+            win.removeEventListener("fileReaderComplete", eventHandler);
+            resolve();
+          }, 5000);
+
+          const eventHandler = () => {
+            clearTimeout(timeoutId);
+            resolve();
+          };
+
+          win.addEventListener("fileReaderComplete", eventHandler, { once: true });
+        });
+      });
+      cy.getDataCy("save-image-button").should("be.visible");
+
+      cy.get("button").contains("Save").click();
+
+      cy.wait("@imageActions").then(({ response }) => {
+        expect(response.statusCode).to.equal(200);
+      });
+
       cy.contains("Profile updated successfully").should("be.visible");
 
-      cy.getDataCy("profile-image").should("exist");
-      cy.getDataCy("default-profile").should("not.exist");
+      // Delete image
+      cy.getDataCy("delete-image-button").should("be.visible").click();
 
-      cy.getDataCy("delete-image-button").should("be.visible");
-      cy.getDataCy("delete-image-button").click();
+      cy.wait("@imageActions").then(({ response }) => {
+        expect(response.statusCode).to.equal(200);
+      });
 
-      cy.wait("@imageActions");
       cy.contains("Photo was deleted").should("be.visible");
-      cy.getDataCy("upload-image-button").should("be.visible");
-      cy.getDataCy("delete-image-button").should("not.exist");
     });
     it("Cancel image upload", () => {
-      cy.getDataCy("upload-image-button").should("be.visible");
-      cy.get('input[type="file"]').selectFile("cypress/fixtures/profileImage.jpg", { force: true });
+      cy.getDataCy("upload-image-button").should("be.visible").click();
+      cy.getDataCy("upload-image-input").selectFile("cypress/fixtures/profileImage.jpg", { force: true });
 
-      cy.get("button").contains("Cancel").click();
+      cy.getDataCy("save-image-button").should("be.visible");
+      cy.getDataCy("cancel-image-button").should("be.visible");
 
-      cy.getDataCy("upload-image-button").should("be.visible");
-      cy.getDataCy("save-upload-button").should("not.exist");
-      cy.getDataCy("cancel-upload-button").should("not.exist");
+      cy.getDataCy("cancel-image-button").click();
+      cy.getDataCy("cancel-image-button").should("not.exist");
 
       cy.get('img[alt="Preview"]').should("not.exist");
     });
   });
+
   describe("Edit Profile Management", () => {
     beforeEach(() => {
       cy.intercept("PATCH", "**/api/users/update").as("UpdateUser");

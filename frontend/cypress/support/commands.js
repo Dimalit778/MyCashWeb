@@ -80,21 +80,3 @@ Cypress.Commands.add("testResponsiveLayout", () => {
   cy.getDataCy("left-sidebar").should("not.be.visible");
   cy.getDataCy("bottom-nav").should("be.visible");
 });
-Cypress.Commands.add("getCategories", (type) => {
-  cy.request({
-    method: "GET",
-    url: `${Cypress.env("API_URL")}/api/categories/get?type=${type}`,
-  }).then((response) => {
-    return response.body;
-  });
-});
-Cypress.Commands.add("getTransactions", (type) => {
-  const year = new Date().getFullYear();
-  const month = new Date().getMonth();
-  cy.request({
-    method: "GET",
-    url: `${Cypress.env("API_URL")}/api/transactions/monthly?type=${type}&year=${year}&month=${month}`,
-  }).then((response) => {
-    return response.body;
-  });
-});

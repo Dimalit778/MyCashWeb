@@ -1,4 +1,4 @@
-import { isPlatformMobile } from "utils/paltformUtils";
+import { isPlatformMobile } from "utils/platform";
 import { apiSlice } from "../baseQuery";
 
 import { tokenStorage } from "utils/tokenStorage";

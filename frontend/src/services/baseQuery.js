@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { isPlatformMobile } from "utils/paltformUtils";
+import { isPlatformMobile } from "utils/platform";
 import { tokenStorage } from "utils/tokenStorage";
 
 // const BASE_URL = "https://mycashserver.onrender.com";

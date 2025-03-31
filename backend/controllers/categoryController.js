@@ -9,7 +9,9 @@ const getCategories = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const maxCategories = CATEGORY_LIMITS[req.user.subscription];
 
-  // Get all categories of specified type for the user
+  if (!type || (type !== "expenses" && type !== "incomes")) {
+    throw new ApiError(400, "Invalid category type");
+  }
   const categories = await Category.find({
     user: userId,
     type: type,
@@ -87,12 +89,6 @@ const deleteCategory = asyncHandler(async (req, res) => {
   if (!category) {
     throw new ApiError(404, "Category not found");
   }
-
-  // Optional: Update related transactions to null or another category
-  // await Transaction.updateMany(
-  //   { category: id },
-  //   { category: null }
-  // );
 
   // Delete the category
   await Category.deleteOne({ _id: id, user: userId });

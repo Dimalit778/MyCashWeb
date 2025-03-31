@@ -106,6 +106,9 @@ export const getMonthlyData = asyncHandler(async (req, res) => {
   if (!year || !month || !type) {
     throw new ApiError(400, "Year, month, and type parameters are required");
   }
+  if (month < 0 || month > 11) {
+    throw new ApiError(400, "Invalid month");
+  }
 
   const yearNum = parseInt(year);
   const monthNum = parseInt(month) + 1;
@@ -152,7 +155,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { description, amount, category, date, type } = req.body;
 
-  if (!description || !date || !category || !type || !amount) {
+  if (!description || !date || !category || !type || amount === undefined) {
     throw new ApiError(400, "All required fields must be provided", [
       "description",
       "date",
@@ -161,10 +164,13 @@ export const addTransaction = asyncHandler(async (req, res) => {
       "amount",
     ]);
   }
-
+  if (typeof amount !== "number" || isNaN(amount)) {
+    throw new ApiError(400, "Amount must be a number");
+  }
   if (amount <= 0) {
     throw new ApiError(400, "Amount must be greater than 0");
   }
+
   if (amount > 1000000) {
     throw new ApiError(400, "Amount must be less than 1000000");
   }
@@ -173,7 +179,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid transaction type");
   }
 
-  if (description.length > 20 || description.length < 1) {
+  if (description.length > 20 || description.length <= 1) {
     throw new ApiError(400, "Description must be between 1 and 20 characters");
   }
 
@@ -203,6 +209,18 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 
   if (!existingTransaction) {
     throw new ApiError(404, "Transaction not found");
+  }
+  if (amount !== undefined) {
+    if (typeof amount !== "number" || isNaN(amount)) {
+      throw new ApiError(400, "Amount must be a number");
+    }
+    if (amount <= 0) {
+      throw new ApiError(400, "Amount must be greater than 0");
+    }
+
+    if (amount > 1000000) {
+      throw new ApiError(400, "Amount must be less than 1000000");
+    }
   }
 
   let updateData = { description, amount, date };

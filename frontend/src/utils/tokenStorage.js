@@ -1,4 +1,4 @@
-import { isPlatformMobile } from "./paltformUtils";
+import { isPlatformMobile } from "./platform";
 
 class TokenStorage {
   constructor() {
